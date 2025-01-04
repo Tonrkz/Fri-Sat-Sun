@@ -1,6 +1,8 @@
 # Fri-Sat-Sun
 ## Project: Kingdom Kome
 
+Production Plan: https://docs.google.com/spreadsheets/d/1o85uwfIlRwwSFRdvmUjWtzAg-9XMstUpD75xVH0qYjs 
+
 ### Team Members
 - 651310131 นางสาวสมินตรา เนตรจันทร์: 2D Artist, Art Director https://github.com/Chocolateshishi
 - 651310297 นายนฤธัช เสริมสุวิทยวงศ์: Unity Developer, Game Designer https://github.com/Tonrkz
