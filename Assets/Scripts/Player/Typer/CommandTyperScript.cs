@@ -59,7 +59,18 @@ public class CommandTyperScript : MonoBehaviour {
                 Debug.Log("Build command");
                 BuildManager.instance.onTowerBuild.Invoke();
                 break;
-            
+            case "destroy":
+                Debug.Log("Destroy command");
+                break;
+            case "guard":
+                Debug.Log("Guard command");
+                break;
+            case "upgrade":
+                Debug.Log("Upgrade command");
+                break;
+            case "tax":
+                Debug.Log("Tax command");
+                break;
             default:
                 foreach (string n in TowerNameManager.instance.usedTowerNames) {
                     if (TowerNameManager.instance.CheckIfNameUsed(splitedCommand[0])) {
@@ -74,18 +85,9 @@ public class CommandTyperScript : MonoBehaviour {
 
     string CheckCommandForTowers(string inputCommand) {
         switch (inputCommand) {
-            case "attack":
-                Debug.Log("Attack command");
-                return "attack command";
-            case "defense":
-                Debug.Log("Defense command");
-                return "defense command";
             case "differntiate":
                 Debug.Log("Differentiate command");
                 return "differentiate command";
-            case "upgrade":
-                Debug.Log("Upgrade command");
-                return "upgrade command";
             default:
                 return "No Exisited Command.";
         }
