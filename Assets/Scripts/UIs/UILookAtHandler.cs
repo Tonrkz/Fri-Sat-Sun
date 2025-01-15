@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class UILookAtHandler : MonoBehaviour {
     [Header("References")]
-    [SerializeField] GameObject lookedAtObj;
+    [SerializeField] internal GameObject lookedAtObj;
 
-    void Start() {
+    private void Update() {
         LookAt();
     }
 
