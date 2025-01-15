@@ -1,16 +1,75 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+public class PlayerMovement : MonoBehaviour {
+
+    [Header("Attributes")]
+    [SerializeField] float moveCooldown = 0.15f;
+    [SerializeField] float holdCooldown = 0.1f;
+    float calcMoveCooldown = 0f;
+    float calcHoldCooldown = 0f;
+
+    void Start() {
+        calcMoveCooldown = moveCooldown;
+        calcHoldCooldown = holdCooldown;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+        if (Input.GetKey(KeyCode.UpArrow)) {
+            calcHoldCooldown -= Time.deltaTime;
+            if (calcHoldCooldown <= 0) {
+                calcMoveCooldown -= Time.deltaTime;
+                if (calcMoveCooldown <= 0) {
+                    transform.position += new Vector3(0, 0, 1);
+                    calcMoveCooldown = moveCooldown;
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.UpArrow)) {
+                transform.position += new Vector3(0, 0, 1);
+            }
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow)) {
+            calcHoldCooldown -= Time.deltaTime;
+            if (calcHoldCooldown <= 0) {
+                calcMoveCooldown -= Time.deltaTime;
+                if (calcMoveCooldown <= 0) {
+                    transform.position += new Vector3(-1, 0, 0);
+                    calcMoveCooldown = moveCooldown;
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+                transform.position += new Vector3(-1, 0, 0);
+            }
+        }
+        else if (Input.GetKey(KeyCode.DownArrow)) {
+            calcHoldCooldown -= Time.deltaTime;
+            if (calcHoldCooldown <= 0) {
+                calcMoveCooldown -= Time.deltaTime;
+                if (calcMoveCooldown <= 0) {
+                    transform.position += new Vector3(0, 0, -1);
+                    calcMoveCooldown = moveCooldown;
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow)) {
+                transform.position += new Vector3(0, 0, -1);
+            }
+        }
+        else if (Input.GetKey(KeyCode.RightArrow)) {
+            calcHoldCooldown -= Time.deltaTime;
+            if (calcHoldCooldown <= 0) {
+                calcMoveCooldown -= Time.deltaTime;
+                if (calcMoveCooldown <= 0) {
+                    transform.position += new Vector3(1, 0, 0);
+                    calcMoveCooldown = moveCooldown;
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow)) {
+                transform.position += new Vector3(1, 0, 0);
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.RightArrow)) {
+            calcMoveCooldown = moveCooldown;
+            calcHoldCooldown = holdCooldown;
+        }
     }
 }
