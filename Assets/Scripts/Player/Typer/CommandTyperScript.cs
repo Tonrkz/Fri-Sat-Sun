@@ -57,7 +57,12 @@ public class CommandTyperScript : MonoBehaviour {
         switch (splitedCommand[0]) {
             case "build":
                 Debug.Log("Build command");
-                BuildManager.instance.onTowerBuild.Invoke();
+                if (BuildManager.instance.CheckIfGroundAvailable()) {
+                    BuildManager.instance.BuildTower();
+                }
+                else {
+                    Debug.Log("Ground is occupied.");
+                }
                 break;
             case "destroy":
                 Debug.Log("Destroy command");
