@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class BaseTowerScript : MonoBehaviour {
+public class CampfireScript : MonoBehaviour {
     [Header("References")]
     [SerializeField] GameObject baseTowerPrefab;
-    [SerializeField] Rigidbody2D rb;
+    [SerializeField] Rigidbody rb;
 
     [Header("Attributes")]
-    [SerializeField] string towerName = "Base Tower";
+    [SerializeField] string towerName = "Campfire";
     [SerializeField] float hitPoint = 10f;
     [SerializeField] int attackUnit = 1;
     [SerializeField] float range = 15f;

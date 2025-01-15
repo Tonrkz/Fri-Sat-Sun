@@ -7,7 +7,7 @@ public class BuildManager : MonoBehaviour {
     public static BuildManager instance;
 
     [Header("Attributes")]
-    [SerializeField] GameObject baseTowerPrefab;
+    [SerializeField] GameObject campfirePrefab;
 
     public UnityEvent onTowerBuild = new UnityEvent();
 
@@ -18,8 +18,8 @@ public class BuildManager : MonoBehaviour {
 
     public bool BuildTower() {
         string buildTowerName = TowerNameManager.instance.GetRandomTowerName();
-        GameObject builtTower = Instantiate(baseTowerPrefab, new Vector2(Random.Range(-2.5f, 10.5f), Random.Range(-5.5f, 5.5f)), Quaternion.identity);
-        builtTower.GetComponent<BaseTowerScript>().SetTowerName(buildTowerName);
+        GameObject builtTower = Instantiate(campfirePrefab, PlayerMovement.instance.GetCurrentPosition() + new Vector3(0, 0.35f, 0), Quaternion.identity);
+        builtTower.GetComponent<CampfireScript>().SetTowerName(buildTowerName);
         Debug.Log($"{buildTowerName}: Built");
         return true;
     }

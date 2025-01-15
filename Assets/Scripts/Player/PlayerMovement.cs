@@ -1,12 +1,18 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
+    public static PlayerMovement instance;
 
     [Header("Attributes")]
     [SerializeField] float moveCooldown = 0.15f;
     [SerializeField] float holdCooldown = 0.1f;
     float calcMoveCooldown = 0f;
     float calcHoldCooldown = 0f;
+
+    void Awake() {
+        instance = this;
+    }
 
     void Start() {
         calcMoveCooldown = moveCooldown;
@@ -71,5 +77,10 @@ public class PlayerMovement : MonoBehaviour {
             calcMoveCooldown = moveCooldown;
             calcHoldCooldown = holdCooldown;
         }
+    }
+
+    public Vector3 GetCurrentPosition() {
+        Debug.Log($"Current Position: {transform.position}");
+        return transform.position;
     }
 }
