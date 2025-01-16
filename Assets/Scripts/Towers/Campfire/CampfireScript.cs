@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using System;
 
 public class CampfireScript : MonoBehaviour {
     [Header("References")]
@@ -9,12 +10,12 @@ public class CampfireScript : MonoBehaviour {
     [SerializeField] TextMeshProUGUI towerNameText;
 
     [Header("Attributes")]
-    [SerializeField] string towerName = "Campfire";
-    [SerializeField] float hitPoint = 10f;
-    [SerializeField] int attackUnit = 1;
-    [SerializeField] float range = 15f;
-    [SerializeField] float fireRate = 1f;
-    [SerializeField] float buildTime = 5f;
+    [SerializeField] internal string towerName = "Campfire";
+    [SerializeField] internal Single hitPoint = 10f;
+    [SerializeField] internal Byte attackUnit = 1;
+    [SerializeField] internal Single range = 3f;
+    [SerializeField] internal Single fireRate = 1f;
+    [SerializeField] internal Single buildTime = 5f;
 
     Enum_BaseTowerStates states = Enum_BaseTowerStates.Building;
 
@@ -30,5 +31,10 @@ public class CampfireScript : MonoBehaviour {
 
     public void DisplayTowerName() {
         towerNameText.text = towerName;
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, range);
     }
 }

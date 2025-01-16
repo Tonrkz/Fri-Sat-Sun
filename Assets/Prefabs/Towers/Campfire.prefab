@@ -517,6 +517,6 @@ MonoBehaviour:
   towerName: Campfire
   hitPoint: 10
   attackUnit: 1
-  range: 15
+  range: 3
   fireRate: 1
   buildTime: 5
