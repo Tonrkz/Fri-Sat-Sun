@@ -12677,7 +12677,7 @@ GameObject:
   - component: {fileID: 637672721}
   - component: {fileID: 637672720}
   - component: {fileID: 637672719}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Normal Demon
   m_TagString: Demon
   m_Icon: {fileID: 0}
@@ -12704,7 +12704,8 @@ MonoBehaviour:
   acceptableRadius: 0.33
   damage: 10
   attackSpeed: 1
-  range: 0.75
+  attackCooldown: 1
+  attackRange: 0.75
   walkPath:
   - {fileID: 1259265040}
   - {fileID: 1464682355}
@@ -18047,7 +18048,7 @@ GameObject:
   m_Component:
   - component: {fileID: 930085564}
   - component: {fileID: 930085565}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22387,7 +22388,7 @@ GameObject:
   - component: {fileID: 1110535482}
   - component: {fileID: 1110535481}
   - component: {fileID: 1110535480}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Normal Soldier
   m_TagString: Soldier
   m_Icon: {fileID: 0}
@@ -22413,7 +22414,9 @@ MonoBehaviour:
   walkSpeed: 1
   acceptableRadius: 0.33
   damage: 10
+  sightRange: 1.25
   attackSpeed: 1
+  attackCooldown: 1
   attackRange: 0.75
 --- !u!54 &1110535481
 Rigidbody:
@@ -22472,7 +22475,7 @@ Transform:
   m_GameObject: {fileID: 1110535479}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -64, y: 0, z: 16}
+  m_LocalPosition: {x: -64, y: 0, z: 14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -45188,7 +45191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2059623338}
   - component: {fileID: 2059623339}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47836,7 +47839,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8173159802208214877, guid: a70c2e4d5098ec845b9894904a30059c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -32
+      value: -62
       objectReference: {fileID: 0}
     - target: {fileID: 8173159802208214877, guid: a70c2e4d5098ec845b9894904a30059c, type: 3}
       propertyPath: m_LocalPosition.y

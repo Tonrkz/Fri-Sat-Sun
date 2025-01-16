@@ -1,6 +1,7 @@
 public enum Enum_NormalSoldierState {
+    Initiate,
     Idle,
-    Walk,
+    Engage,
     Attack,
     Die
 }

@@ -18,7 +18,8 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     [SerializeField] Single acceptableRadius = 0.33f;
     [SerializeField] Single damage = 10;
     [SerializeField] Single attackSpeed = 1;
-    [SerializeField] Single range = 0.75f;
+    [SerializeField] Single attackCooldown = 1;
+    [SerializeField] Single attackRange = 0.75f;
     [SerializeField] List<GameObject> walkPath = new List<GameObject>();
 
     [Header("Debug")]
@@ -55,7 +56,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void Move() {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, walkTarget.transform.position, walkSpeed * Time.deltaTime));
+        rb.MovePosition(Vector3.MoveTowards(transform.position, walkTarget.transform.position, walkSpeed * Time.fixedDeltaTime));
         if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
             walkTarget = GetNextWalkTarget();
         }
@@ -71,7 +72,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.green;
         foreach (var item in walkPath) {
             Gizmos.DrawWireSphere(item.transform.position, acceptableRadius);
