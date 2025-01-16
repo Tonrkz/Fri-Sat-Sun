@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Behavior;
 using Unity.VisualScripting;
+using UnityEngine.Rendering;
 
-public class NormalDemonBehaviour : MonoBehaviour, IDemons {
+public class NormalDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator anim;
@@ -14,11 +15,13 @@ public class NormalDemonBehaviour : MonoBehaviour, IDemons {
     [Header("Attributes")]
     [SerializeField] Enum_NormalDemonState state = Enum_NormalDemonState.Walk;
     [SerializeField] float hitPoint = 100;
+    public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] Single walkSpeed = 1;
-    [SerializeField] Single acceptableRadius = 0.5f;
+    [SerializeField] Single acceptableRadius = 0.33f;
     [SerializeField] Single damage = 10;
     [SerializeField] Single attackSpeed = 1;
-    [SerializeField] Single range = 0.75f;
+    [SerializeField] Single attackCooldown = 1;
+    [SerializeField] Single attackRange = 1f;
     [SerializeField] List<GameObject> walkPath = new List<GameObject>();
 
     [Header("Debug")]
@@ -44,6 +47,9 @@ public class NormalDemonBehaviour : MonoBehaviour, IDemons {
             default:
                 break;
         }
+        if (HitPoint <= 0) {
+            state = Enum_NormalDemonState.Die;
+        }
     }
 
     public void Attack() {
@@ -55,10 +61,14 @@ public class NormalDemonBehaviour : MonoBehaviour, IDemons {
     }
 
     public void Move() {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, walkTarget.transform.position, walkSpeed * Time.deltaTime));
+        rb.MovePosition(Vector3.MoveTowards(transform.position, walkTarget.transform.position, walkSpeed * Time.fixedDeltaTime));
         if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
             walkTarget = GetNextWalkTarget();
         }
+    }
+
+    public void TakeDamage(Single damage) {
+        HitPoint -= damage;
     }
 
     GameObject GetNextWalkTarget() {
@@ -71,7 +81,7 @@ public class NormalDemonBehaviour : MonoBehaviour, IDemons {
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.green;
         foreach (var item in walkPath) {
             Gizmos.DrawWireSphere(item.transform.position, acceptableRadius);
