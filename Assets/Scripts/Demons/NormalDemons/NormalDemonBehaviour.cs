@@ -4,6 +4,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Behavior;
+using Unity.VisualScripting;
 
 public class NormalDemonBehaviour : MonoBehaviour, IDemons {
     [Header("References")]
@@ -13,10 +14,10 @@ public class NormalDemonBehaviour : MonoBehaviour, IDemons {
     [Header("Attributes")]
     [SerializeField] Enum_NormalDemonState state = Enum_NormalDemonState.Walk;
     [SerializeField] float hitPoint = 100;
-    [SerializeField] Byte walkSpeed = 1;
+    [SerializeField] Single walkSpeed = 1;
     [SerializeField] Single acceptableRadius = 0.5f;
-    [SerializeField] Byte damage = 10;
-    [SerializeField] Byte attackSpeed = 1;
+    [SerializeField] Single damage = 10;
+    [SerializeField] Single attackSpeed = 1;
     [SerializeField] Single range = 0.75f;
     [SerializeField] List<GameObject> walkPath = new List<GameObject>();
 
@@ -31,6 +32,18 @@ public class NormalDemonBehaviour : MonoBehaviour, IDemons {
     }
 
     void FixedUpdate() {
+        switch (state) {
+            case Enum_NormalDemonState.Walk:
+                Move();
+                break;
+            case Enum_NormalDemonState.Attack:
+                break;
+            case Enum_NormalDemonState.Die:
+                Destroy(gameObject);
+                break;
+            default:
+                break;
+        }
     }
 
     public void Attack() {
@@ -42,7 +55,18 @@ public class NormalDemonBehaviour : MonoBehaviour, IDemons {
     }
 
     public void Move() {
-        throw new System.NotImplementedException();
+        rb.MovePosition(Vector3.MoveTowards(transform.position, walkTarget.transform.position, walkSpeed * Time.deltaTime));
+        if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
+            walkTarget = GetNextWalkTarget();
+        }
+    }
+
+    GameObject GetNextWalkTarget() {
+        currentPathIndex++;
+        if (currentPathIndex >= walkPath.Count) {
+            currentPathIndex = 0;
+        }
+        return walkPath[currentPathIndex];
     }
 
     private void OnDrawGizmos() {

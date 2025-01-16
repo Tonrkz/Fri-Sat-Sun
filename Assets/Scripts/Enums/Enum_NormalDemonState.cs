@@ -4,7 +4,8 @@ using Unity.Behavior;
 [BlackboardEnum]
 public enum Enum_NormalDemonState
 {
-    Walk,
+    Idle,
+	Walk,
 	Attack,
 	Die
 }
