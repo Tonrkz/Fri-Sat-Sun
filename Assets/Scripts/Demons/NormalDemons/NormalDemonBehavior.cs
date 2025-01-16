@@ -16,12 +16,13 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     [SerializeField] Enum_NormalDemonState state = Enum_NormalDemonState.Walk;
     [SerializeField] float hitPoint = 100;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] Single walkSpeed = 1;
-    [SerializeField] Single acceptableRadius = 0.33f;
-    [SerializeField] Single damage = 10;
-    [SerializeField] Single attackSpeed = 1;
-    [SerializeField] Single attackCooldown = 1;
-    [SerializeField] Single attackRange = 1f;
+    [SerializeField] internal Single walkSpeed = 1;
+    [SerializeField] internal Single acceptableRadius = 0.33f;
+    [SerializeField] internal Single damage = 10;
+    [SerializeField] internal Single sightRange = 1.5f;
+    [SerializeField] internal Single attackSpeed = 1;
+    [SerializeField] internal Single attackCooldown = 1;
+    [SerializeField] internal Single attackRange = 1f;
     [SerializeField] List<GameObject> walkPath = new List<GameObject>();
 
     [Header("Debug")]
@@ -36,13 +37,29 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
 
     void FixedUpdate() {
         switch (state) {
+            case Enum_NormalDemonState.Idle:
+                return;
             case Enum_NormalDemonState.Walk:
-                Move();
+                if (attackTarget != null) {
+                    Move(attackTarget.transform.position);
+                    if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {
+                        state = Enum_NormalDemonState.Attack;
+                    }
+                    return;
+                }
+                Move(walkTarget.transform.position);
+                if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
+                    walkTarget = GetNextWalkTarget();
+                }
+                CheckForTarget();
                 break;
             case Enum_NormalDemonState.Attack:
+                //Play Attack Animation
+                //Deal Damage
+                Attack(attackTarget);
                 break;
             case Enum_NormalDemonState.Die:
-                Destroy(gameObject);
+                Die();
                 break;
             default:
                 break;
@@ -52,32 +69,40 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
         }
     }
 
-    public void Attack() {
-        throw new System.NotImplementedException();
+    public void Attack(GameObject target) {
+        target.gameObject.GetComponent<ISoldiers>().TakeDamage(damage);
     }
 
     public void Die() {
-        throw new System.NotImplementedException();
+        Destroy(gameObject);
     }
 
-    public void Move() {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, walkTarget.transform.position, walkSpeed * Time.fixedDeltaTime));
-        if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
-            walkTarget = GetNextWalkTarget();
-        }
+    public void Move(Vector3 position) {
+        rb.MovePosition(Vector3.MoveTowards(transform.position, position, walkSpeed * Time.fixedDeltaTime));
     }
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
     }
 
-    GameObject GetNextWalkTarget() {
+    public void CheckForTarget() {
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, sightRange, Vector3.up, sightRange, 7);
+        foreach (var hit in hits) {
+            if (hit.collider.CompareTag("Soldier")) {
+                attackTarget = hit.collider.gameObject;
+                break;
+            }
+        }
+    }
+
+        public GameObject GetNextWalkTarget() {
         currentPathIndex++;
         if (currentPathIndex >= walkPath.Count) {
             currentPathIndex = 0;
         }
         return walkPath[currentPathIndex];
     }
+
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;

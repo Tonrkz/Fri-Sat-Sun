@@ -60,6 +60,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 //Deal Damage
                 Attack(attackTarget);
                 if (attackTarget.GetComponent<IDemons>().HitPoint <= 0) {
+                    attackTarget = null;
                     state = Enum_NormalSoldierState.Idle;
                 }
                 break;
