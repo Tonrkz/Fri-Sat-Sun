@@ -8,6 +8,7 @@ TagManager:
   - Path
   - Tower
   - Demon
+  - Soldier
   layers:
   - Default
   - TransparentFX

@@ -6,7 +6,7 @@ using UnityEngine;
 using Unity.Behavior;
 using Unity.VisualScripting;
 
-public class NormalDemonBehaviour : MonoBehaviour, IDemons {
+public class NormalDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator anim;
@@ -15,7 +15,7 @@ public class NormalDemonBehaviour : MonoBehaviour, IDemons {
     [SerializeField] Enum_NormalDemonState state = Enum_NormalDemonState.Walk;
     [SerializeField] float hitPoint = 100;
     [SerializeField] Single walkSpeed = 1;
-    [SerializeField] Single acceptableRadius = 0.5f;
+    [SerializeField] Single acceptableRadius = 0.33f;
     [SerializeField] Single damage = 10;
     [SerializeField] Single attackSpeed = 1;
     [SerializeField] Single range = 0.75f;
