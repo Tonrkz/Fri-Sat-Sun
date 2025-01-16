@@ -9,14 +9,15 @@ public class NormalSoldierBehavior : MonoBehaviour {
 
     [Header("Attributes")]
     [SerializeField] Enum_NormalSoldierState state = Enum_NormalSoldierState.Initiate;
-    [SerializeField] float hitPoint = 100;
-    [SerializeField] Single walkSpeed = 1;
-    [SerializeField] Single acceptableRadius = 0.33f;
-    [SerializeField] Single damage = 10;
-    [SerializeField] Single sightRange = 1.25f;
-    [SerializeField] Single attackSpeed = 1;
-    [SerializeField] Single attackCooldown = 1;
-    [SerializeField] Single attackRange = 0.75f;
+    [SerializeField] internal float hitPoint = 100;
+    [SerializeField] internal Single walkSpeed = 1;
+    [SerializeField] internal Single acceptableRadius = 0.33f;
+    [SerializeField] internal Single damage = 10;
+    [SerializeField] internal Single sightRange = 1.5f;
+    [SerializeField] internal Single attackSpeed = 1;
+    [SerializeField] internal Single attackCooldown = 1;
+    [SerializeField] internal Single attackRange = 1f;
+    [SerializeField] internal bool canSeeAssassin = false;
 
     [Header("Debug")]
     internal GameObject baseTower;
@@ -55,6 +56,10 @@ public class NormalSoldierBehavior : MonoBehaviour {
             case Enum_NormalSoldierState.Attack:
                 //Play Attack Animation
                 //Deal Damage
+                attackTarget.GetComponent<IDemons>().TakeDamage(damage * Time.deltaTime);
+                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0) {
+                    state = Enum_NormalSoldierState.Idle;
+                }
                 break;
             case Enum_NormalSoldierState.Die:
                 Destroy(gameObject);
@@ -62,12 +67,15 @@ public class NormalSoldierBehavior : MonoBehaviour {
             default:
                 break;
         }
+        if (hitPoint <= 0) {
+            state = Enum_NormalSoldierState.Die;
+        }
     }
 
     void CheckForTarget() {
         Collider[] collides = Physics.OverlapSphere(transform.position, attackRange);
         foreach (var item in collides) {
-            if (item.CompareTag("Demon")) {
+            if (item.CompareTag("Demon") || (item.CompareTag("Assassin") && canSeeAssassin)) {
                 attackTarget = item.gameObject;
                 state = Enum_NormalSoldierState.Engage;
                 break;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Behavior;
 using Unity.VisualScripting;
+using UnityEngine.Rendering;
 
 public class NormalDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
@@ -14,12 +15,13 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     [Header("Attributes")]
     [SerializeField] Enum_NormalDemonState state = Enum_NormalDemonState.Walk;
     [SerializeField] float hitPoint = 100;
+    public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] Single walkSpeed = 1;
     [SerializeField] Single acceptableRadius = 0.33f;
     [SerializeField] Single damage = 10;
     [SerializeField] Single attackSpeed = 1;
     [SerializeField] Single attackCooldown = 1;
-    [SerializeField] Single attackRange = 0.75f;
+    [SerializeField] Single attackRange = 1f;
     [SerializeField] List<GameObject> walkPath = new List<GameObject>();
 
     [Header("Debug")]
@@ -45,6 +47,9 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
             default:
                 break;
         }
+        if (HitPoint <= 0) {
+            state = Enum_NormalDemonState.Die;
+        }
     }
 
     public void Attack() {
@@ -60,6 +65,10 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
         if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
             walkTarget = GetNextWalkTarget();
         }
+    }
+
+    public void TakeDamage(Single damage) {
+        HitPoint -= damage;
     }
 
     GameObject GetNextWalkTarget() {

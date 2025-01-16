@@ -12705,7 +12705,7 @@ MonoBehaviour:
   damage: 10
   attackSpeed: 1
   attackCooldown: 1
-  attackRange: 0.75
+  attackRange: 1
   walkPath:
   - {fileID: 1259265040}
   - {fileID: 1464682355}
@@ -22414,10 +22414,11 @@ MonoBehaviour:
   walkSpeed: 1
   acceptableRadius: 0.33
   damage: 10
-  sightRange: 1.25
+  sightRange: 1.5
   attackSpeed: 1
   attackCooldown: 1
-  attackRange: 0.75
+  attackRange: 1
+  canSeeAssassin: 0
 --- !u!54 &1110535481
 Rigidbody:
   m_ObjectHideFlags: 0
