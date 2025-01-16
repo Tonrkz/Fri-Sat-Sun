@@ -29,10 +29,12 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     GameObject attackTarget;
     GameObject walkTarget;
     Byte currentPathIndex = 0;
+    LayerMask DemonAndSoldierLayer;
 
     void Start() {
         currentPathIndex = 0;
         walkTarget = walkPath[currentPathIndex];
+        DemonAndSoldierLayer = LayerMask.GetMask("DemonAndSoldier");
     }
 
     void FixedUpdate() {
@@ -57,6 +59,10 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
                 //Play Attack Animation
                 //Deal Damage
                 Attack(attackTarget);
+                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0) {
+                    attackTarget = null;
+                    state = Enum_NormalDemonState.Walk;
+                }
                 break;
             case Enum_NormalDemonState.Die:
                 Die();
@@ -70,7 +76,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void Attack(GameObject target) {
-        target.gameObject.GetComponent<ISoldiers>().TakeDamage(damage);
+        target.gameObject.GetComponent<ISoldiers>().TakeDamage(damage * Time.fixedDeltaTime * 5); // Don't forget to fix this
     }
 
     public void Die() {
@@ -86,10 +92,10 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void CheckForTarget() {
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, sightRange, Vector3.up, sightRange, 7);
-        foreach (var hit in hits) {
-            if (hit.collider.CompareTag("Soldier")) {
-                attackTarget = hit.collider.gameObject;
+        Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, DemonAndSoldierLayer);
+        foreach (var item in collides) {
+            if (item.CompareTag("Soldier")) {
+                attackTarget = item.gameObject;
                 break;
             }
         }
@@ -111,5 +117,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
         foreach (var item in walkPath) {
             Gizmos.DrawWireSphere(item.transform.position, acceptableRadius);
         }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, sightRange);
     }
 }

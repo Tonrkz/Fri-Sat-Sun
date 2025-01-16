@@ -1,4 +1,5 @@
 using System;
+using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -25,17 +26,23 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     Single towerRange;
     GameObject attackTarget;
     Vector3 walkPosition;
+    LayerMask DemonAndSoldierLayer;
+    LayerMask PathLayer;
 
 
     private void Start() {
-        towerRange = baseTower.GetComponent<CampfireScript>().range;
+        if (baseTower != null) {
+            towerRange = baseTower.GetComponent<CampfireScript>().range;
+        }
+        DemonAndSoldierLayer = LayerMask.GetMask("DemonAndSoldier");
+        PathLayer = LayerMask.GetMask("Ground");
     }
 
     private void FixedUpdate() {
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
                 if (baseTower != null) {
-                    RaycastHit[] hits = Physics.SphereCastAll(baseTower.transform.position, towerRange, Vector3.up, towerRange, 6);
+                    RaycastHit[] hits = Physics.SphereCastAll(baseTower.transform.position, towerRange, Vector3.up, towerRange, PathLayer);
                     foreach (var hit in hits) {
                         if (hit.collider.CompareTag("Path")) {
                             walkPosition = hit.transform.position;
@@ -70,13 +77,13 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
             default:
                 break;
         }
-        if (hitPoint <= 0) {
+        if (HitPoint <= 0) {
             state = Enum_NormalSoldierState.Die;
         }
     }
 
     void CheckForTarget() {
-        Collider[] collides = Physics.OverlapSphere(transform.position, attackRange);
+        Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, DemonAndSoldierLayer);
         foreach (var item in collides) {
             if (item.CompareTag("Demon") || (item.CompareTag("Assassin") && canSeeAssassin)) {
                 attackTarget = item.gameObject;
@@ -94,7 +101,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     public void Attack(GameObject target) {
-        target.GetComponent<IDemons>().TakeDamage(damage);
+        target.GetComponent<IDemons>().TakeDamage(damage * Time.fixedDeltaTime * 3);  // Don't forget to fix this
     }
 
     public void Die() {
