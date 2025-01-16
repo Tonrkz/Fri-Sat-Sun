@@ -2,14 +2,15 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class NormalSoldierBehavior : MonoBehaviour {
+public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator anim;
 
     [Header("Attributes")]
     [SerializeField] Enum_NormalSoldierState state = Enum_NormalSoldierState.Initiate;
-    [SerializeField] internal float hitPoint = 100;
+    [SerializeField] float hitPoint = 100;
+    public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Single walkSpeed = 1;
     [SerializeField] internal Single acceptableRadius = 0.33f;
     [SerializeField] internal Single damage = 10;
@@ -25,6 +26,7 @@ public class NormalSoldierBehavior : MonoBehaviour {
     GameObject attackTarget;
     Vector3 walkPosition;
 
+
     private void Start() {
         towerRange = baseTower.GetComponent<CampfireScript>().range;
     }
@@ -37,7 +39,7 @@ public class NormalSoldierBehavior : MonoBehaviour {
                     foreach (var hit in hits) {
                         if (hit.collider.CompareTag("Path")) {
                             walkPosition = hit.transform.position;
-                            rb.MovePosition(Vector3.MoveTowards(transform.position, walkPosition, walkSpeed * Time.fixedDeltaTime));
+                            Move(walkPosition);
                             state = Enum_NormalSoldierState.Idle;
                             break;
                         }
@@ -48,7 +50,7 @@ public class NormalSoldierBehavior : MonoBehaviour {
                 CheckForTarget();
                 return;
             case Enum_NormalSoldierState.Engage:
-                rb.MovePosition(Vector3.MoveTowards(transform.position, attackTarget.transform.position, walkSpeed * Time.fixedDeltaTime));
+                Move(attackTarget.transform.position);
                 if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {
                     state = Enum_NormalSoldierState.Attack;
                 }
@@ -56,13 +58,13 @@ public class NormalSoldierBehavior : MonoBehaviour {
             case Enum_NormalSoldierState.Attack:
                 //Play Attack Animation
                 //Deal Damage
-                attackTarget.GetComponent<IDemons>().TakeDamage(damage * Time.deltaTime);
+                Attack(attackTarget);
                 if (attackTarget.GetComponent<IDemons>().HitPoint <= 0) {
                     state = Enum_NormalSoldierState.Idle;
                 }
                 break;
             case Enum_NormalSoldierState.Die:
-                Destroy(gameObject);
+                Die();
                 break;
             default:
                 break;
@@ -89,4 +91,20 @@ public class NormalSoldierBehavior : MonoBehaviour {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, sightRange);
     }
+
+    public void Attack(GameObject target) {
+        target.GetComponent<IDemons>().TakeDamage(damage);
+    }
+
+    public void Die() {
+        Destroy(gameObject);
+    }
+    public void Move(Vector3 position) {
+        rb.MovePosition(Vector3.MoveTowards(transform.position, position, walkSpeed * Time.fixedDeltaTime));
+    }
+
+    public void TakeDamage(Single damage) {
+        HitPoint -= damage;
+    }
+
 }
