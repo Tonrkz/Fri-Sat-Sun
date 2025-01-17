@@ -30883,6 +30883,7 @@ GameObject:
   - component: {fileID: 1441553695}
   - component: {fileID: 1441553694}
   - component: {fileID: 1441553696}
+  - component: {fileID: 1441553698}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -30958,6 +30959,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66fb6470b84d0174bb5cd9c7b35edd18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1441553698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441553691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10ac73f2a233be14b9b8fe0208926167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wordBank: []
 --- !u!1 &1441623857
 GameObject:
   m_ObjectHideFlags: 0
@@ -47853,6 +47867,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Campfire
       objectReference: {fileID: 0}
+    - target: {fileID: 7726950801907583317, guid: a70c2e4d5098ec845b9894904a30059c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8173159802208214877, guid: a70c2e4d5098ec845b9894904a30059c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -62
@@ -47949,6 +47967,10 @@ PrefabInstance:
     - target: {fileID: 8349353592681051844, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8349353592681051844, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

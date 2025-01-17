@@ -21,9 +21,9 @@ public class InputStateManager : MonoBehaviour {
                 return;
             }
             else {
-                StartCoroutine(ClearInputString());
                 gameInputState = Enum_GameInputState.ActivateMode;
                 Debug.Log("Activate Mode");
+                StartCoroutine(ClearInputString());
                 return;
             }
         }

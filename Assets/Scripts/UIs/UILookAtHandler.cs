@@ -4,7 +4,7 @@ public class UILookAtHandler : MonoBehaviour {
     [Header("References")]
     [SerializeField] internal GameObject lookedAtObj;
 
-    private void Update() {
+    private void Start() {
         LookAt();
     }
 
