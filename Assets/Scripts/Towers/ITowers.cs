@@ -10,4 +10,5 @@ public interface ITowers {
     void TakeDamage(Single damage);
     void SetTowerName(string towerNameInput);
     void DisplayTowerName();
+    void Activate();
 }

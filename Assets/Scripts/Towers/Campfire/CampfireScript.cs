@@ -5,7 +5,7 @@ using System;
 
 public class CampfireScript : MonoBehaviour, ITowers {
     [Header("References")]
-    [SerializeField] GameObject baseTowerPrefab;
+    [SerializeField] GameObject campfirePrefab;
     [SerializeField] Rigidbody rb;
     [SerializeField] TextMeshProUGUI towerNameText;
 
@@ -49,5 +49,9 @@ public class CampfireScript : MonoBehaviour, ITowers {
 
     public void TakeDamage(Single damage) {
         hitPoint -= damage;
+    }
+
+    public void Activate() {
+        Debug.Log($"{TowerName} activated");
     }
 }

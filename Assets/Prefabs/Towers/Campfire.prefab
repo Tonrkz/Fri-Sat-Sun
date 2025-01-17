@@ -511,12 +511,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b64f56197db4ed4da649e3709ab4320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTowerPrefab: {fileID: 7726950801907583317}
+  campfirePrefab: {fileID: 7726950801907583317}
   rb: {fileID: 540427046439860620}
   towerNameText: {fileID: 3352077761069779274}
   towerName: Campfire
   hitPoint: 10
   attackUnit: 1
-  range: 3
+  towerRange: 3
   fireRate: 1
+  activatable: 1
   buildTime: 5
