@@ -4,7 +4,7 @@ using TMPro;
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 
-public class CampfireScript : MonoBehaviour, ITowers {
+public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] GameObject campfirePrefab;
     [SerializeField] Rigidbody rb;
@@ -20,8 +20,6 @@ public class CampfireScript : MonoBehaviour, ITowers {
     public float TowerRange { get => towerRange; set => towerRange = value; }
     [SerializeField] Single fireRate = 1f;
     public float FireRate { get => fireRate; set => fireRate = value; }
-    [SerializeField] bool activatable = true;
-    public bool Activatable { get => activatable; set => activatable = value; }
     [SerializeField] internal Single buildTime = 5f;
 
     [Header("Debug")]
@@ -39,11 +37,18 @@ public class CampfireScript : MonoBehaviour, ITowers {
 
     public void SetTowerName(string towerNameInput) {
         towerName = towerNameInput;
-        DisplayTowerName();
+        DisplayTowerNameOrAssignedWord();
     }
 
-    public void DisplayTowerName() {
-        towerNameText.text = towerName;
+    public void DisplayTowerNameOrAssignedWord() {
+        switch (state) {
+            case Enum_CampfireState.Active:
+                towerNameText.text = assignedWord;
+                break;
+            default:
+                towerNameText.text = towerName;
+                break;
+        }
     }
 
     private void OnDrawGizmos() {

@@ -7,10 +7,8 @@ public interface ITowers {
     Single HitPoint { get; set; }
     Single TowerRange { get; set; }
     Single FireRate { get; set; }
-    bool Activatable { get; set; }
     string AssignedWord { get; set; }
     void TakeDamage(Single damage);
     void SetTowerName(string towerNameInput);
-    void DisplayTowerName();
-    void Activate();
+    void DisplayTowerNameOrAssignedWord();
 }
