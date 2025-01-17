@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class CampfireScript : MonoBehaviour, ITowers {
     [Header("References")]
@@ -26,6 +27,9 @@ public class CampfireScript : MonoBehaviour, ITowers {
     [Header("Debug")]
     Enum_CampfireState state = Enum_CampfireState.Building;
     Enum_TowerTypes towerType = Enum_TowerTypes.Campfire;
+    public Enum_TowerTypes TowerType { get => towerType; set => throw new NotImplementedException(); }
+    string assignedWord = null;
+    public string AssignedWord { get => assignedWord; set => assignedWord = value; }
 
 
     void Start() {
