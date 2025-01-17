@@ -1,4 +1,4 @@
-public enum Enum_BaseTowerStates {
+public enum Enum_CampfireState {
     Building,
     Idle,
     Defending,

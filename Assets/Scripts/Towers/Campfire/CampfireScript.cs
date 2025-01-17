@@ -17,7 +17,8 @@ public class CampfireScript : MonoBehaviour {
     [SerializeField] internal Single fireRate = 1f;
     [SerializeField] internal Single buildTime = 5f;
 
-    Enum_BaseTowerStates states = Enum_BaseTowerStates.Building;
+    [Header("Debug")]
+    Enum_CampfireState state = Enum_CampfireState.Building;
 
     void Start() {
         GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
