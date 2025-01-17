@@ -14,15 +14,18 @@ public class CampfireScript : MonoBehaviour, ITowers {
     public string TowerName { get => towerName; set => towerName = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] Byte attackUnit = 1;
+    [SerializeField] internal Byte attackUnit = 1;
     [SerializeField] Single towerRange = 3f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
     [SerializeField] Single fireRate = 1f;
     public float FireRate { get => fireRate; set => fireRate = value; }
-    [SerializeField] Single buildTime = 5f;
+    [SerializeField] bool activatable = true;
+    public bool Activatable { get => activatable; set => activatable = value; }
+    [SerializeField] internal Single buildTime = 5f;
 
     [Header("Debug")]
     Enum_CampfireState state = Enum_CampfireState.Building;
+    Enum_TowerTypes towerType = Enum_TowerTypes.Campfire;
 
 
     void Start() {
@@ -45,6 +48,6 @@ public class CampfireScript : MonoBehaviour, ITowers {
     }
 
     public void TakeDamage(Single damage) {
-        throw new NotImplementedException();
+        hitPoint -= damage;
     }
 }
