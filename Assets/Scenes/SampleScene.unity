@@ -12703,6 +12703,7 @@ MonoBehaviour:
   walkSpeed: 1
   acceptableRadius: 0.33
   damage: 10
+  sightRange: 1.5
   attackSpeed: 1
   attackCooldown: 1
   attackRange: 1
@@ -30916,6 +30917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   commandText: {fileID: 1789587159}
+  inputString: 
 --- !u!114 &1441553694
 MonoBehaviour:
   m_ObjectHideFlags: 0
