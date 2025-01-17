@@ -7,7 +7,7 @@ using System.Collections;
 
 public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
-    [SerializeField] GameObject campfirePrefab;
+    [SerializeField] GameObject normalSoldierPrefab;
     [SerializeField] Rigidbody rb;
     [SerializeField] TextMeshProUGUI towerNameText;
 
@@ -119,6 +119,8 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     public void Activate() {
+        GameObject aSoldier = Instantiate(normalSoldierPrefab, transform.position, Quaternion.identity);
+        aSoldier.GetComponent<ISoldiers>().BaseTower = gameObject;
         Debug.Log($"{TowerName} activated");
     }
 }

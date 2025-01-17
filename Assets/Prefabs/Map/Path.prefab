@@ -149,5 +149,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e6e9fade7104a45907d7d56271218f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasTower: 0
-  tower: {fileID: 0}

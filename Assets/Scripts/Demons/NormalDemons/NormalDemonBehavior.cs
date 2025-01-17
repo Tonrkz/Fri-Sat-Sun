@@ -29,12 +29,12 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     GameObject attackTarget;
     GameObject walkTarget;
     Byte currentPathIndex = 0;
-    LayerMask DemonAndSoldierLayer;
+    LayerMask SoldierLayer;
 
     void Start() {
         currentPathIndex = 0;
         walkTarget = walkPath[currentPathIndex];
-        DemonAndSoldierLayer = LayerMask.GetMask("DemonAndSoldier");
+        SoldierLayer = LayerMask.GetMask("Soldier");
     }
 
     void FixedUpdate() {
@@ -59,7 +59,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
                 //Play Attack Animation
                 //Deal Damage
                 Attack(attackTarget);
-                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0) {
+                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || ReferenceEquals(attackTarget, null)) {
                     attackTarget = null;
                     state = Enum_NormalDemonState.Walk;
                 }
@@ -92,7 +92,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void CheckForTarget() {
-        Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, DemonAndSoldierLayer);
+        Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, SoldierLayer);
         foreach (var item in collides) {
             if (item.CompareTag("Soldier")) {
                 attackTarget = item.gameObject;
