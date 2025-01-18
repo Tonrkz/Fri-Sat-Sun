@@ -73,7 +73,13 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
             case Enum_NormalSoldierState.Attack:
                 //Play Attack Animation
                 //Deal Damage
-                Attack(attackTarget);
+                try {
+                    Attack(attackTarget);
+                }
+                catch {
+                    attackTarget = null;
+                    state = Enum_NormalSoldierState.Idle;
+                }
                 if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || ReferenceEquals(attackTarget, null)) {
                     attackTarget = null;
                     state = Enum_NormalSoldierState.Idle;

@@ -58,8 +58,14 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
             case Enum_NormalDemonState.Attack:
                 //Play Attack Animation
                 //Deal Damage
+                try {
                 Attack(attackTarget);
-                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || ReferenceEquals(attackTarget, null)) {
+                }
+                catch {
+                    attackTarget = null;
+                    state = Enum_NormalDemonState.Walk;
+                }
+                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0) {
                     attackTarget = null;
                     state = Enum_NormalDemonState.Walk;
                 }
