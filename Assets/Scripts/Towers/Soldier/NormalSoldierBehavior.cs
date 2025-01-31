@@ -1,5 +1,4 @@
 using System;
-using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -25,29 +24,32 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     internal GameObject baseTower;
     public GameObject BaseTower { get => baseTower; set => baseTower = value; }
     Single towerRange;
+    float lastCalculateTime;
+    [SerializeField] float delayCalculateTime = 0.2f;
     GameObject attackTarget;
     Vector3 walkPosition;
     LayerMask DemonLayer;
     LayerMask PathLayer;
 
 
-    private void Start() {
+    void Start() {
         if (baseTower != null) {
             towerRange = baseTower.GetComponent<CampfireScript>().TowerRange;
         }
         DemonLayer = LayerMask.GetMask("Demon");
         PathLayer = LayerMask.GetMask("Ground");
+        lastCalculateTime = Time.time;
     }
 
-    private void FixedUpdate() {
+    void Update() {
+        if (Time.time < lastCalculateTime + delayCalculateTime) {
+            return;
+        }
+        lastCalculateTime = Time.time;
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
-                if (walkPosition != new Vector3()) {
-                    Move(walkPosition);
-                    if (Vector3.Distance(transform.position, walkPosition) <= acceptableRadius) {
-                        state = Enum_NormalSoldierState.Idle;
-                    }
-                    return;
+                if (Vector3.Distance(transform.position, walkPosition) <= acceptableRadius) {
+                    state = Enum_NormalSoldierState.Idle;
                 }
                 if (baseTower != null) {
                     RaycastHit[] hits = Physics.SphereCastAll(baseTower.transform.position, towerRange, Vector3.up, towerRange, PathLayer);
@@ -63,12 +65,37 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 break;
             case Enum_NormalSoldierState.Idle:
                 CheckForTarget();
-                return;
+                break;
             case Enum_NormalSoldierState.Engage:
-                Move(attackTarget.transform.position);
                 if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {
                     state = Enum_NormalSoldierState.Attack;
                 }
+                break;
+            case Enum_NormalSoldierState.Attack:
+                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || ReferenceEquals(attackTarget, null)) {
+                    attackTarget = null;
+                    state = Enum_NormalSoldierState.Idle;
+                }
+                break;
+            case Enum_NormalSoldierState.Die:
+                break;
+            default:
+                break;
+        }
+    }
+
+    void FixedUpdate() {
+        switch (state) {
+            case Enum_NormalSoldierState.Initiate:
+                if (walkPosition != new Vector3()) {
+                    Move(walkPosition);
+                    return;
+                }
+                break;
+            case Enum_NormalSoldierState.Idle:
+                return;
+            case Enum_NormalSoldierState.Engage:
+                Move(attackTarget.transform.position);
                 break;
             case Enum_NormalSoldierState.Attack:
                 //Play Attack Animation
@@ -77,10 +104,6 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                     Attack(attackTarget);
                 }
                 catch {
-                    attackTarget = null;
-                    state = Enum_NormalSoldierState.Idle;
-                }
-                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || ReferenceEquals(attackTarget, null)) {
                     attackTarget = null;
                     state = Enum_NormalSoldierState.Idle;
                 }
