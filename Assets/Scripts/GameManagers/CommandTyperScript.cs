@@ -1,26 +1,31 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CommandTyperScript : MonoBehaviour {
+    public static CommandTyperScript instance;
 
     [Header("References")]
     [SerializeField] TextMeshProUGUI commandText;
 
-    string inputString = "";
+    public string inputString = "";
     string commandString = "";
     List<string> splitedCommand = new List<string>();
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() {
-
+    void Awake() {
+        instance = this;
     }
 
-    // Update is called once per frame
     void Update() {
+        if (InputStateManager.instance.GameInputState != Enum_GameInputState.CommandMode) {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Backspace)) {
+            inputString = "";
+            splitedCommand.Clear();
             return;
         }
 
@@ -37,11 +42,16 @@ public class CommandTyperScript : MonoBehaviour {
                     return;
                 }
                 else {
-                    inputString += c;
+                    StartCoroutine(AddChar(c));
                 }
             }
         }
         commandText.text = inputString;
+    }
+    
+    IEnumerator AddChar(char c) {
+        yield return new WaitForEndOfFrame();
+        inputString += c;
     }
 
     void SetCommand(string command) {

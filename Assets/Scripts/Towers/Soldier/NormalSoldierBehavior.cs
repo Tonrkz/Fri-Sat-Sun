@@ -1,5 +1,4 @@
 using System;
-using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -23,31 +22,42 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     [Header("Debug")]
     internal GameObject baseTower;
+    public GameObject BaseTower { get => baseTower; set => baseTower = value; }
     Single towerRange;
+    float lastCalculateTime;
+    [SerializeField] float delayCalculateTime = 0.2f;
     GameObject attackTarget;
     Vector3 walkPosition;
-    LayerMask DemonAndSoldierLayer;
+    LayerMask DemonLayer;
     LayerMask PathLayer;
 
 
-    private void Start() {
+    void Start() {
         if (baseTower != null) {
-            towerRange = baseTower.GetComponent<CampfireScript>().range;
+            towerRange = baseTower.GetComponent<CampfireScript>().TowerRange;
         }
-        DemonAndSoldierLayer = LayerMask.GetMask("DemonAndSoldier");
+        DemonLayer = LayerMask.GetMask("Demon");
         PathLayer = LayerMask.GetMask("Ground");
+        lastCalculateTime = Time.time;
     }
 
-    private void FixedUpdate() {
+    void Update() {
+        if (Time.time < lastCalculateTime + delayCalculateTime) {
+            return;
+        }
+        lastCalculateTime = Time.time;
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
+                if (Vector3.Distance(transform.position, walkPosition) <= acceptableRadius) {
+                    state = Enum_NormalSoldierState.Idle;
+                }
                 if (baseTower != null) {
                     RaycastHit[] hits = Physics.SphereCastAll(baseTower.transform.position, towerRange, Vector3.up, towerRange, PathLayer);
                     foreach (var hit in hits) {
+                        Debug.Log(hit.collider.name);
                         if (hit.collider.CompareTag("Path")) {
-                            walkPosition = hit.transform.position;
-                            Move(walkPosition);
-                            state = Enum_NormalSoldierState.Idle;
+                            Debug.Log("Found Path");
+                            walkPosition = hit.transform.position + Vector3.up;
                             break;
                         }
                     }
@@ -55,18 +65,45 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 break;
             case Enum_NormalSoldierState.Idle:
                 CheckForTarget();
-                return;
+                break;
             case Enum_NormalSoldierState.Engage:
-                Move(attackTarget.transform.position);
                 if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {
                     state = Enum_NormalSoldierState.Attack;
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
+                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || ReferenceEquals(attackTarget, null)) {
+                    attackTarget = null;
+                    state = Enum_NormalSoldierState.Idle;
+                }
+                break;
+            case Enum_NormalSoldierState.Die:
+                break;
+            default:
+                break;
+        }
+    }
+
+    void FixedUpdate() {
+        switch (state) {
+            case Enum_NormalSoldierState.Initiate:
+                if (walkPosition != new Vector3()) {
+                    Move(walkPosition);
+                    return;
+                }
+                break;
+            case Enum_NormalSoldierState.Idle:
+                return;
+            case Enum_NormalSoldierState.Engage:
+                Move(attackTarget.transform.position);
+                break;
+            case Enum_NormalSoldierState.Attack:
                 //Play Attack Animation
                 //Deal Damage
-                Attack(attackTarget);
-                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0) {
+                try {
+                    Attack(attackTarget);
+                }
+                catch {
                     attackTarget = null;
                     state = Enum_NormalSoldierState.Idle;
                 }
@@ -83,7 +120,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     void CheckForTarget() {
-        Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, DemonAndSoldierLayer);
+        Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, DemonLayer);
         foreach (var item in collides) {
             if (item.CompareTag("Demon") || (item.CompareTag("Assassin") && canSeeAssassin)) {
                 attackTarget = item.gameObject;
@@ -98,6 +135,8 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, sightRange);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(walkPosition, acceptableRadius);
     }
 
     public void Attack(GameObject target) {

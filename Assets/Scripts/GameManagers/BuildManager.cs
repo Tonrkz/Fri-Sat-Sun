@@ -9,9 +9,12 @@ public class BuildManager : MonoBehaviour {
     [Header("Attributes")]
     [SerializeField] GameObject campfirePrefab;
 
+    [Header("Debug")]
+    internal List<GameObject> builtTowerList = new List<GameObject>();
+
     RaycastHit hit;
 
-    void Start() {
+    void Awake() {
         instance = this;
     }
 
@@ -34,6 +37,7 @@ public class BuildManager : MonoBehaviour {
         hit.collider.GetComponent<GroundScript>().hasTower = true;
         hit.collider.GetComponent<GroundScript>().tower = builtTower;
         Debug.Log($"{buildTowerName}: Built");
+        builtTowerList.Add(builtTower);
         return true;
     }
 }
