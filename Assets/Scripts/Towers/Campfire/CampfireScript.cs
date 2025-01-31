@@ -24,9 +24,10 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] internal Single buildTime = 5f;
 
     [Header("Debug")]
-    internal Enum_CampfireState state = Enum_CampfireState.Building;
+    [SerializeField] internal Enum_CampfireState state = Enum_CampfireState.Building;
+    bool hasBuilt = false;
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Campfire; }
-    string assignedWord = null;
+    [SerializeField] string assignedWord = null;
     public string AssignedWord { get => assignedWord; set => assignedWord = value; }
 
 
@@ -36,9 +37,29 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     void Update() {
+        if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode && state == Enum_CampfireState.Idle) {
+            state = Enum_CampfireState.Active;
+            if (assignedWord == null || assignedWord == "") {
+                WordManager.instance.AssignWord(this);
+                StartCoroutine(DisplayTowerNameOrAssignedWord());
+            }
+            else if (towerNameText.text != assignedWord) {
+                StartCoroutine(DisplayTowerNameOrAssignedWord());
+            }
+        }
+        else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode && state == Enum_CampfireState.Active) {
+            state = Enum_CampfireState.Idle;
+            if (towerNameText.text != TowerName) {
+                StartCoroutine(DisplayTowerNameOrAssignedWord());
+            }
+        }
+
         switch (state) {
             case Enum_CampfireState.Building:
-                StartCoroutine(Build());
+                if (!hasBuilt) {
+                    hasBuilt = true;
+                    StartCoroutine(Build());
+                }
                 break;
             case Enum_CampfireState.Idle:
                 break;
@@ -55,22 +76,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
             default:
                 return;
         }
-        if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode && state == Enum_CampfireState.Idle) {
-            state = Enum_CampfireState.Active;
-            if (assignedWord == null) {
-                WordManager.instance.AssignWord(this);
-                StartCoroutine(DisplayTowerNameOrAssignedWord());
-            }
-            else if (towerNameText.text != assignedWord) {
-                StartCoroutine(DisplayTowerNameOrAssignedWord());
-            }
-        }
-        else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode && state == Enum_CampfireState.Active) {
-            state = Enum_CampfireState.Idle;
-            if (towerNameText.text != TowerName) {
-                StartCoroutine(DisplayTowerNameOrAssignedWord());
-            }
-        }
+        
         if (hitPoint <= 0) {
             state = Enum_CampfireState.Dead;
         }
@@ -122,5 +128,13 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         GameObject aSoldier = Instantiate(normalSoldierPrefab, transform.position, Quaternion.identity);
         aSoldier.GetComponent<ISoldiers>().BaseTower = gameObject;
         Debug.Log($"{TowerName} activated");
+        AssignedWord = null;
+        StartCoroutine(GetNewWord());
+    }
+
+    IEnumerator GetNewWord() {
+        yield return new WaitForSeconds(FireRate);
+        WordManager.instance.AssignWord(this);
+        StartCoroutine(DisplayTowerNameOrAssignedWord());
     }
 }
