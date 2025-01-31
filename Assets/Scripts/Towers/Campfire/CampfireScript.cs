@@ -64,11 +64,8 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
             case Enum_CampfireState.Idle:
                 break;
             case Enum_CampfireState.Active:
-                if (Input.GetKeyDown(KeyCode.Mouse0)) {
-                    Activate();
-                }
                 break;
-            case Enum_CampfireState.Upgrading:
+            case Enum_CampfireState.Differentiating:
                 break;
             case Enum_CampfireState.Dead:
                 StartCoroutine(Dead());
@@ -93,7 +90,8 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         state = Enum_CampfireState.Idle;
     }
 
-    public GameObject Differentiate() {
+    public GameObject Differentiate(Enum_TowerTypes towerType) {
+        
         return null;
     }
 
