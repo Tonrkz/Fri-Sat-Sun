@@ -126,6 +126,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  delayCalculateTime: 0.2
 --- !u!1 &4702585756037912314
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +203,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b5d5709dcd8df3b4288a77bfd7c0753b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7afa5ac8f8008e54681563c6c644b9bf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
