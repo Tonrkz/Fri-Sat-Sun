@@ -288,7 +288,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6cfb23fe29695aa46b67bde17d6a8479, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e4f2a6a2548ca4b49b919a3a422e780f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -426,9 +426,9 @@ GameObject:
   - component: {fileID: 8173159802208214877}
   - component: {fileID: 6463909333190640776}
   - component: {fileID: 540427046439860620}
-  - component: {fileID: 7537740158042319459}
+  - component: {fileID: 695562685379062782}
   m_Layer: 8
-  m_Name: Campfire
+  m_Name: Attacker
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -499,7 +499,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
---- !u!114 &7537740158042319459
+--- !u!114 &695562685379062782
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -508,23 +508,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 7726950801907583317}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b64f56197db4ed4da649e3709ab4320, type: 3}
+  m_Script: {fileID: 11500000, guid: b0cd990ebf9529d4f9f5b6cb89d87e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSoldierPrefab: {fileID: 2225985748608282072, guid: 9e7ebc637e9b00b48b9a3d16b6fc7608, type: 3}
+  attackerSoldierPrefab: {fileID: 2225985748608282072, guid: b5774b0d464940143acbfec0be978239, type: 3}
   rb: {fileID: 540427046439860620}
   towerNameText: {fileID: 3352077761069779274}
-  towerName: Campfire
+  towerName: Attacker
   hitPoint: 10
   attackUnit: 1
   towerRange: 3
   fireRate: 1
   buildTime: 5
-  soldierHitPoint: 100
+  soldierHitPoint: 150
   soldierWalkSpeed: 2
   soldierAcceptableRadius: 0.33
-  soldierDamage: 10
-  soldierSightRange: 1.5
+  soldierDamage: 15
+  soldierSightRange: 2
   soldierAttackSpeed: 1
   soldierAttackCooldown: 1
   soldierAttackRange: 1

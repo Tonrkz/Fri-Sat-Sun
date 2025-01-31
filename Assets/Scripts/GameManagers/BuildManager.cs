@@ -9,6 +9,7 @@ public class BuildManager : MonoBehaviour {
 
     [Header("Attributes")]
     [SerializeField] internal GameObject campfirePrefab;
+    [SerializeField] internal GameObject attackerTowerPrefab;
     [SerializeField] internal GameObject rangedTowerPrefab;
 
     [Header("Debug")]

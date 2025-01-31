@@ -55,7 +55,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 685e50370accc914ebe7b7d8940ca6e8, type: 3}
+  - {fileID: 2100000, guid: 23feaeebe55678249bb3c0cda294f883, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 4737402720248959742}
   - component: {fileID: 3853142849221479168}
   m_Layer: 9
-  m_Name: Normal Soldier
+  m_Name: Attacker Soldier
   m_TagString: Soldier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,4 +196,4 @@ MonoBehaviour:
   attackCooldown: 1
   attackRange: 1
   canSeeAssassin: 0
-  delayCalculateTime: 0.25
+  delayCalculateTime: 0.2
