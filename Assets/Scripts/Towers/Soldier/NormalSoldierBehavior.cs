@@ -34,7 +34,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     void Start() {
         if (baseTower != null) {
-            towerRange = baseTower.GetComponent<CampfireScript>().TowerRange;
+            towerRange = baseTower.GetComponent<ITowers>().TowerRange;
         }
         DemonLayer = LayerMask.GetMask("Demon");
         PathLayer = LayerMask.GetMask("Ground");

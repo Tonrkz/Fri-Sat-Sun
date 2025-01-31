@@ -288,7 +288,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 93b14eb04f16b29429cd2e5a4c5f6c5a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e4f2a6a2548ca4b49b919a3a422e780f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -426,9 +426,9 @@ GameObject:
   - component: {fileID: 8173159802208214877}
   - component: {fileID: 6463909333190640776}
   - component: {fileID: 540427046439860620}
-  - component: {fileID: -1527144294245224348}
+  - component: {fileID: 695562685379062782}
   m_Layer: 8
-  m_Name: Ranged
+  m_Name: Attacker
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -449,7 +449,6 @@ Transform:
   m_Children:
   - {fileID: 1541739477384394527}
   - {fileID: 5721210104567658568}
-  - {fileID: 7131147888114118632}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6463909333190640776
@@ -500,7 +499,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
---- !u!114 &-1527144294245224348
+--- !u!114 &695562685379062782
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -509,54 +508,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 7726950801907583317}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2b048f55b7363c4bb5fe8201a564908, type: 3}
+  m_Script: {fileID: 11500000, guid: b0cd990ebf9529d4f9f5b6cb89d87e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowPrefab: {fileID: 4342468968940038269, guid: dd308c9c45a031d4d945cf11d3e1f034, type: 3}
-  arrowSpawnPoint: {fileID: 8473894353468488687}
+  attackerSoldierPrefab: {fileID: 2225985748608282072, guid: b5774b0d464940143acbfec0be978239, type: 3}
   rb: {fileID: 540427046439860620}
   towerNameText: {fileID: 3352077761069779274}
-  towerName: Ranged
+  towerName: Attacker
   hitPoint: 10
   attackUnit: 1
-  towerRange: 5
+  towerRange: 3
   fireRate: 1
-  canSeeAssassin: 0
-  arrowSpeed: 10
-  arrowDamage: 50
+  buildTime: 5
+  soldierHitPoint: 150
+  soldierWalkSpeed: 2
+  soldierAcceptableRadius: 0.33
+  soldierDamage: 15
+  soldierSightRange: 2
+  soldierAttackSpeed: 1
+  soldierAttackCooldown: 1
+  soldierAttackRange: 1
+  soldierCanSeeAssassin: 0
   state: 0
   assignedWord: 
-  DemonLayer:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!1 &8473894353468488687
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7131147888114118632}
-  m_Layer: 8
-  m_Name: Arrow Spawn Point
-  m_TagString: Untagged
-  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7131147888114118632
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8473894353468488687}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.05, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8173159802208214877}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

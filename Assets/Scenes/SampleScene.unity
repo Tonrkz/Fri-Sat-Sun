@@ -30992,6 +30992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   campfirePrefab: {fileID: 7726950801907583317, guid: a70c2e4d5098ec845b9894904a30059c, type: 3}
+  attackerTowerPrefab: {fileID: 7726950801907583317, guid: 638f558e116db044a8cc06075332f35b, type: 3}
   rangedTowerPrefab: {fileID: 7726950801907583317, guid: b41d510eec92ecd4d8c3305ef40b6b16, type: 3}
 --- !u!114 &1441553695
 MonoBehaviour:

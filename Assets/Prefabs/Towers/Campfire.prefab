@@ -520,5 +520,14 @@ MonoBehaviour:
   towerRange: 3
   fireRate: 1
   buildTime: 5
+  soldierHitPoint: 100
+  soldierWalkSpeed: 2
+  soldierAcceptableRadius: 0.33
+  soldierDamage: 10
+  soldierSightRange: 1.5
+  soldierAttackSpeed: 1
+  soldierAttackCooldown: 1
+  soldierAttackRange: 1
+  soldierCanSeeAssassin: 0
   state: 0
   assignedWord: 
