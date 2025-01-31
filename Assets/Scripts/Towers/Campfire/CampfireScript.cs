@@ -23,6 +23,17 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] internal Single buildTime = 5f;
 
+    [Header("Soldier Attributes")]
+    [SerializeField] Single soldierHitPoint = 100;
+    [SerializeField] Single soldierWalkSpeed = 1;
+    [SerializeField] Single soldierAcceptableRadius = 0.33f;
+    [SerializeField] Single soldierDamage = 10;
+    [SerializeField] Single soldierSightRange = 1.5f;
+    [SerializeField] Single soldierAttackSpeed = 1;
+    [SerializeField] Single soldierAttackCooldown = 1;
+    [SerializeField] Single soldierAttackRange = 1f;
+    [SerializeField] bool soldierCanSeeAssassin = false;
+
     [Header("Debug")]
     [SerializeField] internal Enum_CampfireState state = Enum_CampfireState.Building;
     bool hasBuilt = false;
@@ -64,11 +75,8 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
             case Enum_CampfireState.Idle:
                 break;
             case Enum_CampfireState.Active:
-                if (Input.GetKeyDown(KeyCode.Mouse0)) {
-                    Activate();
-                }
                 break;
-            case Enum_CampfireState.Upgrading:
+            case Enum_CampfireState.Differentiating:
                 break;
             case Enum_CampfireState.Dead:
                 StartCoroutine(Dead());
@@ -93,8 +101,29 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         state = Enum_CampfireState.Idle;
     }
 
-    public GameObject Differentiate() {
-        return null;
+    public IEnumerator Differentiate(Enum_TowerTypes towerType) {
+        state = Enum_CampfireState.Differentiating;
+        yield return new WaitForSeconds(buildTime);
+        GameObject newTower = null;
+        switch (towerType) {
+            case Enum_TowerTypes.Ranged:
+                newTower = Instantiate(BuildManager.instance.rangedTowerPrefab, transform.position, Quaternion.identity);
+                break;
+            default:
+                break;
+        }
+
+        newTower.GetComponent<ITowers>().TowerName = towerName;
+        if (AssignedWord != null) {
+            newTower.GetComponent<ITowers>().AssignedWord = AssignedWord;
+        }
+
+        BuildManager.instance.builtTowerList.Remove(gameObject);
+        BuildManager.instance.builtTowerList.Add(newTower);
+
+        Debug.Log($"{towerName} differentiated to {towerType}");
+
+        Destroy(gameObject);
     }
 
     IEnumerator Dead() {
@@ -126,13 +155,26 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
 
     public void Activate() {
         GameObject aSoldier = Instantiate(normalSoldierPrefab, transform.position, Quaternion.identity);
-        aSoldier.GetComponent<ISoldiers>().BaseTower = gameObject;
+        SetSoldierAttributes(aSoldier);
         Debug.Log($"{TowerName} activated");
         AssignedWord = null;
         StartCoroutine(GetNewWord());
     }
 
-    IEnumerator GetNewWord() {
+    void SetSoldierAttributes(GameObject soldier) {
+        soldier.GetComponent<ISoldiers>().BaseTower = gameObject;
+        soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint;
+        soldier.GetComponent<NormalSoldierBehavior>().walkSpeed = soldierWalkSpeed;
+        soldier.GetComponent<NormalSoldierBehavior>().acceptableRadius = soldierAcceptableRadius;
+        soldier.GetComponent<NormalSoldierBehavior>().damage = soldierDamage;
+        soldier.GetComponent<NormalSoldierBehavior>().sightRange = soldierSightRange;
+        soldier.GetComponent<NormalSoldierBehavior>().attackSpeed = soldierAttackSpeed;
+        soldier.GetComponent<NormalSoldierBehavior>().attackCooldown = soldierAttackCooldown;
+        soldier.GetComponent<NormalSoldierBehavior>().attackRange = soldierAttackRange;
+        soldier.GetComponent<NormalSoldierBehavior>().canSeeAssassin = soldierCanSeeAssassin;
+    }
+
+        IEnumerator GetNewWord() {
         yield return new WaitForSeconds(FireRate);
         WordManager.instance.AssignWord(this);
         StartCoroutine(DisplayTowerNameOrAssignedWord());

@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class InputStateManager : MonoBehaviour {
+    [Header("References")]
+    [SerializeField] TextMeshProUGUI stateText;
+
     public static InputStateManager instance;
 
     Enum_GameInputState gameInputState = Enum_GameInputState.CommandMode;
@@ -18,12 +22,14 @@ public class InputStateManager : MonoBehaviour {
                 StartCoroutine(ClearInputString());
                 gameInputState = Enum_GameInputState.CommandMode;
                 Debug.Log("Command Mode");
+                stateText.text = "Command";
                 return;
             }
             else {
                 gameInputState = Enum_GameInputState.ActivateMode;
                 Debug.Log("Activate Mode");
                 StartCoroutine(ClearInputString());
+                stateText.text = "Activation";
                 return;
             }
         }

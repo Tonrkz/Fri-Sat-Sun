@@ -1,13 +1,15 @@
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 using System.Collections.Generic;
 
 public class BuildManager : MonoBehaviour {
     public static BuildManager instance;
 
     [Header("Attributes")]
-    [SerializeField] GameObject campfirePrefab;
+    [SerializeField] internal GameObject campfirePrefab;
+    [SerializeField] internal GameObject rangedTowerPrefab;
 
     [Header("Debug")]
     internal List<GameObject> builtTowerList = new List<GameObject>();
@@ -16,6 +18,16 @@ public class BuildManager : MonoBehaviour {
 
     void Awake() {
         instance = this;
+    }
+
+    public GameObject FindTowerViaName(string towerName) {
+        towerName = towerName.ToLower();
+        foreach (var tower in builtTowerList) {
+            if (tower.GetComponent<ITowers>().TowerName == towerName) {
+                return tower;
+            }
+        }
+        return null;
     }
 
     public bool CheckIfGroundAvailable() {
