@@ -100,8 +100,30 @@ public class CommandTyperScript : MonoBehaviour {
 
     string CheckCommandForTowers(string inputCommand) {
         switch (inputCommand) {
-            case "differntiate":
+            case "differentiate":
                 Debug.Log("Differentiate command");
+                GameObject towerObject = BuildManager.instance.FindTowerViaName(splitedCommand[0]);
+                if (towerObject.GetComponent<ITowers>().TowerType == Enum_TowerTypes.Campfire) {
+                    switch (splitedCommand[2]) {
+                        case "attacker":
+                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Attacker));
+                            break;
+                        case "ranged":
+                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Ranged));
+                            break;
+                        case "barricade":
+                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Barricade));
+                            break;
+                        case "supply":
+                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Supply));
+                            break;
+                        case "mage":
+                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Mage));
+                            break;
+                        default:
+                            break;
+                    }
+                }
                 return "differentiate command";
             default:
                 return "No Exisited Command.";

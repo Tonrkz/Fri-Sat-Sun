@@ -90,9 +90,29 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         state = Enum_CampfireState.Idle;
     }
 
-    public GameObject Differentiate(Enum_TowerTypes towerType) {
-        
-        return null;
+    public IEnumerator Differentiate(Enum_TowerTypes towerType) {
+        state = Enum_CampfireState.Differentiating;
+        yield return new WaitForSeconds(buildTime);
+        GameObject newTower = null;
+        switch (towerType) {
+            case Enum_TowerTypes.Ranged:
+                newTower = Instantiate(BuildManager.instance.rangedTowerPrefab, transform.position, Quaternion.identity);
+                break;
+            default:
+                break;
+        }
+
+        newTower.GetComponent<ITowers>().TowerName = towerName;
+        if (AssignedWord != null) {
+            newTower.GetComponent<ITowers>().AssignedWord = AssignedWord;
+        }
+
+        BuildManager.instance.builtTowerList.Remove(gameObject);
+        BuildManager.instance.builtTowerList.Add(newTower);
+
+        Debug.Log($"{towerName} differentiated to {towerType}");
+
+        Destroy(gameObject);
     }
 
     IEnumerator Dead() {
