@@ -91,12 +91,16 @@ public class RangedScript : MonoBehaviour, ITowers, IActivatables {
 
     public void Activate() {
         GameObject aArrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
-        aArrow.GetComponent<ArrowScript>().Target = CheckForTarget();
-        aArrow.GetComponent<ArrowScript>().Damage = arrowDamage;
-        aArrow.GetComponent<ArrowScript>().Speed = arrowSpeed;
+        SetArrowAttributes(aArrow);
         Debug.Log($"{TowerName} activated");
         AssignedWord = null;
         StartCoroutine(GetNewWord());
+    }
+
+    void SetArrowAttributes(GameObject arrow) {
+        arrow.GetComponent<ArrowScript>().Target = CheckForTarget();
+        arrow.GetComponent<ArrowScript>().Damage = arrowDamage;
+        arrow.GetComponent<ArrowScript>().Speed = arrowSpeed;
     }
 
     GameObject CheckForTarget() {
