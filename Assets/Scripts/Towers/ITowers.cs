@@ -10,6 +10,9 @@ public interface ITowers {
     Single TowerRange { get; set; }
     Single FireRate { get; set; }
     string AssignedWord { get; set; }
+    GameObject OccupiedGround { get; set; }
+    void UpdradeTower();
+    void DestroyTower();
     void TakeDamage(Single damage);
     void SetTowerName(string towerNameInput);
     IEnumerator DisplayTowerNameOrAssignedWord();

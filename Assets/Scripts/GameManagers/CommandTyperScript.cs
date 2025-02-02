@@ -81,6 +81,7 @@ public class CommandTyperScript : MonoBehaviour {
                 break;
             case "destroy":
                 Debug.Log("Destroy command");
+                BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>().DestroyTower();
                 break;
             case "upgrade":
                 Debug.Log("Upgrade command");
