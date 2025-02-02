@@ -3,7 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class RangedScript : MonoBehaviour, ITowers, IActivatables {
+public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] GameObject arrowSpawnPoint;
@@ -13,6 +13,8 @@ public class RangedScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Ranged";
     public string TowerName { get => towerName; set => towerName = value; }
+    [SerializeField] int buildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;

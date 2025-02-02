@@ -13,6 +13,8 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Attacker";
     public string TowerName { get => towerName; set => towerName = value; }
+    [SerializeField] int buildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -35,7 +37,6 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
 
     [Header("Debug")]
     [SerializeField] internal Enum_AttackerTowerState state = Enum_AttackerTowerState.Idle;
-    bool hasBuilt = false;
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Campfire; }
     [SerializeField] string assignedWord = null;
     public string AssignedWord { get => assignedWord; set => assignedWord = value; }
