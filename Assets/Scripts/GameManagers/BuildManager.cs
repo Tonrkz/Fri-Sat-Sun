@@ -18,7 +18,12 @@ public class BuildManager : MonoBehaviour {
     RaycastHit hit;
 
     void Awake() {
-        instance = this;
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
 
     public GameObject FindTowerViaName(string towerName) {

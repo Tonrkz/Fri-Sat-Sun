@@ -7,7 +7,12 @@ public class ActivateTyperScript : MonoBehaviour {
     GameObject selectedTower;
 
     void Awake() {
-        instance = this;
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
 
     private void Update() {

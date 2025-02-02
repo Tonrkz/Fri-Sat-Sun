@@ -40,8 +40,16 @@ public class TowerNameManager : MonoBehaviour {
     public List<string> towerNames = new List<string>();
     public List<string> usedTowerNames = new List<string>();
 
+    void Awake() {
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
+    }
+
     void Start() {
-        instance = this;
         towerNames = allTowerNames;
     }
 
