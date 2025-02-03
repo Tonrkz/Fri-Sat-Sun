@@ -5,6 +5,7 @@ using UnityEngine;
 public interface ITowers {
     string TowerName { get; set; }
     Enum_TowerTypes TowerType { get; }
+    Byte Level { get; set; }
     int BuildCost { get; set; }
     int UpgradeCost { get; set; }
     Single HitPoint { get; set; }
