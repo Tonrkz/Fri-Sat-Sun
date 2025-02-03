@@ -101,7 +101,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   state: 0
   hitPoint: 100
-  walkSpeed: 1
+  walkSpeed: 1.5
   acceptableRadius: 0.33
   walkPath: []
   delayCalculateTime: 0.2

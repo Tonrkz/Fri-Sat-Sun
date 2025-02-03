@@ -101,7 +101,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   state: 1
   hitPoint: 100
-  walkSpeed: 1
+  walkSpeed: 1.5
   acceptableRadius: 0.33
   damage: 10
   sightRange: 1.5
