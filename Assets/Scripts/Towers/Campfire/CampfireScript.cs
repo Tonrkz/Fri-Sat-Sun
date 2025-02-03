@@ -14,6 +14,8 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Campfire";
     public string TowerName { get => towerName; set => towerName = value; }
+    [SerializeField] int buildCost = 50;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -40,11 +42,19 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Campfire; }
     [SerializeField] string assignedWord = null;
     public string AssignedWord { get => assignedWord; set => assignedWord = value; }
+    [SerializeField] GameObject occupiedGround;
+    public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
 
 
     void Start() {
         GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
         GetComponentInChildren<UILookAtHandler>().LookAt();
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
+            OccupiedGround = hit.collider.gameObject;
+            OccupiedGround.GetComponent<GroundScript>().hasTower = true;
+            OccupiedGround.GetComponent<GroundScript>().tower = gameObject;
+        }
     }
 
     void Update() {
@@ -84,7 +94,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
             default:
                 return;
         }
-        
+
         if (hitPoint <= 0) {
             state = Enum_CampfireState.Dead;
         }
@@ -117,6 +127,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         }
 
         newTower.GetComponent<ITowers>().TowerName = towerName;
+        newTower.GetComponent<ITowers>().BuildCost = buildCost;
         if (AssignedWord != null) {
             newTower.GetComponent<ITowers>().AssignedWord = AssignedWord;
         }
@@ -127,6 +138,31 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         Debug.Log($"{towerName} differentiated to {towerType}");
 
         Destroy(gameObject);
+    }
+
+    public void TakeDamage(Single damage) {
+        hitPoint -= damage;
+    }
+
+    public void UpdradeTower() {
+        throw new System.NotImplementedException();
+    }
+
+    public void DestroyTower() {
+        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
+        OccupiedGround.GetComponent<GroundScript>().tower = null;
+        OccupiedGround.GetComponent<GroundScript>().hasTower = false;
+        TowerNameManager.instance.usedTowerNames.Remove(TowerName);
+        BuildManager.instance.builtTowerList.Remove(gameObject);
+        state = Enum_CampfireState.Dead;
+    }
+
+    public void Activate() {
+        GameObject aSoldier = Instantiate(normalSoldierPrefab, transform.position, Quaternion.identity);
+        SetSoldierAttributes(aSoldier);
+        Debug.Log($"{TowerName} activated");
+        AssignedWord = null;
+        StartCoroutine(GetNewWord());
     }
 
     IEnumerator Dead() {
@@ -147,23 +183,6 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         Debug.Log($"{towerNameText.text} displayed");
     }
 
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, towerRange);
-    }
-
-    public void TakeDamage(Single damage) {
-        hitPoint -= damage;
-    }
-
-    public void Activate() {
-        GameObject aSoldier = Instantiate(normalSoldierPrefab, transform.position, Quaternion.identity);
-        SetSoldierAttributes(aSoldier);
-        Debug.Log($"{TowerName} activated");
-        AssignedWord = null;
-        StartCoroutine(GetNewWord());
-    }
-
     void SetSoldierAttributes(GameObject soldier) {
         soldier.GetComponent<ISoldiers>().BaseTower = gameObject;
         soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint;
@@ -177,9 +196,14 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         soldier.GetComponent<NormalSoldierBehavior>().canSeeAssassin = soldierCanSeeAssassin;
     }
 
-        IEnumerator GetNewWord() {
+    IEnumerator GetNewWord() {
         yield return new WaitForSeconds(FireRate);
         WordManager.instance.AssignWord(this);
         StartCoroutine(DisplayTowerNameOrAssignedWord());
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, towerRange);
     }
 }

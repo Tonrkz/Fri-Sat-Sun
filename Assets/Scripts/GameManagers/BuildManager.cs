@@ -18,7 +18,12 @@ public class BuildManager : MonoBehaviour {
     RaycastHit hit;
 
     void Awake() {
-        instance = this;
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
 
     public GameObject FindTowerViaName(string towerName) {
@@ -35,7 +40,7 @@ public class BuildManager : MonoBehaviour {
         Debug.Log("CheckIfGroundAvailable");
         Physics.Raycast(PlayerMovement.instance.GetCurrentPosition(), Vector3.down, out hit, 2f);
         Debug.Log(hit.collider.tag);
-        if (hit.collider.CompareTag("Ground") || hit.collider.CompareTag("Path")) {
+        if (hit.collider.CompareTag("Ground")) {
             if (!hit.collider.gameObject.GetComponent<GroundScript>().hasTower) {
                 return true;
             }
@@ -47,8 +52,6 @@ public class BuildManager : MonoBehaviour {
         string buildTowerName = TowerNameManager.instance.GetRandomTowerName();
         GameObject builtTower = Instantiate(campfirePrefab, PlayerMovement.instance.GetCurrentPosition() + new Vector3(0, 0.35f, 0), Quaternion.identity);
         builtTower.GetComponent<CampfireScript>().SetTowerName(buildTowerName);
-        hit.collider.GetComponent<GroundScript>().hasTower = true;
-        hit.collider.GetComponent<GroundScript>().tower = builtTower;
         Debug.Log($"{buildTowerName}: Built");
         builtTowerList.Add(builtTower);
         return true;

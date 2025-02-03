@@ -16,7 +16,12 @@ public class CommandTyperScript : MonoBehaviour {
     List<string> splitedCommand = new List<string>();
 
     void Awake() {
-        instance = this;
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
 
     void Update() {
@@ -76,9 +81,7 @@ public class CommandTyperScript : MonoBehaviour {
                 break;
             case "destroy":
                 Debug.Log("Destroy command");
-                break;
-            case "guard":
-                Debug.Log("Guard command");
+                BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>().DestroyTower();
                 break;
             case "upgrade":
                 Debug.Log("Upgrade command");

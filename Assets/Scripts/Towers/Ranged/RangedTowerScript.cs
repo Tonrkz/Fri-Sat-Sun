@@ -3,7 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class RangedScript : MonoBehaviour, ITowers, IActivatables {
+public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] GameObject arrowSpawnPoint;
@@ -13,6 +13,8 @@ public class RangedScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Ranged";
     public string TowerName { get => towerName; set => towerName = value; }
+    [SerializeField] int buildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -33,6 +35,8 @@ public class RangedScript : MonoBehaviour, ITowers, IActivatables {
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Ranged; }
     [SerializeField] string assignedWord = null;
     public string AssignedWord { get => assignedWord; set => assignedWord = value; }
+    [SerializeField] GameObject occupiedGround;
+    public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
     [SerializeField] LayerMask DemonLayer;
 
 
@@ -40,6 +44,12 @@ public class RangedScript : MonoBehaviour, ITowers, IActivatables {
         GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
         GetComponentInChildren<UILookAtHandler>().LookAt();
         StartCoroutine(DisplayTowerNameOrAssignedWord());
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
+            OccupiedGround = hit.collider.gameObject;
+            OccupiedGround.GetComponent<GroundScript>().hasTower = true;
+            OccupiedGround.GetComponent<GroundScript>().tower = gameObject;
+        }
         DemonLayer = LayerMask.GetMask("Demon");
     }
 
@@ -83,10 +93,21 @@ public class RangedScript : MonoBehaviour, ITowers, IActivatables {
         towerName[0].ToString().ToUpper();
         StartCoroutine(DisplayTowerNameOrAssignedWord());
     }
+    public void TakeDamage(Single damage) {
+        hitPoint -= damage;
+    }
 
-    IEnumerator Dead() {
-        yield return new WaitForEndOfFrame();
-        Destroy(gameObject);
+    public void UpdradeTower() {
+        throw new NotImplementedException();
+    }
+
+    public void DestroyTower() {
+        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
+        OccupiedGround.GetComponent<GroundScript>().hasTower = false;
+        OccupiedGround.GetComponent<GroundScript>().tower = null;
+        TowerNameManager.instance.usedTowerNames.Remove(TowerName);
+        BuildManager.instance.builtTowerList.Remove(gameObject);
+        state = Enum_RangedTowerState.Dead;
     }
 
     public void Activate() {
@@ -95,6 +116,11 @@ public class RangedScript : MonoBehaviour, ITowers, IActivatables {
         Debug.Log($"{TowerName} activated");
         AssignedWord = null;
         StartCoroutine(GetNewWord());
+    }
+
+    IEnumerator Dead() {
+        yield return new WaitForEndOfFrame();
+        Destroy(gameObject);
     }
 
     void SetArrowAttributes(GameObject arrow) {
@@ -126,18 +152,16 @@ public class RangedScript : MonoBehaviour, ITowers, IActivatables {
         Debug.Log($"{towerNameText.text} displayed");
     }
 
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, towerRange);
-    }
 
-    public void TakeDamage(Single damage) {
-        hitPoint -= damage;
-    }
 
     IEnumerator GetNewWord() {
         yield return new WaitForSeconds(FireRate);
         WordManager.instance.AssignWord(this);
         StartCoroutine(DisplayTowerNameOrAssignedWord());
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, towerRange);
     }
 }

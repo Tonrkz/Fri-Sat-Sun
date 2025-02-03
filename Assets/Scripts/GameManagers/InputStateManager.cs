@@ -13,7 +13,12 @@ public class InputStateManager : MonoBehaviour {
     public Enum_GameInputState GameInputState { get => gameInputState; set => gameInputState = value; }
 
     void Awake() {
-        instance = this;
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
 
     void Update() {

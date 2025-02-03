@@ -13,6 +13,8 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Attacker";
     public string TowerName { get => towerName; set => towerName = value; }
+    [SerializeField] int buildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -35,16 +37,23 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
 
     [Header("Debug")]
     [SerializeField] internal Enum_AttackerTowerState state = Enum_AttackerTowerState.Idle;
-    bool hasBuilt = false;
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Campfire; }
     [SerializeField] string assignedWord = null;
     public string AssignedWord { get => assignedWord; set => assignedWord = value; }
+    [SerializeField] GameObject occupiedGround;
+    public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
 
 
     void Start() {
         GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
         GetComponentInChildren<UILookAtHandler>().LookAt();
         StartCoroutine(DisplayTowerNameOrAssignedWord());
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
+            OccupiedGround = hit.collider.gameObject;
+            OccupiedGround.GetComponent<GroundScript>().hasTower = true;
+            OccupiedGround.GetComponent<GroundScript>().tower = gameObject;
+        }
     }
 
     void Update() {
@@ -88,6 +97,30 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         StartCoroutine(DisplayTowerNameOrAssignedWord());
     }
 
+    public void TakeDamage(Single damage) {
+        hitPoint -= damage;
+    }
+
+    public void UpdradeTower() {
+        throw new System.NotImplementedException();
+    }
+
+    public void DestroyTower() {
+        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
+        OccupiedGround.GetComponent<GroundScript>().hasTower = false;
+        OccupiedGround.GetComponent<GroundScript>().tower = null;
+        TowerNameManager.instance.usedTowerNames.Remove(TowerName);
+        BuildManager.instance.builtTowerList.Remove(gameObject);
+        state = Enum_AttackerTowerState.Dead;
+    }
+
+    public void Activate() {
+        GameObject aSoldier = Instantiate(attackerSoldierPrefab, transform.position, Quaternion.identity);
+        SetSoldierAttributes(aSoldier);
+        Debug.Log($"{TowerName} activated");
+        AssignedWord = null;
+        StartCoroutine(GetNewWord());
+    }
 
     IEnumerator Dead() {
         yield return new WaitForEndOfFrame();
@@ -107,23 +140,6 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         Debug.Log($"{towerNameText.text} displayed");
     }
 
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, towerRange);
-    }
-
-    public void TakeDamage(Single damage) {
-        hitPoint -= damage;
-    }
-
-    public void Activate() {
-        GameObject aSoldier = Instantiate(attackerSoldierPrefab, transform.position, Quaternion.identity);
-        SetSoldierAttributes(aSoldier);
-        Debug.Log($"{TowerName} activated");
-        AssignedWord = null;
-        StartCoroutine(GetNewWord());
-    }
-
     void SetSoldierAttributes(GameObject soldier) {
         soldier.GetComponent<ISoldiers>().BaseTower = gameObject;
         soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint;
@@ -141,5 +157,10 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         yield return new WaitForSeconds(FireRate);
         WordManager.instance.AssignWord(this);
         StartCoroutine(DisplayTowerNameOrAssignedWord());
+    }
+
+    void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, towerRange);
     }
 }

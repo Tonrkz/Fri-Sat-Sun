@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -46,6 +47,9 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
             return;
         }
         lastCalculateTime = Time.time;
+        if (baseTower.gameObject.IsDestroyed()) {
+            Destroy(gameObject);
+        }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
                 if (Vector3.Distance(transform.position, walkPosition) <= acceptableRadius) {
@@ -62,9 +66,14 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                         }
                     }
                 }
+                CheckForTarget();
                 break;
             case Enum_NormalSoldierState.Idle:
                 CheckForTarget();
+                if (Vector3.Distance(transform.position, walkPosition) > 1.5f) {
+                    // Don't forget to fix this
+                    state = Enum_NormalSoldierState.Initiate;
+                }
                 break;
             case Enum_NormalSoldierState.Engage:
                 if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {

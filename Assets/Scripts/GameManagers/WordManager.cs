@@ -10,8 +10,16 @@ public class WordManager : MonoBehaviour {
 
     public List<string> wordBank = new List<string>();
 
-    private void Start() {
-        instance = this;
+    void Awake() {
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
+    }
+
+    void Start() {
         wordBank.AddRange(allWords);
     }
 
