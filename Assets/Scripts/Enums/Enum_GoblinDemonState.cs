@@ -1,6 +1,6 @@
 using System;
 
-public enum Enum_NormalDemonState
+public enum Enum_GoblinDemonState
 {
     Idle,
 	Walk,

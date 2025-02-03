@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.VisualScripting;
 
-public class NormalDemonBehavior : MonoBehaviour, IDemons {
+public class GoblinDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator anim;
 
     [Header("Attributes")]
-    [SerializeField] Enum_NormalDemonState state = Enum_NormalDemonState.Walk;
+    [SerializeField] Enum_GoblinDemonState state = Enum_GoblinDemonState.Walk;
     [SerializeField] float hitPoint = 100;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Single walkSpeed = 1;
@@ -42,12 +42,12 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
         }
         lastCalculateTime = Time.time;
         switch (state) {
-            case Enum_NormalDemonState.Idle:
+            case Enum_GoblinDemonState.Idle:
                 break;
-            case Enum_NormalDemonState.Walk:
+            case Enum_GoblinDemonState.Walk:
                 if (attackTarget != null) {
                     if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {
-                        state = Enum_NormalDemonState.Attack;
+                        state = Enum_GoblinDemonState.Attack;
                     }
                 }
                 if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
@@ -55,13 +55,13 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
                 }
                 CheckForTarget();
                 break;
-            case Enum_NormalDemonState.Attack:
+            case Enum_GoblinDemonState.Attack:
                 if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
                     attackTarget = null;
-                    state = Enum_NormalDemonState.Walk;
+                    state = Enum_GoblinDemonState.Walk;
                 }
                 break;
-            case Enum_NormalDemonState.Dead:
+            case Enum_GoblinDemonState.Dead:
                 break;
             default:
                 break;
@@ -70,16 +70,16 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
 
     void FixedUpdate() {
         switch (state) {
-            case Enum_NormalDemonState.Idle:
+            case Enum_GoblinDemonState.Idle:
                 return;
-            case Enum_NormalDemonState.Walk:
+            case Enum_GoblinDemonState.Walk:
                 if (attackTarget != null) {
                     Move(attackTarget.transform.position);
                     return;
                 }
                 Move(walkTarget.transform.position);
                 break;
-            case Enum_NormalDemonState.Attack:
+            case Enum_GoblinDemonState.Attack:
                 //Play Attack Animation
                 //Deal Damage
                 try {
@@ -87,17 +87,17 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
                 }
                 catch {
                     attackTarget = null;
-                    state = Enum_NormalDemonState.Walk;
+                    state = Enum_GoblinDemonState.Walk;
                 }
                 break;
-            case Enum_NormalDemonState.Dead:
+            case Enum_GoblinDemonState.Dead:
                 Dead();
                 break;
             default:
                 break;
         }
         if (HitPoint <= 0) {
-            state = Enum_NormalDemonState.Dead;
+            state = Enum_GoblinDemonState.Dead;
         }
     }
 
