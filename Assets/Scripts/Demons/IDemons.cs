@@ -7,5 +7,5 @@ public interface IDemons {
     public void Move(Vector3 position);
     public void Attack(GameObject target);
     public void TakeDamage(Single damage);
-    public void Die();
+    public void Dead();
 }

@@ -1,11 +1,7 @@
-using NUnit.Framework;
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Behavior;
 using Unity.VisualScripting;
-using UnityEngine.Rendering;
 
 public class NormalDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
@@ -34,6 +30,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     LayerMask SoldierLayer;
 
     void Start() {
+        walkPath = DemonsNavigationManager.instance.NormalWalkPath;
         currentPathIndex = 0;
         walkTarget = walkPath[currentPathIndex];
         SoldierLayer = LayerMask.GetMask("Soldier");
@@ -59,12 +56,12 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
                 CheckForTarget();
                 break;
             case Enum_NormalDemonState.Attack:
-                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0) {
+                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
                     attackTarget = null;
                     state = Enum_NormalDemonState.Walk;
                 }
                 break;
-            case Enum_NormalDemonState.Die:
+            case Enum_NormalDemonState.Dead:
                 break;
             default:
                 break;
@@ -86,21 +83,21 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
                 //Play Attack Animation
                 //Deal Damage
                 try {
-                Attack(attackTarget);
+                    Attack(attackTarget);
                 }
                 catch {
                     attackTarget = null;
                     state = Enum_NormalDemonState.Walk;
                 }
                 break;
-            case Enum_NormalDemonState.Die:
-                Die();
+            case Enum_NormalDemonState.Dead:
+                Dead();
                 break;
             default:
                 break;
         }
         if (HitPoint <= 0) {
-            state = Enum_NormalDemonState.Die;
+            state = Enum_NormalDemonState.Dead;
         }
     }
 
@@ -108,7 +105,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
         target.gameObject.GetComponent<ISoldiers>().TakeDamage(damage * Time.fixedDeltaTime * 5); // Don't forget to fix this
     }
 
-    public void Die() {
+    public void Dead() {
         Destroy(gameObject);
     }
 
@@ -130,23 +127,11 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
         }
     }
 
-        public GameObject GetNextWalkTarget() {
+    public GameObject GetNextWalkTarget() {
         currentPathIndex++;
         if (currentPathIndex >= walkPath.Count) {
             currentPathIndex = 0;
         }
         return walkPath[currentPathIndex];
-    }
-
-
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-        Gizmos.color = Color.green;
-        foreach (var item in walkPath) {
-            Gizmos.DrawWireSphere(item.transform.position, acceptableRadius);
-        }
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, sightRange);
     }
 }

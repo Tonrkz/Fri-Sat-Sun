@@ -1,7 +1,6 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [Header("References")]
@@ -81,7 +80,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
-                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || ReferenceEquals(attackTarget, null)) {
+                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
                     attackTarget = null;
                     state = Enum_NormalSoldierState.Idle;
                 }
