@@ -13,8 +13,8 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Ranged";
     public string TowerName { get => towerName; set => towerName = value; }
-    [SerializeField] int buildCost;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] Byte level = 1;
+    public Byte Level { get => level; set => level = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -23,6 +23,18 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Single fireRate = 1f;
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] internal bool canSeeAssassin = false;
+
+    [Header("Money Attributes")]
+    int buildCost = MoneyManager.rangedTowerBuildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] int upgradeCost = MoneyManager.rangedTowerBuildCost;
+    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+    [Header("Upgrade Attributes")]
+    [SerializeField] Single upgradeTowerRange = 0.2f;
+    [SerializeField] Single upgradeFireRate = 0.1f;
+    [SerializeField] Single upgradeArrowSpeed = 0.2f;
+    [SerializeField] Single upgradeArrowDamage = 5f;
 
     [Header("Arrow Attributes")]
     [SerializeField] Single arrowSpeed = 10f;
@@ -38,7 +50,6 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
     [SerializeField] LayerMask DemonLayer;
-
 
     void Start() {
         GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
@@ -93,12 +104,27 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         towerName[0].ToString().ToUpper();
         StartCoroutine(DisplayTowerNameOrAssignedWord());
     }
+
     public void TakeDamage(Single damage) {
         hitPoint -= damage;
     }
 
     public void UpdradeTower() {
-        throw new NotImplementedException();
+        // Upgrade Every Level
+        TowerRange += upgradeTowerRange;
+        if (FireRate > upgradeFireRate) {
+            FireRate -= upgradeFireRate;
+        }
+        ArrowSpeed += upgradeArrowSpeed;
+        ArrowDamage += upgradeArrowDamage;
+
+        // Upgrade Every 2 Levels
+        if (Level % 2 == 0 && attackUnit < 5) {
+            attackUnit += 1;
+        }
+        UpgradeCost = (int)(MoneyManager.rangedTowerBuildCost * Mathf.Pow(level, MoneyManager.upgradePriceExponent));
+        level++;
+        Debug.Log($"{TowerName} upgraded");
     }
 
     public void DestroyTower() {
@@ -111,8 +137,10 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     public void Activate() {
-        GameObject aArrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
-        SetArrowAttributes(aArrow);
+        for (int i = 0 ; i < attackUnit ; i++) {
+            GameObject aArrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
+            SetArrowAttributes(aArrow);
+        }
         Debug.Log($"{TowerName} activated");
         AssignedWord = null;
         StartCoroutine(GetNewWord());
@@ -151,8 +179,6 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         }
         Debug.Log($"{towerNameText.text} displayed");
     }
-
-
 
     IEnumerator GetNewWord() {
         yield return new WaitForSeconds(FireRate);

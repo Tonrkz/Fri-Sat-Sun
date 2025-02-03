@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
-using TMPro;
+using System.Collections.Generic;
 using Unity;
 using UnityEngine;
+using TMPro;
 
 public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
@@ -13,8 +14,8 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Attacker";
     public string TowerName { get => towerName; set => towerName = value; }
-    [SerializeField] int buildCost;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] Byte level = 1;
+    public Byte Level { get => level; set => level = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -24,7 +25,23 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] internal Single buildTime = 5f;
 
+    [Header("Money Attributes")]
+    int buildCost = MoneyManager.attackerTowerBuildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] int upgradeCost = MoneyManager.attackerTowerBuildCost;
+    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+    [Header("Upgrade Attributes")]
+    [SerializeField] Single upgradeFireRate = 0.1f;
+    [SerializeField] Single upgradeSoldierHitPoint = 10;
+    [SerializeField] Single upgradeSoldierWalkSpeed = 0.2f;
+    [SerializeField] Single upgradeSoldierDamage = 5;
+    [SerializeField] Single upgradeSoldierAttackSpeed = 0.1f;
+    [SerializeField] Single upgradeSoldierAttackCooldown = 0.1f;
+
+
     [Header("Soldier Attributes")]
+    [SerializeField] List<GameObject> soldierList = new List<GameObject>();
     [SerializeField] Single soldierHitPoint = 150;
     [SerializeField] Single soldierWalkSpeed = 2;
     [SerializeField] Single soldierAcceptableRadius = 0.33f;
@@ -102,7 +119,29 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     public void UpdradeTower() {
-        throw new System.NotImplementedException();
+        // Upgrade Every Level
+        if (FireRate > upgradeFireRate) {
+            FireRate -= upgradeFireRate;
+        }
+        if (soldierAttackCooldown > upgradeSoldierAttackCooldown) {
+            soldierAttackCooldown += upgradeSoldierAttackCooldown;
+        }
+        soldierHitPoint += upgradeSoldierHitPoint;
+        soldierWalkSpeed += upgradeSoldierWalkSpeed;
+        soldierDamage += upgradeSoldierDamage;
+
+        // Upgrade Every 2 Levels
+        if (Level % 2 == 0) {
+            soldierAttackSpeed += upgradeSoldierAttackSpeed;
+        }
+
+        // Upgrade Every 4 Levels
+        if (level % 4 == 0 && attackUnit < 3) {
+            attackUnit++;
+        }
+        Level++;
+        upgradeCost = (int)(MoneyManager.rangedTowerBuildCost * Mathf.Pow(level, MoneyManager.upgradePriceExponent));
+        Debug.Log($"{TowerName} upgraded");
     }
 
     public void DestroyTower() {
@@ -115,8 +154,11 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     public void Activate() {
-        GameObject aSoldier = Instantiate(attackerSoldierPrefab, transform.position, Quaternion.identity);
-        SetSoldierAttributes(aSoldier);
+        for (int i = 0 ; i < attackUnit ; i++) {
+            GameObject aSoldier = Instantiate(attackerSoldierPrefab, transform.position, Quaternion.identity);
+            soldierList.Add(aSoldier);
+            SetSoldierAttributes(aSoldier);
+        }
         Debug.Log($"{TowerName} activated");
         AssignedWord = null;
         StartCoroutine(GetNewWord());

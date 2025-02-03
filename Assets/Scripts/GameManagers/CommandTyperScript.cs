@@ -53,7 +53,7 @@ public class CommandTyperScript : MonoBehaviour {
         }
         commandText.text = inputString;
     }
-    
+
     IEnumerator AddChar(char c) {
         yield return new WaitForEndOfFrame();
         inputString += c;
@@ -69,35 +69,65 @@ public class CommandTyperScript : MonoBehaviour {
     }
 
     void CheckCommand() {
-        switch (splitedCommand[0]) {
-            case "build":
-                Debug.Log("Build command");
-                if (BuildManager.instance.CheckIfGroundAvailable()) {
-                    BuildManager.instance.BuildTower();
-                }
-                else {
-                    Debug.Log("Ground is occupied.");
-                }
-                break;
-            case "destroy":
-                Debug.Log("Destroy command");
-                BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>().DestroyTower();
-                break;
-            case "upgrade":
-                Debug.Log("Upgrade command");
-                break;
-            case "tax":
-                Debug.Log("Tax command");
-                break;
-            default:
-                foreach (string n in TowerNameManager.instance.usedTowerNames) {
-                    if (TowerNameManager.instance.CheckIfNameUsed(splitedCommand[0])) {
-                        Debug.Log($"{splitedCommand[0]} {CheckCommandForTowers(splitedCommand[1])}");
+        ITowers tower;
+        if (splitedCommand.Count < 1) {
+            return;
+        }
+        else if (splitedCommand.Count == 1) {
+            switch (splitedCommand[0]) {
+                case "build":
+                    Debug.Log("Build command");
+                    if (BuildManager.instance.CheckIfGroundAvailable() && MoneyManager.instance.money >= 50f) {
+                        BuildManager.instance.BuildTower();
+                    }
+                    else {
+                        Debug.Log("Ground is occupied.");
+                    }
+                    break;
+                case "tax":
+                    Debug.Log("Tax command");
+                    break;
+                default:
+                    Debug.Log("No Exisited Command.");
+                    break;
+            }
+        }
+        else if (splitedCommand.Count == 2 || splitedCommand.Count == 3) {
+            switch (splitedCommand[0]) {
+                case "destroy":
+                    Debug.Log("Destroy command");
+                    try {
+                        tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>();
+                    }
+                    catch (Exception) {
                         return;
                     }
-                }
-                Debug.Log("No Exisited Command.");
-                break;
+                    tower.DestroyTower();
+                    break;
+                case "upgrade":
+                    Debug.Log("Upgrade command");
+                    try {
+                        tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>();
+                    }
+                    catch (Exception) {
+                        return;
+                    }
+                    if (tower.TowerType != Enum_TowerTypes.Campfire) {
+                        if (MoneyManager.instance.money >= tower.UpgradeCost) {
+                            tower.UpdradeTower();
+                        }
+                    }
+                    break;
+                default:
+                    foreach (string n in TowerNameManager.instance.usedTowerNames) {
+                        if (TowerNameManager.instance.CheckIfNameUsed(splitedCommand[0])) {
+                            Debug.Log($"{splitedCommand[0]} {CheckCommandForTowers(splitedCommand[1])}");
+                            return;
+                        }
+                    }
+                    Debug.Log("No Exisited Command.");
+                    break;
+            }
         }
     }
 
@@ -113,9 +143,6 @@ public class CommandTyperScript : MonoBehaviour {
                             break;
                         case "ranged":
                             StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Ranged));
-                            break;
-                        case "barricade":
-                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Barricade));
                             break;
                         case "supply":
                             StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Supply));

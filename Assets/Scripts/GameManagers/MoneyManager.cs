@@ -13,6 +13,16 @@ public class MoneyManager : MonoBehaviour {
     public Single moneyPerSecond = 4f;
     public Single percentRefund = 0.5f;
 
+    [Header("Build and Differentiate Cost Attributes")]
+    public static readonly Byte campfireBuildCost = 50;
+    public static readonly Byte attackerTowerBuildCost = 100;
+    public static readonly Byte rangedTowerBuildCost = 150;
+    public static readonly Byte supportTowerBuildCost = 200;
+    public static readonly Byte mageTowerBuildCost = 250;
+
+    [Header("Upgrade Attributes")]
+    public static readonly float upgradePriceExponent = 0.75f;
+
     [Header("Debug")]
     [SerializeField] float calcTimeDelay = 1f;
     float lastCalculatedTime = 0;

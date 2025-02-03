@@ -1,9 +1,8 @@
 using UnityEngine;
-using UnityEngine.Events;
 using TMPro;
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
@@ -14,16 +13,21 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Campfire";
     public string TowerName { get => towerName; set => towerName = value; }
-    [SerializeField] int buildCost = 50;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] Byte level = 1;
+    public Byte Level { get => level; set => level = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] internal Byte attackUnit = 1;
     [SerializeField] Single towerRange = 3f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
     [SerializeField] Single fireRate = 1f;
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] internal Single buildTime = 5f;
+
+    [Header("Money Attributes")]
+    int buildCost = MoneyManager.campfireBuildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] int upgradeCost = 0;
+    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
 
     [Header("Soldier Attributes")]
     [SerializeField] Single soldierHitPoint = 100;
@@ -44,7 +48,6 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     public string AssignedWord { get => assignedWord; set => assignedWord = value; }
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
-
 
     void Start() {
         GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
@@ -127,7 +130,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         }
 
         newTower.GetComponent<ITowers>().TowerName = towerName;
-        newTower.GetComponent<ITowers>().BuildCost = buildCost;
+        newTower.GetComponent<ITowers>().BuildCost += buildCost;
         if (AssignedWord != null) {
             newTower.GetComponent<ITowers>().AssignedWord = AssignedWord;
         }
@@ -145,7 +148,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     public void UpdradeTower() {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void DestroyTower() {
