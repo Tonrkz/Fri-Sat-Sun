@@ -9,10 +9,10 @@ public class YetiDemonBehavior : MonoBehaviour {
     [SerializeField] Animator anim;
 
     [Header("Attributes")]
-    [SerializeField] Enum_GoblinDemonState state = Enum_GoblinDemonState.Walk;
-    [SerializeField] float hitPoint = 100;
+    [SerializeField] Enum_YetiDemonState state = Enum_YetiDemonState.Walk;
+    [SerializeField] float hitPoint = 300;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] internal Single walkSpeed = 1;
+    [SerializeField] internal Single walkSpeed = 0.33f;
     [SerializeField] internal Single acceptableRadius = 0.33f;
     [SerializeField] internal Single damage = 10;
     [SerializeField] internal Single sightRange = 1.5f;
@@ -42,12 +42,12 @@ public class YetiDemonBehavior : MonoBehaviour {
         }
         lastCalculateTime = Time.time;
         switch (state) {
-            case Enum_GoblinDemonState.Idle:
+            case Enum_YetiDemonState.Idle:
                 break;
-            case Enum_GoblinDemonState.Walk:
+            case Enum_YetiDemonState.Walk:
                 if (attackTarget != null) {
                     if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {
-                        state = Enum_GoblinDemonState.Attack;
+                        state = Enum_YetiDemonState.Attack;
                     }
                 }
                 if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
@@ -55,13 +55,13 @@ public class YetiDemonBehavior : MonoBehaviour {
                 }
                 CheckForTarget();
                 break;
-            case Enum_GoblinDemonState.Attack:
+            case Enum_YetiDemonState.Attack:
                 if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
                     attackTarget = null;
-                    state = Enum_GoblinDemonState.Walk;
+                    state = Enum_YetiDemonState.Walk;
                 }
                 break;
-            case Enum_GoblinDemonState.Dead:
+            case Enum_YetiDemonState.Dead:
                 break;
             default:
                 break;
@@ -70,16 +70,16 @@ public class YetiDemonBehavior : MonoBehaviour {
 
     void FixedUpdate() {
         switch (state) {
-            case Enum_GoblinDemonState.Idle:
+            case Enum_YetiDemonState.Idle:
                 return;
-            case Enum_GoblinDemonState.Walk:
+            case Enum_YetiDemonState.Walk:
                 if (attackTarget != null) {
                     Move(attackTarget.transform.position);
                     return;
                 }
                 Move(walkTarget.transform.position);
                 break;
-            case Enum_GoblinDemonState.Attack:
+            case Enum_YetiDemonState.Attack:
                 //Play Attack Animation
                 //Deal Damage
                 try {
@@ -87,17 +87,17 @@ public class YetiDemonBehavior : MonoBehaviour {
                 }
                 catch {
                     attackTarget = null;
-                    state = Enum_GoblinDemonState.Walk;
+                    state = Enum_YetiDemonState.Walk;
                 }
                 break;
-            case Enum_GoblinDemonState.Dead:
+            case Enum_YetiDemonState.Dead:
                 Dead();
                 break;
             default:
                 break;
         }
         if (HitPoint <= 0) {
-            state = Enum_GoblinDemonState.Dead;
+            state = Enum_YetiDemonState.Dead;
         }
     }
 
