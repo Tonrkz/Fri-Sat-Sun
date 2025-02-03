@@ -12290,6 +12290,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1547208004216900948, guid: 838f63d018367214b8302cc00a39489a, type: 3}
   m_PrefabInstance: {fileID: 689935371}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &613543367
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 613543368}
+  m_Layer: 0
+  m_Name: Walk Point 16
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &613543368
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613543367}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 19, y: 0, z: -17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 957450161}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &614319190 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1547208004216900948, guid: 838f63d018367214b8302cc00a39489a, type: 3}
@@ -18483,6 +18514,7 @@ Transform:
   - {fileID: 1055481447}
   - {fileID: 2137631236}
   - {fileID: 1692855798}
+  - {fileID: 613543368}
   - {fileID: 746057533}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -26723,7 +26755,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1259265041}
   m_Layer: 0
-  m_Name: StartPoint
+  m_Name: Start Point
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -26738,7 +26770,7 @@ Transform:
   m_GameObject: {fileID: 1259265040}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -13, y: 0, z: 23}
+  m_LocalPosition: {x: -13, y: 0, z: 19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -48164,6 +48196,10 @@ PrefabInstance:
       value: Normal Demon
       objectReference: {fileID: 0}
     - target: {fileID: 5060968290504869761, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
+      propertyPath: walkPath.Array.size
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5060968290504869761, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
       propertyPath: 'walkPath.Array.data[0]'
       value: 
       objectReference: {fileID: 1259265040}
@@ -48229,6 +48265,10 @@ PrefabInstance:
       objectReference: {fileID: 1692855797}
     - target: {fileID: 5060968290504869761, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
       propertyPath: 'walkPath.Array.data[16]'
+      value: 
+      objectReference: {fileID: 613543367}
+    - target: {fileID: 5060968290504869761, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
+      propertyPath: 'walkPath.Array.data[17]'
       value: 
       objectReference: {fileID: 746057532}
     m_RemovedComponents: []
