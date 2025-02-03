@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1975301545574397154}
   - component: {fileID: 5060968290504869761}
   m_Layer: 7
-  m_Name: Normal Demon
+  m_Name: Goblin Demon
   m_TagString: Demon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

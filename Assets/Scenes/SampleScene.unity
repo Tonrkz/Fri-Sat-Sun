@@ -48264,7 +48264,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2838582429635018128, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
       propertyPath: m_Name
-      value: Normal Demon
+      value: Goblin Demon
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
