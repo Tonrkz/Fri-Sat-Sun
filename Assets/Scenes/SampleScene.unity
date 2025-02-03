@@ -21720,6 +21720,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1079180929}
+  - component: {fileID: 1079180930}
   - component: {fileID: 1079180928}
   m_Layer: 0
   m_Name: Demons Spawner
@@ -21757,6 +21758,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1079180930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079180927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56307cc2e168e474f888180b80f27ac9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goblinDemonPrefab: {fileID: 2838582429635018128, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
+  fastDemonPrefab: {fileID: 2838582429635018128, guid: 65ced1e434403df4a8386faab95e627b, type: 3}
+  tankDemonPrefab: {fileID: 2838582429635018128, guid: fb0bb3bae7a7e1043a4cf06df17add72, type: 3}
+  stealthDemonPrefab: {fileID: 0}
+  demonKingPrefab: {fileID: 0}
+  wave: 1
+  isSpawning: 0
+  spawnRate: 1
+  spawnCooldown: 1
+  goblinDemonLeftToSpawn: 1
+  fastDemonLeftToSpawn: 1
+  tankDemonLeftToSpawn: 1
+  stealthDemonLeftToSpawn: 0
+  demonKingLeftToSpawn: 0
 --- !u!4 &1082481090 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1547208004216900948, guid: 838f63d018367214b8302cc00a39489a, type: 3}
@@ -48157,63 +48184,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
---- !u!1001 &7879149407664729627
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -64
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 24
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 548798455483460247, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2838582429635018128, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-      propertyPath: m_Name
-      value: Goblin Demon
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -48231,6 +48201,5 @@ SceneRoots:
   - {fileID: 1150071817}
   - {fileID: 383365980}
   - {fileID: 267096146}
-  - {fileID: 7879149407664729627}
   - {fileID: 2204672370874323804}
   - {fileID: 957450161}
