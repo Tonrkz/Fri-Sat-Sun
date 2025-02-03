@@ -30,6 +30,7 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
     LayerMask SoldierLayer;
 
     void Start() {
+        walkPath = DemonsNavigationManager.instance.NormalWalkPath;
         currentPathIndex = 0;
         walkTarget = walkPath[currentPathIndex];
         SoldierLayer = LayerMask.GetMask("Soldier");
@@ -132,17 +133,5 @@ public class NormalDemonBehavior : MonoBehaviour, IDemons {
             currentPathIndex = 0;
         }
         return walkPath[currentPathIndex];
-    }
-
-
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-        Gizmos.color = Color.green;
-        foreach (var item in walkPath) {
-            Gizmos.DrawWireSphere(item.transform.position, acceptableRadius);
-        }
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, sightRange);
     }
 }

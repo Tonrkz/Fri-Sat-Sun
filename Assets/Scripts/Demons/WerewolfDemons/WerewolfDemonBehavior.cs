@@ -13,25 +13,42 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     [SerializeField] float hitPoint = 100;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Single walkSpeed = 1;
+    [SerializeField] internal Single acceptableRadius = 0.33f;
     [SerializeField] List<GameObject> walkPath = new List<GameObject>();
 
     [Header("Debug")]
-    GameObject attackTarget;
     GameObject walkTarget;
+    float lastCalculateTime;
+    [SerializeField] float delayCalculateTime = 0.2f;
     Byte currentPathIndex = 0;
 
     void Start() {
+        walkPath = DemonsNavigationManager.instance.ShortcutWalkPath;
         currentPathIndex = 0;
         walkTarget = walkPath[currentPathIndex];
+    }
+
+    void Update() {
+        if (Time.time < lastCalculateTime + delayCalculateTime) {
+            return;
+        }
+        lastCalculateTime = Time.time;
+        switch (state) {
+            case Enum_WerewolfDemonState.Walk:
+                if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
+                    walkTarget = GetNextWalkTarget();
+                }
+                break;
+            case Enum_WerewolfDemonState.Dead:
+                break;
+            default:
+                break;
+        }
     }
 
     void FixedUpdate() {
         switch (state) {
             case Enum_WerewolfDemonState.Walk:
-                if (attackTarget != null) {
-                    Move(attackTarget.transform.position);
-                    return;
-                }
                 Move(walkTarget.transform.position);
                 break;
             case Enum_WerewolfDemonState.Dead:
@@ -59,5 +76,13 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+    }
+
+    GameObject GetNextWalkTarget() {
+        currentPathIndex++;
+        if (currentPathIndex >= walkPath.Count) {
+            currentPathIndex = 0;
+        }
+        return walkPath[currentPathIndex];
     }
 }
