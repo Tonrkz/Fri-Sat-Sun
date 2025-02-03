@@ -152,7 +152,9 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
         OccupiedGround.GetComponent<GroundScript>().tower = null;
         OccupiedGround.GetComponent<GroundScript>().hasTower = false;
-        Destroy(gameObject);
+        TowerNameManager.instance.usedTowerNames.Remove(TowerName);
+        BuildManager.instance.builtTowerList.Remove(gameObject);
+        state = Enum_CampfireState.Dead;
     }
 
     public void Activate() {

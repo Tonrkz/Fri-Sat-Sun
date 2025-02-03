@@ -105,7 +105,9 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
         OccupiedGround.GetComponent<GroundScript>().hasTower = false;
         OccupiedGround.GetComponent<GroundScript>().tower = null;
-        Destroy(gameObject);
+        TowerNameManager.instance.usedTowerNames.Remove(TowerName);
+        BuildManager.instance.builtTowerList.Remove(gameObject);
+        state = Enum_RangedTowerState.Dead;
     }
 
     public void Activate() {
