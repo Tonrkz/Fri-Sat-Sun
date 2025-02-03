@@ -1,9 +1,8 @@
 using UnityEngine;
-using UnityEngine.Events;
 using TMPro;
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
@@ -14,8 +13,6 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Campfire";
     public string TowerName { get => towerName; set => towerName = value; }
-    [SerializeField] int buildCost = 50;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -24,6 +21,12 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Single fireRate = 1f;
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] internal Single buildTime = 5f;
+
+    [Header("Money Attributes")]
+    int buildCost = MoneyManager.campfireBuildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] int upgradeCost = 0;
+    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
 
     [Header("Soldier Attributes")]
     [SerializeField] Single soldierHitPoint = 100;
@@ -46,6 +49,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
 
 
+
     void Start() {
         GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
         GetComponentInChildren<UILookAtHandler>().LookAt();
@@ -56,6 +60,8 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
             OccupiedGround.GetComponent<GroundScript>().tower = gameObject;
         }
     }
+
+
 
     void Update() {
         if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode && state == Enum_CampfireState.Idle) {
@@ -100,16 +106,22 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         }
     }
 
+
+
     public void SetTowerName(string towerNameInput) {
         towerName = towerNameInput;
         towerName[0].ToString().ToUpper();
         StartCoroutine(DisplayTowerNameOrAssignedWord());
     }
 
+
+
     IEnumerator Build() {
         yield return new WaitForSeconds(buildTime);
         state = Enum_CampfireState.Idle;
     }
+
+
 
     public IEnumerator Differentiate(Enum_TowerTypes towerType) {
         state = Enum_CampfireState.Differentiating;
@@ -127,7 +139,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         }
 
         newTower.GetComponent<ITowers>().TowerName = towerName;
-        newTower.GetComponent<ITowers>().BuildCost = buildCost;
+        newTower.GetComponent<ITowers>().BuildCost += buildCost;
         if (AssignedWord != null) {
             newTower.GetComponent<ITowers>().AssignedWord = AssignedWord;
         }
@@ -140,13 +152,19 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         Destroy(gameObject);
     }
 
+
+
     public void TakeDamage(Single damage) {
         hitPoint -= damage;
     }
 
+
+
     public void UpdradeTower() {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
+
+
 
     public void DestroyTower() {
         MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
@@ -157,6 +175,8 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         state = Enum_CampfireState.Dead;
     }
 
+
+
     public void Activate() {
         GameObject aSoldier = Instantiate(normalSoldierPrefab, transform.position, Quaternion.identity);
         SetSoldierAttributes(aSoldier);
@@ -165,10 +185,14 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         StartCoroutine(GetNewWord());
     }
 
+
+
     IEnumerator Dead() {
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);
     }
+
+
 
     public IEnumerator DisplayTowerNameOrAssignedWord() {
         yield return new WaitForEndOfFrame();
@@ -183,6 +207,8 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         Debug.Log($"{towerNameText.text} displayed");
     }
 
+
+
     void SetSoldierAttributes(GameObject soldier) {
         soldier.GetComponent<ISoldiers>().BaseTower = gameObject;
         soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint;
@@ -196,11 +222,15 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         soldier.GetComponent<NormalSoldierBehavior>().canSeeAssassin = soldierCanSeeAssassin;
     }
 
+
+
     IEnumerator GetNewWord() {
         yield return new WaitForSeconds(FireRate);
         WordManager.instance.AssignWord(this);
         StartCoroutine(DisplayTowerNameOrAssignedWord());
     }
+
+
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.yellow;

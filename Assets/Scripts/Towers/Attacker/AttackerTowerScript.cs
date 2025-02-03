@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
-using TMPro;
+using System.Collections.Generic;
 using Unity;
 using UnityEngine;
+using TMPro;
 
 public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
@@ -13,8 +14,6 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Attacker";
     public string TowerName { get => towerName; set => towerName = value; }
-    [SerializeField] int buildCost;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -24,7 +23,15 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] internal Single buildTime = 5f;
 
+    [Header("Money Attributes")]
+    int buildCost = MoneyManager.attackerTowerBuildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] int upgradeCost;
+    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+
     [Header("Soldier Attributes")]
+    [SerializeField] List<GameObject> soldierList = new List<GameObject>();
     [SerializeField] Single soldierHitPoint = 150;
     [SerializeField] Single soldierWalkSpeed = 2;
     [SerializeField] Single soldierAcceptableRadius = 0.33f;

@@ -13,8 +13,6 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("Attributes")]
     [SerializeField] string towerName = "Ranged";
     public string TowerName { get => towerName; set => towerName = value; }
-    [SerializeField] int buildCost;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] internal Byte attackUnit = 1;
@@ -23,6 +21,15 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Single fireRate = 1f;
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] internal bool canSeeAssassin = false;
+
+    [Header("Money Attributes")]
+    int buildCost = MoneyManager.rangedTowerBuildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] int upgradeCost;
+    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+    [Header("Upgrade Attributes")]
+    [SerializeField] Single upgradeHitPoint = 10f;
 
     [Header("Arrow Attributes")]
     [SerializeField] Single arrowSpeed = 10f;

@@ -6,6 +6,7 @@ public interface ITowers {
     string TowerName { get; set; }
     Enum_TowerTypes TowerType { get; }
     int BuildCost { get; set; }
+    int UpgradeCost { get; set; }
     Single HitPoint { get; set; }
     Single TowerRange { get; set; }
     Single FireRate { get; set; }

@@ -69,10 +69,11 @@ public class CommandTyperScript : MonoBehaviour {
     }
 
     void CheckCommand() {
+        ITowers tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>();
         switch (splitedCommand[0]) {
             case "build":
                 Debug.Log("Build command");
-                if (BuildManager.instance.CheckIfGroundAvailable()) {
+                if (BuildManager.instance.CheckIfGroundAvailable() && MoneyManager.instance.money >= 50f) {
                     BuildManager.instance.BuildTower();
                 }
                 else {
@@ -81,10 +82,15 @@ public class CommandTyperScript : MonoBehaviour {
                 break;
             case "destroy":
                 Debug.Log("Destroy command");
-                BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>().DestroyTower();
+                tower.DestroyTower();
                 break;
             case "upgrade":
                 Debug.Log("Upgrade command");
+                if (tower.TowerType != Enum_TowerTypes.Campfire) {
+                    if (MoneyManager.instance.money >= tower.UpgradeCost) {
+
+                    }
+                }
                 break;
             case "tax":
                 Debug.Log("Tax command");
