@@ -192,6 +192,16 @@ public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
         activeRadius.ATKSpeedUpPercentage = ATKSpeedUpPercent * MageMultiplier;
     }
 
+    public IEnumerator SetCanSeePhantom(bool canSee) {
+        CanSeePhantom = canSee;
+        yield return null;
+    }
+
+    public IEnumerator ResetCanSeePhantom() {
+        CanSeePhantom = StartCanSeePhantom;
+        yield return null;
+    }
+
     IEnumerator Dead() {
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);

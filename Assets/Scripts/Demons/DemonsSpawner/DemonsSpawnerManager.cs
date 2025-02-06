@@ -4,9 +4,9 @@ using UnityEngine;
 public class DemonsSpawnerManager : MonoBehaviour {
     [Header("References")]
     [SerializeField] GameObject goblinDemonPrefab;
-    [SerializeField] GameObject fastDemonPrefab;
-    [SerializeField] GameObject tankDemonPrefab;
-    [SerializeField] GameObject stealthDemonPrefab;
+    [SerializeField] GameObject werewolfDemonPrefab;
+    [SerializeField] GameObject yetiDemonPrefab;
+    [SerializeField] GameObject phantomDemonPrefab;
     [SerializeField] GameObject demonKingPrefab;
 
     [Header("Attributes")]
@@ -34,13 +34,13 @@ public class DemonsSpawnerManager : MonoBehaviour {
             Instantiate(goblinDemonPrefab, transform.position, Quaternion.identity);
         }
         else if (Input.GetKeyDown(KeyCode.F2)) {
-            Instantiate(fastDemonPrefab, transform.position, Quaternion.identity);
+            Instantiate(werewolfDemonPrefab, transform.position, Quaternion.identity);
         }
         else if (Input.GetKeyDown(KeyCode.F3)) {
-            Instantiate(tankDemonPrefab, transform.position, Quaternion.identity);
+            Instantiate(yetiDemonPrefab, transform.position, Quaternion.identity);
         }
         else if (Input.GetKeyDown(KeyCode.F4)) {
-            Instantiate(stealthDemonPrefab, transform.position, Quaternion.identity);
+            Instantiate(phantomDemonPrefab, transform.position, Quaternion.identity);
         }
         else if (Input.GetKeyDown(KeyCode.F5)) {
             Instantiate(demonKingPrefab, transform.position, Quaternion.identity);

@@ -9,9 +9,6 @@ public interface ITowers {
     int BuildCost { get; set; }
     int UpgradeCost { get; set; }
     Single HitPoint { get; set; }
-    bool StartCanSeePhantom { get; set; }
-    bool CanSeePhantom { get; set; }
-    string AssignedWord { get; set; }
     GameObject OccupiedGround { get; set; }
     void UpdradeTower();
     void DestroyTower();

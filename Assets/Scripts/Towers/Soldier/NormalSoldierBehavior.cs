@@ -8,6 +8,8 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator anim;
 
+
+
     [Header("Attributes")]
     [SerializeField] Enum_NormalSoldierState state = Enum_NormalSoldierState.Initiate;
     [SerializeField] float hitPoint = 100;
@@ -19,7 +21,10 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [SerializeField] internal Single attackSpeed = 1;
     [SerializeField] internal Single attackCooldown = 1;
     [SerializeField] internal Single attackRange = 1f;
-    [SerializeField] internal bool canSeePhantom = false;
+    [SerializeField] internal bool startCanSeePhantom = false;
+    bool canSeePhantom;
+
+
 
     [Header("Debug")]
     internal GameObject baseTower;
@@ -35,6 +40,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
 
     void Start() {
+        canSeePhantom = startCanSeePhantom;
         if (baseTower != null) {
             towerRange = baseTower.GetComponent<IActivatables>().TowerRange;
         }
@@ -153,9 +159,21 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         }
 
         if (attackTarget == null && colliders.Length > 0) {
-            attackTarget = colliders[0].gameObject;
-            state = Enum_NormalSoldierState.Engage;
+            if (colliders[0].CompareTag("Demon")) {
+                attackTarget = colliders[0].gameObject;
+                state = Enum_NormalSoldierState.Engage;
+            }
         }
+        yield return null;
+    }
+
+    public IEnumerator SetCanSeePhantom(bool canSee) {
+        canSeePhantom = canSee;
+        yield return null;
+    }
+
+    public IEnumerator ResetCanSeePhantom() {
+        canSeePhantom = startCanSeePhantom;
         yield return null;
     }
 

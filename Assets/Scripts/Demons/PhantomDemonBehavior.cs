@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
+public class PhantomDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator anim;
@@ -12,7 +10,7 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
 
 
     [Header("Attributes")]
-    [SerializeField] Enum_WerewolfDemonState state = Enum_WerewolfDemonState.Walk;
+    [SerializeField] Enum_PhantomDemonState state = Enum_PhantomDemonState.Walk;
     [SerializeField] float hitPoint = 100;
     [SerializeField] public float HitPoint { get => hitPoint; set => hitPoint = value; }
 
@@ -28,12 +26,10 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
 
 
     [Header("Debug")]
-    Enum_DemonTypes demonType = Enum_DemonTypes.Werewolf;
+    Enum_DemonTypes demonType = Enum_DemonTypes.Phantom;
     public Enum_DemonTypes DemonType { get => demonType; set => demonType = value; }
     float lastCalculateTime;
     [SerializeField] float delayCalculateTime = 0.2f;
-
-
 
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -47,12 +43,12 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
         }
         lastCalculateTime = Time.time;
         switch (state) {
-            case Enum_WerewolfDemonState.Walk:
+            case Enum_PhantomDemonState.Walk:
                 if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
                     movement.walkTarget = movement.GetNextWalkTarget();
                 }
                 break;
-            case Enum_WerewolfDemonState.Dead:
+            case Enum_PhantomDemonState.Dead:
                 break;
             default:
                 break;
@@ -61,17 +57,17 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
 
     void FixedUpdate() {
         switch (state) {
-            case Enum_WerewolfDemonState.Walk:
+            case Enum_PhantomDemonState.Walk:
                 Move(movement.walkTarget.transform.position);
                 break;
-            case Enum_WerewolfDemonState.Dead:
+            case Enum_PhantomDemonState.Dead:
                 Dead();
                 break;
             default:
                 break;
         }
         if (HitPoint <= 0) {
-            state = Enum_WerewolfDemonState.Dead;
+            state = Enum_PhantomDemonState.Dead;
         }
     }
 

@@ -9,17 +9,23 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     [SerializeField] Animator anim;
     [SerializeField] DemonsMovement movement;
 
+
+
     [Header("Attributes")]
     [SerializeField] Enum_YetiDemonState state = Enum_YetiDemonState.Walk;
     [SerializeField] float hitPoint = 300;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] Single startWalkSpeed = 1.5f;
 
+
+
     [Header("Movement Attributes")]
     public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
     Single walkSpeed;
     public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
     [SerializeField] internal Single acceptableRadius = 0.75f;
+
+
 
     [Header("Attack Attributes")]
     [SerializeField] Single startDamage = 20;
@@ -33,6 +39,8 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     public Single AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
     [SerializeField] Single attackRange = 1f;
     public Single AttackRange { get => attackRange; set => attackRange = value; }
+
+
 
     [Header("Debug")]
     Enum_DemonTypes demonType = Enum_DemonTypes.Yeti;

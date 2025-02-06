@@ -21684,9 +21684,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goblinDemonPrefab: {fileID: 2838582429635018128, guid: 0d35925901423464ca93b0275e55f3e4, type: 3}
-  fastDemonPrefab: {fileID: 2838582429635018128, guid: 65ced1e434403df4a8386faab95e627b, type: 3}
-  tankDemonPrefab: {fileID: 2838582429635018128, guid: fb0bb3bae7a7e1043a4cf06df17add72, type: 3}
-  stealthDemonPrefab: {fileID: 0}
+  werewolfDemonPrefab: {fileID: 2838582429635018128, guid: 65ced1e434403df4a8386faab95e627b, type: 3}
+  yetiDemonPrefab: {fileID: 2838582429635018128, guid: fb0bb3bae7a7e1043a4cf06df17add72, type: 3}
+  phantomDemonPrefab: {fileID: 2838582429635018128, guid: 0ebb9bc87bc663b4195a4cdca4e842d8, type: 3}
   demonKingPrefab: {fileID: 0}
   wave: 1
   isSpawning: 0
@@ -31127,6 +31127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wordBank: []
+  usedWords: []
 --- !u!114 &1441553699
 MonoBehaviour:
   m_ObjectHideFlags: 0

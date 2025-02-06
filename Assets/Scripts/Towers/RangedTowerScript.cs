@@ -206,10 +206,22 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         }
 
         if (target == null && colliders.Length > 0) {
-            target = colliders[0].gameObject;
+            if (colliders[0].CompareTag("Demon")) {
+                target = colliders[0].gameObject;
+            }
         }
 
         return target;
+    }
+
+    public IEnumerator SetCanSeePhantom(bool canSee) {
+        CanSeePhantom = canSee;
+        yield return null;
+    }
+
+    public IEnumerator ResetCanSeePhantom() {
+        CanSeePhantom = StartCanSeePhantom;
+        yield return null;
     }
 
     public IEnumerator DisplayTowerNameOrAssignedWord() {

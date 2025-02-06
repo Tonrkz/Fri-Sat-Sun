@@ -7,7 +7,11 @@ public interface IActivatables {
     Single FireRate { get; set; }
     Single TowerRange { get; set; }
     string AssignedWord { get; set; }
+    bool StartCanSeePhantom { get; set; }
+    bool CanSeePhantom { get; set; }
     void Activate();
+    IEnumerator SetCanSeePhantom(bool canSee);
+    IEnumerator ResetCanSeePhantom();
     IEnumerator FireRateUp(Single fireRateUpPercent);
     IEnumerator ResetFireRate();
 }
