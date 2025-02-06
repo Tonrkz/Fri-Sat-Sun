@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 [RequireComponent(typeof(IDemons), typeof(Rigidbody))]
@@ -27,12 +27,14 @@ public class DemonsMovement : MonoBehaviour {
         walkTarget = walkPath[currentPathIndex];
     }
 
-    public void SlowWalkSpeed(Single slowDownPercent) {
+    public IEnumerator SlowWalkSpeed(Single slowDownPercent) {
         demons.WalkSpeed = demons.StartWalkSpeed * (1 - slowDownPercent);
+        yield return null;
     }
 
-    public void ResetWalkSpeed() {
+    public IEnumerator ResetWalkSpeed() {
         demons.WalkSpeed = demons.StartWalkSpeed;
+        yield return null;
     }
 
     public GameObject GetNextWalkTarget() {

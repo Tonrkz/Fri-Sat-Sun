@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public interface IAttackables {
@@ -10,6 +11,6 @@ public interface IAttackables {
     public GameObject AttackTarget { get; set; }
 
     public void Attack(GameObject target);
-    public void AttackDown(Single atkDownPercent);
-    public void ResetAttack();
+    public IEnumerator AttackDown(Single atkDownPercent);
+    public IEnumerator ResetAttack();
 }

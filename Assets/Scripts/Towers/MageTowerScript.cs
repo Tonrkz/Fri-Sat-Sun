@@ -9,24 +9,33 @@ public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] TextMeshPro towerNameText;
     [SerializeField] MageTowerActivateRadiusScript activeRadius;
 
-    [Header("Attributes")]
+
+
+    [Header("Tower Attributes")]
     [SerializeField] string towerName = "Mage";
     public string TowerName { get => towerName; set => towerName = value; }
     [SerializeField] Byte level = 1;
     public Byte Level { get => level; set => level = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
+    [SerializeField] bool startCanSeePhantom = true;
+    public bool StartCanSeePhantom { get => startCanSeePhantom; set => startCanSeePhantom = value; }
+    bool canSeePhantom;
+    public bool CanSeePhantom { get => canSeePhantom; set => canSeePhantom = value; }
+
+
+
+    [Header("Activate Attributes")]
+    [SerializeField] Single startFireRate = 1f;
+    public Single StartFireRate { get => startFireRate; set => startFireRate = value; }
+    Single fireRate;
+    public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] Single towerRange = 5f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
-    [SerializeField] Single fireRate = 1f;
-    public float FireRate { get => fireRate; set => fireRate = value; }
-    [SerializeField] internal bool canSeePhantom = true;
+    [SerializeField] string assignedWord = null;
+    public string AssignedWord { get => assignedWord; set => assignedWord = value; }
 
-    [Header("Money Attributes")]
-    int buildCost = MoneyManager.mageTowerBuildCost;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
-    [SerializeField] int upgradeCost = MoneyManager.mageTowerBuildCost;
-    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
 
     [Header("Mage Attributes")]
     [SerializeField] Single mageMultiplier = 1f;
@@ -37,21 +46,32 @@ public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Range(0, 1)][SerializeField] Single ATKSpeedUpPercent = 0.25f;
 
 
+
+    [Header("Money Attributes")]
+    int buildCost = MoneyManager.mageTowerBuildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] int upgradeCost = MoneyManager.mageTowerBuildCost;
+    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+
+
     [Header("Upgrade Attributes")]
     [SerializeField] Single upgradeTowerRange = 0.2f;
     [SerializeField] Single upgradeFireRate = 0.1f;
     [SerializeField] Single upgradeMageMultiplier = 0.1f;
     [SerializeField] Single upgradeDuration = 0.2f;
 
+
+
     [Header("Debug")]
     [SerializeField] internal Enum_MageTowerState state = Enum_MageTowerState.Idle;
     [SerializeField] internal Enum_MageTowerSelectedPower power = Enum_MageTowerSelectedPower.Slow;
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Mage; }
-    [SerializeField] string assignedWord = null;
-    public string AssignedWord { get => assignedWord; set => assignedWord = value; }
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
     [SerializeField] LayerMask DemonLayer;
+
+
 
     void Start() {
         StartCoroutine(DisplayTowerNameOrAssignedWord());
@@ -142,10 +162,23 @@ public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
 
         IEnumerator WaitForDuration() {
             yield return new WaitForSeconds(duration);
-            activeRadius.ResetCollidedDemon();
+            activeRadius.ResetCollided();
             activeRadius.gameObject.SetActive(false);
             StartCoroutine(GetNewWord());
         }
+    }
+
+    public IEnumerator FireRateUp(Single fireRateUpPercent) {
+        FireRate = StartFireRate * (1 - fireRateUpPercent);
+        if (FireRate <= 0.1f) {
+            FireRate = 0.1f;
+        }
+        yield return null;
+    }
+
+    public IEnumerator ResetFireRate() {
+        FireRate = StartFireRate;
+        yield return null;
     }
 
     void SetActiveRadiusAttributes() {

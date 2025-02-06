@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using Unity.VisualScripting;
 
@@ -9,10 +9,14 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     [SerializeField] Animator anim;
     [SerializeField] DemonsMovement movement;
 
+
+
     [Header("Demon Attributes")]
     [SerializeField] Enum_GoblinDemonState state = Enum_GoblinDemonState.Walk;
     [SerializeField] float hitPoint = 100;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
+
+
 
     [Header("Movement Attributes")]
     [SerializeField]  Single startWalkSpeed = 1.5f;
@@ -20,6 +24,8 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     Single walkSpeed;
     public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
     [SerializeField] internal Single acceptableRadius = 0.33f;
+
+
 
     [Header("Attack Attributes")]
     [SerializeField] Single startDamage = 10;
@@ -34,6 +40,8 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     [SerializeField] Single attackRange = 1f;
     public Single AttackRange { get => attackRange; set => attackRange = value; }
 
+
+
     [Header("Debug")]
     Enum_DemonTypes demonType = Enum_DemonTypes.Goblin;
     public Enum_DemonTypes DemonType { get => demonType; set => demonType = value; }
@@ -42,6 +50,8 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     float lastCalculateTime;
     [SerializeField] float delayCalculateTime = 0.2f;
     LayerMask SoldierLayer;
+
+
 
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -120,12 +130,14 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
         target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage * Time.fixedDeltaTime * 5); // Don't forget to fix this
     }
 
-    public void AttackDown(Single atkDownPercent) {
+    public IEnumerator AttackDown(Single atkDownPercent) {
         Damage = StartDamage * (1 - atkDownPercent);
+        yield return null;
     }
 
-    public void ResetAttack() {
+    public IEnumerator ResetAttack() {
         Damage = StartDamage;
+        yield return null;
     }
 
     public void Dead() {

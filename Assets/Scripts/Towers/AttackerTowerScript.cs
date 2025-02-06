@@ -11,25 +11,42 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Rigidbody rb;
     [SerializeField] TextMeshPro towerNameText;
 
-    [Header("Attributes")]
+
+
+    [Header("Tower Attributes")]
     [SerializeField] string towerName = "Attacker";
     public string TowerName { get => towerName; set => towerName = value; }
     [SerializeField] Byte level = 1;
     public Byte Level { get => level; set => level = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
+    [SerializeField] bool startCanSeePhantom;
+    public bool StartCanSeePhantom { get => startCanSeePhantom; set => startCanSeePhantom = value; }
+    bool canSeePhantom;
+    public bool CanSeePhantom { get => canSeePhantom; set => canSeePhantom = value; }
     [SerializeField] internal Byte attackUnit = 1;
+
+
+
+    [Header("Activate Attributes")]
+    [SerializeField] Single startFireRate = 1f;
+    public Single StartFireRate { get => startFireRate; set => startFireRate = value; }
+    Single fireRate;
+    public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] Single towerRange = 3f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
-    [SerializeField] Single fireRate = 1f;
-    public float FireRate { get => fireRate; set => fireRate = value; }
-    [SerializeField] internal Single buildTime = 5f;
+    [SerializeField] string assignedWord = null;
+    public string AssignedWord { get => assignedWord; set => assignedWord = value; }
+
+
 
     [Header("Money Attributes")]
     int buildCost = MoneyManager.attackerTowerBuildCost;
     public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] int upgradeCost = MoneyManager.attackerTowerBuildCost;
     public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+
 
     [Header("Upgrade Attributes")]
     [SerializeField] Single upgradeFireRate = 0.1f;
@@ -38,6 +55,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Single upgradeSoldierDamage = 5;
     [SerializeField] Single upgradeSoldierAttackSpeed = 0.1f;
     [SerializeField] Single upgradeSoldierAttackCooldown = 0.1f;
+
 
 
     [Header("Soldier Attributes")]
@@ -52,16 +70,17 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Single soldierAttackRange = 1f;
     [SerializeField] bool soldierCanSeeAssassin = false;
 
+
+
     [Header("Debug")]
     [SerializeField] internal Enum_AttackerTowerState state = Enum_AttackerTowerState.Idle;
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Campfire; }
-    [SerializeField] string assignedWord = null;
-    public string AssignedWord { get => assignedWord; set => assignedWord = value; }
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
 
 
     void Start() {
+        CanSeePhantom = StartCanSeePhantom;
         StartCoroutine(DisplayTowerNameOrAssignedWord());
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
@@ -160,6 +179,19 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         Debug.Log($"{TowerName} activated");
         AssignedWord = null;
         StartCoroutine(GetNewWord());
+    }
+
+    public IEnumerator FireRateUp(Single fireRateUpPercent) {
+        FireRate = StartFireRate * (1 - fireRateUpPercent);
+        if (FireRate <= 0.1f) {
+            FireRate = 0.1f;
+        }
+        yield return null;
+    }
+
+    public IEnumerator ResetFireRate() {
+        FireRate = StartFireRate;
+        yield return null;
     }
 
     IEnumerator Dead() {

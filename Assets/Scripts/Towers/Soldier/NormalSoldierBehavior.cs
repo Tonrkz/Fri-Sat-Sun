@@ -36,7 +36,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     void Start() {
         if (baseTower != null) {
-            towerRange = baseTower.GetComponent<ITowers>().TowerRange;
+            towerRange = baseTower.GetComponent<IActivatables>().TowerRange;
         }
         DemonLayer = LayerMask.GetMask("Demon");
         PathLayer = LayerMask.GetMask("Ground");
@@ -141,13 +141,20 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     IEnumerator CheckForTarget() {
-        Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, DemonLayer);
-        foreach (var item in collides) {
-            if (item.CompareTag("Demon") || (item.CompareTag("Phantom") && canSeePhantom)) {
-                attackTarget = item.gameObject;
-                state = Enum_NormalSoldierState.Engage;
-                break;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, DemonLayer);
+        if (canSeePhantom) {
+            foreach (Collider collider in colliders) {
+                if (collider.CompareTag("Phantom")) {
+                    attackTarget = collider.gameObject;
+                    state = Enum_NormalSoldierState.Engage;
+                    break;
+                }
             }
+        }
+
+        if (attackTarget == null && colliders.Length > 0) {
+            attackTarget = colliders[0].gameObject;
+            state = Enum_NormalSoldierState.Engage;
         }
         yield return null;
     }

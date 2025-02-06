@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class MageTowerActivateRadiusScript : MonoBehaviour {
     public Enum_MageTowerSelectedPower power;
-    [Range(0, 1)] public float slowDownPercentage = 0.25f;
-    [Range(0, 1)] public float ATKDownPercentage = 0.25f;
-    [Range(0, 1)] public float ATKSpeedUpPercentage = 0.25f;
+    [Range(0, 1)] public float slowDownPercentage;
+    [Range(0, 1)] public float ATKDownPercentage;
+    [Range(0, 1)] public float ATKSpeedUpPercentage;
 
-    public List<Collider> collidedDemons = new List<Collider>();
+    public List<Collider> collided = new List<Collider>();
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Demon")) {
-            collidedDemons.Add(other);
+            collided.Add(other);
         }
     }
 
@@ -20,16 +20,19 @@ public class MageTowerActivateRadiusScript : MonoBehaviour {
         if (other.CompareTag("Demon")) {
             switch (power) {
                 case Enum_MageTowerSelectedPower.Slow:
-                    other.GetComponent<DemonsMovement>().SlowWalkSpeed(slowDownPercentage);
+                    StartCoroutine(other.GetComponent<DemonsMovement>().SlowWalkSpeed(slowDownPercentage));
                     break;
                 case Enum_MageTowerSelectedPower.ATKDown:
-                    other.GetComponent<IAttackables>().AttackDown(ATKDownPercentage);
+                    StartCoroutine(other.GetComponent<IAttackables>().AttackDown(ATKDownPercentage));
                     break;
+            }
+        }
+        else if (other.CompareTag("Tower")) {
+            switch (power) {
                 case Enum_MageTowerSelectedPower.ATKSpeedUp:
+                    StartCoroutine(other.GetComponent<IActivatables>().FireRateUp(ATKSpeedUpPercentage));
                     break;
                 case Enum_MageTowerSelectedPower.Reveal:
-                    break;
-                default:
                     break;
             }
         }
@@ -37,35 +40,30 @@ public class MageTowerActivateRadiusScript : MonoBehaviour {
 
     private void OnTriggerExit(Collider other) {
         if (other.CompareTag("Demon")) {
-            collidedDemons.Remove(other);
+            collided.Remove(other);
             Debug.Log("MageTowerActivateRadiusScript: OnTriggerExit: " + other.name);
             switch (power) {
                 case Enum_MageTowerSelectedPower.Slow:
-                    other.GetComponent<DemonsMovement>().ResetWalkSpeed();
+                    StartCoroutine(other.GetComponent<DemonsMovement>().ResetWalkSpeed());
                     break;
                 case Enum_MageTowerSelectedPower.ATKDown:
-                    other.GetComponent<IAttackables>().ResetAttack();
-                    break;
-                case Enum_MageTowerSelectedPower.ATKSpeedUp:
-                    break;
-                case Enum_MageTowerSelectedPower.Reveal:
-                    break;
-                default:
+                    StartCoroutine(other.GetComponent<IAttackables>().ResetAttack());
                     break;
             }
         }
     }
 
-    public void ResetCollidedDemon() {
-        foreach (var demon in collidedDemons) {
+    public void ResetCollided() {
+        foreach (var item in collided) {
             switch (power) {
                 case Enum_MageTowerSelectedPower.Slow:
-                    demon.GetComponent<DemonsMovement>().ResetWalkSpeed();
+                    StartCoroutine(item.GetComponent<DemonsMovement>().ResetWalkSpeed());
                     break;
                 case Enum_MageTowerSelectedPower.ATKDown:
-                    demon.GetComponent<IAttackables>().ResetAttack();
+                    StartCoroutine(item.GetComponent<IAttackables>().ResetAttack());
                     break;
                 case Enum_MageTowerSelectedPower.ATKSpeedUp:
+                    StartCoroutine(item.GetComponent<IActivatables>().ResetFireRate());
                     break;
                 case Enum_MageTowerSelectedPower.Reveal:
                     break;

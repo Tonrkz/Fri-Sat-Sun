@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -120,12 +120,14 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
         target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage * Time.fixedDeltaTime * 5); // Don't forget to fix this
     }
 
-    public void AttackDown(Single atkDownPercent) {
+    public IEnumerator AttackDown(Single atkDownPercent) {
         Damage = StartDamage * (1 - atkDownPercent);
+        yield return null;
     }
 
-    public void ResetAttack() {
+    public IEnumerator ResetAttack() {
         Damage = StartDamage;
+        yield return null;
     }
 
     public void Dead() {
