@@ -8,7 +8,7 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] GameObject arrowSpawnPoint;
     [SerializeField] Rigidbody rb;
-    [SerializeField] TextMeshProUGUI towerNameText;
+    [SerializeField] TextMeshPro towerNameText;
 
     [Header("Attributes")]
     [SerializeField] string towerName = "Ranged";

@@ -9,7 +9,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] GameObject attackerSoldierPrefab;
     [SerializeField] Rigidbody rb;
-    [SerializeField] TextMeshProUGUI towerNameText;
+    [SerializeField] TextMeshPro towerNameText;
 
     [Header("Attributes")]
     [SerializeField] string towerName = "Attacker";

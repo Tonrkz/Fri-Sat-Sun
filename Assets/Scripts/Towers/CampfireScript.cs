@@ -8,7 +8,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] GameObject normalSoldierPrefab;
     [SerializeField] Rigidbody rb;
-    [SerializeField] TextMeshProUGUI towerNameText;
+    [SerializeField] TextMeshPro towerNameText;
 
     [Header("Attributes")]
     [SerializeField] string towerName = "Campfire";
