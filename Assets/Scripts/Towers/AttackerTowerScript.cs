@@ -69,7 +69,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Single soldierAttackSpeed = 1f;
     [SerializeField] Single soldierAttackCooldown = 1f;
     [SerializeField] Single soldierAttackRange = 1f;
-    [SerializeField] bool soldierCanSeeAssassin = false;
+    [SerializeField] bool soldierCanSeePhantom = false;
 
 
 
@@ -196,6 +196,16 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         yield return null;
     }
 
+    public IEnumerator SetCanSeePhantom(bool canSee) {
+        CanSeePhantom = canSee;
+        yield return null;
+    }
+
+    public IEnumerator ResetCanSeePhantom() {
+        CanSeePhantom = StartCanSeePhantom;
+        yield return null;
+    }
+
     IEnumerator Dead() {
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);
@@ -231,7 +241,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         soldier.GetComponent<NormalSoldierBehavior>().attackSpeed = soldierAttackSpeed;
         soldier.GetComponent<NormalSoldierBehavior>().attackCooldown = soldierAttackCooldown;
         soldier.GetComponent<NormalSoldierBehavior>().attackRange = soldierAttackRange;
-        soldier.GetComponent<NormalSoldierBehavior>().canSeePhantom = soldierCanSeeAssassin;
+        soldier.GetComponent<NormalSoldierBehavior>().startCanSeePhantom = soldierCanSeePhantom;
     }
 
     IEnumerator GetNewWord() {

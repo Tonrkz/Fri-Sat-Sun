@@ -157,7 +157,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         newTower.GetComponent<ITowers>().TowerName = towerName;
         newTower.GetComponent<ITowers>().BuildCost += buildCost;
         if (AssignedWord != null) {
-            newTower.GetComponent<ITowers>().AssignedWord = AssignedWord;
+            newTower.GetComponent<IActivatables>().AssignedWord = AssignedWord;
         }
 
         BuildManager.instance.builtTowerList.Remove(gameObject);
@@ -206,6 +206,18 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         yield return null;
     }
 
+    public IEnumerator SetCanSeePhantom(bool canSee) {
+        CanSeePhantom = canSee;
+        soldierCanSeePhantom = canSee;
+        yield return null;
+    }
+
+    public IEnumerator ResetCanSeePhantom() {
+        CanSeePhantom = StartCanSeePhantom;
+        soldierCanSeePhantom = StartCanSeePhantom;
+        yield return null;
+    }
+
     IEnumerator Dead() {
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);
@@ -241,7 +253,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         soldier.GetComponent<NormalSoldierBehavior>().attackSpeed = soldierAttackSpeed;
         soldier.GetComponent<NormalSoldierBehavior>().attackCooldown = soldierAttackCooldown;
         soldier.GetComponent<NormalSoldierBehavior>().attackRange = soldierAttackRange;
-        soldier.GetComponent<NormalSoldierBehavior>().canSeePhantom = soldierCanSeePhantom;
+        soldier.GetComponent<NormalSoldierBehavior>().startCanSeePhantom = soldierCanSeePhantom;
     }
 
     IEnumerator GetNewWord() {

@@ -21,7 +21,8 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [SerializeField] internal Single attackSpeed = 1;
     [SerializeField] internal Single attackCooldown = 1;
     [SerializeField] internal Single attackRange = 1f;
-    [SerializeField] internal bool canSeePhantom = false;
+    [SerializeField] internal bool startCanSeePhantom = false;
+    bool canSeePhantom;
 
 
 
@@ -39,6 +40,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
 
     void Start() {
+        canSeePhantom = startCanSeePhantom;
         if (baseTower != null) {
             towerRange = baseTower.GetComponent<IActivatables>().TowerRange;
         }
@@ -162,6 +164,16 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 state = Enum_NormalSoldierState.Engage;
             }
         }
+        yield return null;
+    }
+
+    public IEnumerator SetCanSeePhantom(bool canSee) {
+        canSeePhantom = canSee;
+        yield return null;
+    }
+
+    public IEnumerator ResetCanSeePhantom() {
+        canSeePhantom = startCanSeePhantom;
         yield return null;
     }
 

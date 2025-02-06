@@ -214,6 +214,16 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         return target;
     }
 
+    public IEnumerator SetCanSeePhantom(bool canSee) {
+        CanSeePhantom = canSee;
+        yield return null;
+    }
+
+    public IEnumerator ResetCanSeePhantom() {
+        CanSeePhantom = StartCanSeePhantom;
+        yield return null;
+    }
+
     public IEnumerator DisplayTowerNameOrAssignedWord() {
         yield return new WaitForEndOfFrame();
         switch (state) {
