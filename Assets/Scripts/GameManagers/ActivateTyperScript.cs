@@ -6,6 +6,7 @@ public class ActivateTyperScript : MonoBehaviour {
     public static ActivateTyperScript instance;
 
     GameObject selectedTower;
+    string towerAssignedWord;
 
     void Awake() {
         if (instance == null) {
@@ -46,6 +47,7 @@ public class ActivateTyperScript : MonoBehaviour {
             if (tower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
                 Debug.Log($"Word found {tower.GetComponent<IActivatables>().AssignedWord}");
                 selectedTower = tower;
+                towerAssignedWord = tower.GetComponent<IActivatables>().AssignedWord;
                 RemoveInputLetter();
                 break;
             }
@@ -58,16 +60,19 @@ public class ActivateTyperScript : MonoBehaviour {
             selectedTower.GetComponent<IActivatables>().AssignedWord = selectedTower.GetComponent<IActivatables>().AssignedWord.Substring(1);
             StartCoroutine(selectedTower.GetComponent<ITowers>().DisplayTowerNameOrAssignedWord());
             if (selectedTower.GetComponent<IActivatables>().AssignedWord.Length == 0) {
-                ActivateSelectedTower();
+            StartCoroutine(ActivateSelectedTower());
             }
         }
     }
 
-    void ActivateSelectedTower() {
+    IEnumerator ActivateSelectedTower() {
         if (selectedTower != null) {
             selectedTower.GetComponent<IActivatables>().Activate();
+            WordManager.instance.usedWords.Remove(towerAssignedWord);
+            towerAssignedWord = "";
             selectedTower = null;
         }
+        yield return null;
     }
 }
 
