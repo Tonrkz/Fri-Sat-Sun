@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2478137486070781640}
   - component: {fileID: 1975301545574397154}
   - component: {fileID: 4757035163865290626}
+  - component: {fileID: -660648354733540177}
   m_Layer: 7
   m_Name: Werewolf Demon
   m_TagString: Demon
@@ -101,10 +102,24 @@ MonoBehaviour:
   anim: {fileID: 0}
   state: 0
   hitPoint: 100
-  walkSpeed: 1.5
+  startWalkSpeed: 1.5
   acceptableRadius: 0.33
   walkPath: []
   delayCalculateTime: 0.2
+--- !u!114 &-660648354733540177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2838582429635018128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd4e5d62c017e04b93544eca83742eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkPath: []
+  walkTarget: {fileID: 0}
 --- !u!1 &4702585756037912314
 GameObject:
   m_ObjectHideFlags: 0
