@@ -9,6 +9,7 @@ public class MoneyManager : MonoBehaviour {
     [SerializeField] TextMeshProUGUI moneyText;
 
     [Header("Attributes")]
+    public Single startingMoney = 100;
     public Single money = 0;
     public Single moneyPerSecond = 4f;
     public Single percentRefund = 0.5f;
@@ -17,7 +18,7 @@ public class MoneyManager : MonoBehaviour {
     public static readonly Byte campfireBuildCost = 50;
     public static readonly Byte attackerTowerBuildCost = 100;
     public static readonly Byte rangedTowerBuildCost = 150;
-    public static readonly Byte supportTowerBuildCost = 200;
+    public static readonly Byte supplyTowerBuildCost = 200;
     public static readonly Byte mageTowerBuildCost = 250;
 
     [Header("Upgrade Attributes")]
@@ -37,11 +38,18 @@ public class MoneyManager : MonoBehaviour {
     }
 
     void Start() {
+        money = startingMoney;
         UpdateMoneyText();
         lastCalculatedTime = Time.time;
     }
 
     void Update() {
+        if (Input.GetKeyDown(KeyCode.F6)) {
+            AddMoney(100);
+        }
+        else if (Input.GetKeyDown(KeyCode.F7)) {
+            AddMoney(-100);
+        }
         if (Time.time < lastCalculatedTime + calcTimeDelay) {
             return;
         }

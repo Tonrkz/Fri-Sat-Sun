@@ -77,7 +77,8 @@ public class CommandTyperScript : MonoBehaviour {
             switch (splitedCommand[0]) {
                 case "build":
                     Debug.Log("Build command");
-                    if (BuildManager.instance.CheckIfGroundAvailable() && MoneyManager.instance.money >= 50f) {
+                    if (BuildManager.instance.CheckIfGroundAvailable() && MoneyManager.instance.CanAfford(MoneyManager.campfireBuildCost)) {
+                        MoneyManager.instance.AddMoney(-MoneyManager.campfireBuildCost);
                         BuildManager.instance.BuildTower();
                     }
                     else {
@@ -113,7 +114,7 @@ public class CommandTyperScript : MonoBehaviour {
                         return;
                     }
                     if (tower.TowerType != Enum_TowerTypes.Campfire) {
-                        if (MoneyManager.instance.money >= tower.UpgradeCost) {
+                        if (MoneyManager.instance.CanAfford(tower.UpgradeCost)) {
                             tower.UpdradeTower();
                         }
                     }
@@ -139,16 +140,28 @@ public class CommandTyperScript : MonoBehaviour {
                 if (towerObject.GetComponent<ITowers>().TowerType == Enum_TowerTypes.Campfire) {
                     switch (splitedCommand[2]) {
                         case "attacker":
-                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Attacker));
+                            if (MoneyManager.instance.CanAfford(MoneyManager.attackerTowerBuildCost)) {
+                                MoneyManager.instance.AddMoney(-MoneyManager.attackerTowerBuildCost);
+                                StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Attacker));
+                            }
                             break;
                         case "ranged":
-                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Ranged));
+                            if (MoneyManager.instance.CanAfford(MoneyManager.rangedTowerBuildCost)) {
+                                MoneyManager.instance.AddMoney(-MoneyManager.rangedTowerBuildCost);
+                                StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Ranged));
+                            }
                             break;
                         case "supply":
-                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Supply));
+                            if (MoneyManager.instance.CanAfford(MoneyManager.supplyTowerBuildCost)) {
+                                MoneyManager.instance.AddMoney(-MoneyManager.supplyTowerBuildCost);
+                                StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Supply));
+                            }
                             break;
                         case "mage":
-                            StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Mage));
+                            if (MoneyManager.instance.CanAfford(MoneyManager.mageTowerBuildCost)) {
+                                MoneyManager.instance.AddMoney(-MoneyManager.mageTowerBuildCost);
+                                StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Mage));
+                            }
                             break;
                         default:
                             break;

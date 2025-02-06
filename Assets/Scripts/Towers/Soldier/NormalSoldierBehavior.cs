@@ -18,7 +18,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [SerializeField] internal Single attackSpeed = 1;
     [SerializeField] internal Single attackCooldown = 1;
     [SerializeField] internal Single attackRange = 1f;
-    [SerializeField] internal bool canSeeAssassin = false;
+    [SerializeField] internal bool canSeePhantom = false;
 
     [Header("Debug")]
     internal GameObject baseTower;
@@ -130,7 +130,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     void CheckForTarget() {
         Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, DemonLayer);
         foreach (var item in collides) {
-            if (item.CompareTag("Demon") || (item.CompareTag("Assassin") && canSeeAssassin)) {
+            if (item.CompareTag("Demon") || (item.CompareTag("Assassin") && canSeePhantom)) {
                 attackTarget = item.gameObject;
                 state = Enum_NormalSoldierState.Engage;
                 break;
