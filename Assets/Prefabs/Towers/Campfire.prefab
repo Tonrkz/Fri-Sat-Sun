@@ -467,14 +467,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalSoldierPrefab: {fileID: 2225985748608282072, guid: 9e7ebc637e9b00b48b9a3d16b6fc7608, type: 3}
   rb: {fileID: 540427046439860620}
+  towerNamePanel: {fileID: 6363144747957364900}
   towerNameText: {fileID: 2264126273200102172}
   towerName: Campfire
   level: 1
   hitPoint: 10
-  towerRange: 3
-  fireRate: 1
+  startCanSeePhantom: 0
   buildTime: 5
-  upgradeCost: 0
+  startFireRate: 1
+  towerRange: 3
+  assignedWord: 
   soldierHitPoint: 100
   soldierWalkSpeed: 2
   soldierAcceptableRadius: 0.33
@@ -484,6 +486,6 @@ MonoBehaviour:
   soldierAttackCooldown: 1
   soldierAttackRange: 1
   soldierCanSeePhantom: 0
+  upgradeCost: 0
   state: 0
-  assignedWord: 
   occupiedGround: {fileID: 0}

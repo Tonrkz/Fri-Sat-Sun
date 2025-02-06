@@ -9,6 +9,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] GameObject attackerSoldierPrefab;
     [SerializeField] Rigidbody rb;
+    [SerializeField] GameObject towerNamePanel;
     [SerializeField] TextMeshPro towerNameText;
 
 
@@ -81,6 +82,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
 
     void Start() {
         CanSeePhantom = StartCanSeePhantom;
+        FireRate = StartFireRate;
         StartCoroutine(DisplayTowerNameOrAssignedWord());
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
@@ -204,9 +206,16 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         switch (state) {
             case Enum_AttackerTowerState.Active:
                 towerNameText.text = assignedWord;
+                if (assignedWord == "" || assignedWord == null) {
+                    towerNamePanel.SetActive(false);
+                }
+                else {
+                    towerNamePanel.SetActive(true);
+                }
                 break;
             default:
                 towerNameText.text = towerName;
+                towerNamePanel.SetActive(true);
                 break;
         }
         Debug.Log($"{towerNameText.text} displayed");

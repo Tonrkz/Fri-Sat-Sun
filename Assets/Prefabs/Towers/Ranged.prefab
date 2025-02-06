@@ -469,23 +469,24 @@ MonoBehaviour:
   arrowPrefab: {fileID: 4342468968940038269, guid: dd308c9c45a031d4d945cf11d3e1f034, type: 3}
   arrowSpawnPoint: {fileID: 8473894353468488687}
   rb: {fileID: 540427046439860620}
+  towerNamePanel: {fileID: 5852134320103565336}
   towerNameText: {fileID: 6366388589969542335}
   towerName: Ranged
   level: 1
   hitPoint: 10
+  startCanSeePhantom: 0
   attackUnit: 1
+  startFireRate: 1
   towerRange: 5
-  fireRate: 1
-  canSeeAssassin: 0
+  assignedWord: 
+  arrowSpeed: 10
+  arrowDamage: 50
   upgradeCost: 150
   upgradeTowerRange: 0.2
   upgradeFireRate: 0.1
   upgradeArrowSpeed: 0.2
   upgradeArrowDamage: 5
-  arrowSpeed: 10
-  arrowDamage: 50
   state: 0
-  assignedWord: 
   occupiedGround: {fileID: 0}
   DemonLayer:
     serializedVersion: 2

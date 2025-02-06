@@ -6,6 +6,7 @@ using UnityEngine;
 public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] Rigidbody rb;
+    [SerializeField] GameObject towerNamePanel;
     [SerializeField] TextMeshPro towerNameText;
     [SerializeField] MageTowerActivateRadiusScript activeRadius;
 
@@ -74,6 +75,8 @@ public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
 
 
     void Start() {
+        CanSeePhantom = StartCanSeePhantom;
+        FireRate = StartFireRate;
         StartCoroutine(DisplayTowerNameOrAssignedWord());
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
@@ -199,9 +202,16 @@ public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
         switch (state) {
             case Enum_MageTowerState.Active:
                 towerNameText.text = assignedWord;
+                if (assignedWord == "" || assignedWord == null) {
+                    towerNamePanel.SetActive(false);
+                }
+                else {
+                    towerNamePanel.SetActive(true);
+                }
                 break;
             default:
                 towerNameText.text = towerName;
+                towerNamePanel.SetActive(true);
                 break;
         }
         Debug.Log($"{towerNameText.text} displayed");

@@ -185,14 +185,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackerSoldierPrefab: {fileID: 2225985748608282072, guid: b5774b0d464940143acbfec0be978239, type: 3}
   rb: {fileID: 540427046439860620}
+  towerNamePanel: {fileID: 7794826963352448128}
   towerNameText: {fileID: 2607964081602877135}
   towerName: Attacker
   level: 1
   hitPoint: 10
+  startCanSeePhantom: 0
   attackUnit: 1
+  startFireRate: 1
   towerRange: 3
-  fireRate: 1
-  buildTime: 5
+  assignedWord: 
   upgradeCost: 100
   upgradeFireRate: 0.1
   upgradeSoldierHitPoint: 10
@@ -211,7 +213,6 @@ MonoBehaviour:
   soldierAttackRange: 1
   soldierCanSeeAssassin: 0
   state: 0
-  assignedWord: 
   occupiedGround: {fileID: 0}
 --- !u!1 &7794826963352448128
 GameObject:

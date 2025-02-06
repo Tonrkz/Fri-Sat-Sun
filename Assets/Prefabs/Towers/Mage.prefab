@@ -495,7 +495,7 @@ MonoBehaviour:
   slowDownPercentage: 0.25
   ATKDownPercentage: 0.25
   ATKSpeedUpPercentage: 0.25
-  collidedDemons: []
+  collided: []
 --- !u!1 &7726950801907583317
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,27 +594,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 540427046439860620}
+  towerNamePanel: {fileID: 1366455547234842662}
   towerNameText: {fileID: 3514439225796164688}
   activeRadius: {fileID: 5959679933665240961}
   towerName: Mage
   level: 1
   hitPoint: 10
+  startCanSeePhantom: 1
+  startFireRate: 1
   towerRange: 7.5
-  fireRate: 1
-  canSeePhantom: 1
-  upgradeCost: 250
+  assignedWord: 
   mageMultiplier: 1
   duration: 5
   slowDownPercent: 0.25
   ATKDownPercent: 0.25
   ATKSpeedUpPercent: 0.25
+  upgradeCost: 250
   upgradeTowerRange: 0.2
   upgradeFireRate: 0.1
   upgradeMageMultiplier: 0.1
   upgradeDuration: 0.2
   state: 0
   power: 0
-  assignedWord: 
   occupiedGround: {fileID: 0}
   DemonLayer:
     serializedVersion: 2

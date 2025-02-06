@@ -8,6 +8,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] GameObject normalSoldierPrefab;
     [SerializeField] Rigidbody rb;
+    [SerializeField] GameObject towerNamePanel;
     [SerializeField] TextMeshPro towerNameText;
 
 
@@ -72,6 +73,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     void Start() {
         CanSeePhantom = StartCanSeePhantom;
         soldierCanSeePhantom = CanSeePhantom;
+        FireRate = StartFireRate;
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
             OccupiedGround = hit.collider.gameObject;
@@ -214,9 +216,16 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         switch (state) {
             case Enum_CampfireState.Active:
                 towerNameText.text = assignedWord;
+                if (assignedWord == "" || assignedWord == null) {
+                    towerNamePanel.SetActive(false);
+                }
+                else {
+                    towerNamePanel.SetActive(true);
+                }
                 break;
             default:
                 towerNameText.text = towerName;
+                towerNamePanel.SetActive(true);
                 break;
         }
         Debug.Log($"{towerNameText.text} displayed");
