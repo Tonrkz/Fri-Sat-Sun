@@ -8,6 +8,8 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator anim;
 
+
+
     [Header("Attributes")]
     [SerializeField] Enum_NormalSoldierState state = Enum_NormalSoldierState.Initiate;
     [SerializeField] float hitPoint = 100;
@@ -20,6 +22,8 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [SerializeField] internal Single attackCooldown = 1;
     [SerializeField] internal Single attackRange = 1f;
     [SerializeField] internal bool canSeePhantom = false;
+
+
 
     [Header("Debug")]
     internal GameObject baseTower;
@@ -153,8 +157,10 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         }
 
         if (attackTarget == null && colliders.Length > 0) {
-            attackTarget = colliders[0].gameObject;
-            state = Enum_NormalSoldierState.Engage;
+            if (colliders[0].CompareTag("Demon")) {
+                attackTarget = colliders[0].gameObject;
+                state = Enum_NormalSoldierState.Engage;
+            }
         }
         yield return null;
     }
