@@ -23,24 +23,7 @@ public class MageTowerActivateRadiusScript : MonoBehaviour {
                     other.GetComponent<DemonsMovement>().SlowWalkSpeed(slowDownPercentage);
                     break;
                 case Enum_MageTowerSelectedPower.ATKDown:
-                    break;
-                case Enum_MageTowerSelectedPower.ATKSpeedUp:
-                    break;
-                case Enum_MageTowerSelectedPower.Reveal:
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    public void ResetCollidedDemon() {
-        foreach (var demon in collidedDemons) {
-            switch (power) {
-                case Enum_MageTowerSelectedPower.Slow:
-                    demon.GetComponent<DemonsMovement>().ResetWalkSpeed();
-                    break;
-                case Enum_MageTowerSelectedPower.ATKDown:
+                    other.GetComponent<IAttackables>().AttackDown(ATKDownPercentage);
                     break;
                 case Enum_MageTowerSelectedPower.ATKSpeedUp:
                     break;
@@ -61,6 +44,26 @@ public class MageTowerActivateRadiusScript : MonoBehaviour {
                     other.GetComponent<DemonsMovement>().ResetWalkSpeed();
                     break;
                 case Enum_MageTowerSelectedPower.ATKDown:
+                    other.GetComponent<IAttackables>().ResetAttack();
+                    break;
+                case Enum_MageTowerSelectedPower.ATKSpeedUp:
+                    break;
+                case Enum_MageTowerSelectedPower.Reveal:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void ResetCollidedDemon() {
+        foreach (var demon in collidedDemons) {
+            switch (power) {
+                case Enum_MageTowerSelectedPower.Slow:
+                    demon.GetComponent<DemonsMovement>().ResetWalkSpeed();
+                    break;
+                case Enum_MageTowerSelectedPower.ATKDown:
+                    demon.GetComponent<IAttackables>().ResetAttack();
                     break;
                 case Enum_MageTowerSelectedPower.ATKSpeedUp:
                     break;

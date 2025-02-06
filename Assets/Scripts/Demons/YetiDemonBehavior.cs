@@ -14,11 +14,17 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     [SerializeField] float hitPoint = 300;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] Single startWalkSpeed = 1.5f;
+
+    [Header("Movement Attributes")]
     public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
-    Single walkSpeed = 1.5f;
+    Single walkSpeed;
     public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
     [SerializeField] internal Single acceptableRadius = 0.75f;
-    [SerializeField] Single damage = 10;
+
+    [Header("Attack Attributes")]
+    [SerializeField] Single startDamage = 20;
+    public Single StartDamage { get => startDamage; set => startDamage = value; }
+    Single damage;
     public Single Damage { get => damage; set => damage = value; }
     [SerializeField] internal Single sightRange = 1.5f;
     [SerializeField] Single attackSpeed = 1;
@@ -41,6 +47,7 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
         rb = GetComponent<Rigidbody>();
         movement = GetComponent<DemonsMovement>();
         WalkSpeed = StartWalkSpeed;
+        Damage = StartDamage;
         SoldierLayer = LayerMask.GetMask("Soldier");
     }
 
@@ -114,7 +121,11 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     }
 
     public void AttackDown(Single atkDownPercent) {
-        throw new NotImplementedException();
+        Damage = StartDamage * (1 - atkDownPercent);
+    }
+
+    public void ResetAttack() {
+        Damage = StartDamage;
     }
 
     public void Dead() {

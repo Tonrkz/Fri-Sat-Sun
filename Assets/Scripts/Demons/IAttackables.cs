@@ -2,6 +2,7 @@
 using UnityEngine;
 
 public interface IAttackables {
+    public Single StartDamage { get; set; }
     public Single Damage { get; set; }
     public Single AttackSpeed { get; set; }
     public Single AttackCooldown { get; set; }
@@ -10,4 +11,5 @@ public interface IAttackables {
 
     public void Attack(GameObject target);
     public void AttackDown(Single atkDownPercent);
+    public void ResetAttack();
 }
