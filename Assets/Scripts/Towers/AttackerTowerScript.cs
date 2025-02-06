@@ -192,7 +192,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         soldier.GetComponent<NormalSoldierBehavior>().attackSpeed = soldierAttackSpeed;
         soldier.GetComponent<NormalSoldierBehavior>().attackCooldown = soldierAttackCooldown;
         soldier.GetComponent<NormalSoldierBehavior>().attackRange = soldierAttackRange;
-        soldier.GetComponent<NormalSoldierBehavior>().canSeeAssassin = soldierCanSeeAssassin;
+        soldier.GetComponent<NormalSoldierBehavior>().canSeePhantom = soldierCanSeeAssassin;
     }
 
     IEnumerator GetNewWord() {

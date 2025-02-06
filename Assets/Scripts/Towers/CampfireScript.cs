@@ -38,7 +38,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Single soldierAttackSpeed = 1;
     [SerializeField] Single soldierAttackCooldown = 1;
     [SerializeField] Single soldierAttackRange = 1f;
-    [SerializeField] bool soldierCanSeeAssassin = false;
+    [SerializeField] bool soldierCanSeePhantom = false;
 
     [Header("Debug")]
     [SerializeField] internal Enum_CampfireState state = Enum_CampfireState.Building;
@@ -196,7 +196,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         soldier.GetComponent<NormalSoldierBehavior>().attackSpeed = soldierAttackSpeed;
         soldier.GetComponent<NormalSoldierBehavior>().attackCooldown = soldierAttackCooldown;
         soldier.GetComponent<NormalSoldierBehavior>().attackRange = soldierAttackRange;
-        soldier.GetComponent<NormalSoldierBehavior>().canSeeAssassin = soldierCanSeeAssassin;
+        soldier.GetComponent<NormalSoldierBehavior>().canSeePhantom = soldierCanSeePhantom;
     }
 
     IEnumerator GetNewWord() {
