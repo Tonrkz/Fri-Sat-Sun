@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class ActivateTyperScript : MonoBehaviour {
     public static ActivateTyperScript instance;
 
     GameObject selectedTower;
+    string towerAssignedWord;
 
     void Awake() {
         if (instance == null) {
@@ -22,14 +24,7 @@ public class ActivateTyperScript : MonoBehaviour {
         if (Input.anyKeyDown) {
             foreach (var c in Input.inputString) {
                 if (selectedTower == null) {
-                    foreach (var tower in BuildManager.instance.builtTowerList) {
-                        if (tower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
-                            Debug.Log($"Word found {tower.GetComponent<IActivatables>().AssignedWord}");
-                            selectedTower = tower;
-                            RemoveInputLetter();
-                            break;
-                        }
-                    }
+                    StartCoroutine(FindTowerFromFirstLetter(c));
                 }
                 else {
                     if (selectedTower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
@@ -38,6 +33,26 @@ public class ActivateTyperScript : MonoBehaviour {
                 }
             }
         }
+        if (Input.GetKeyDown(KeyCode.Space) && selectedTower != null) {
+            WordManager.instance.AssignWord(selectedTower.GetComponent<IActivatables>());
+            selectedTower = null;
+        }
+    }
+
+    IEnumerator FindTowerFromFirstLetter(char c) {
+        foreach (var tower in BuildManager.instance.builtTowerList) {
+            if (tower.GetComponent<IActivatables>().AssignedWord == "" || tower.GetComponent<IActivatables>().AssignedWord == null) {
+                continue;
+            }
+            if (tower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
+                Debug.Log($"Word found {tower.GetComponent<IActivatables>().AssignedWord}");
+                selectedTower = tower;
+                towerAssignedWord = tower.GetComponent<IActivatables>().AssignedWord;
+                RemoveInputLetter();
+                break;
+            }
+        }
+        yield return null;
     }
 
     void RemoveInputLetter() {
@@ -45,16 +60,19 @@ public class ActivateTyperScript : MonoBehaviour {
             selectedTower.GetComponent<IActivatables>().AssignedWord = selectedTower.GetComponent<IActivatables>().AssignedWord.Substring(1);
             StartCoroutine(selectedTower.GetComponent<ITowers>().DisplayTowerNameOrAssignedWord());
             if (selectedTower.GetComponent<IActivatables>().AssignedWord.Length == 0) {
-                ActivateSelectedTower();
+            StartCoroutine(ActivateSelectedTower());
             }
         }
     }
 
-    void ActivateSelectedTower() {
+    IEnumerator ActivateSelectedTower() {
         if (selectedTower != null) {
             selectedTower.GetComponent<IActivatables>().Activate();
+            WordManager.instance.usedWords.Remove(towerAssignedWord);
+            towerAssignedWord = "";
             selectedTower = null;
         }
+        yield return null;
     }
 }
 

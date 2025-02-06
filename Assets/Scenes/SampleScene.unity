@@ -5219,7 +5219,7 @@ Transform:
   m_GameObject: {fileID: 263740865}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -51, y: -1, z: 1}
+  m_LocalPosition: {x: -51, y: -2, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -31086,6 +31086,7 @@ MonoBehaviour:
   campfirePrefab: {fileID: 7726950801907583317, guid: a70c2e4d5098ec845b9894904a30059c, type: 3}
   attackerTowerPrefab: {fileID: 7726950801907583317, guid: 638f558e116db044a8cc06075332f35b, type: 3}
   rangedTowerPrefab: {fileID: 7726950801907583317, guid: b41d510eec92ecd4d8c3305ef40b6b16, type: 3}
+  mageTowerPrefab: {fileID: 7726950801907583317, guid: 343c9e4ea80cc154182780c5072c36b4, type: 3}
 --- !u!114 &1441553695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40934,7 +40935,7 @@ Transform:
   m_GameObject: {fileID: 1887054787}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30, y: 1, z: -16}
+  m_LocalPosition: {x: -30, y: 2, z: -16}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -48140,7 +48141,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4839546973916634678, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.687
+      value: -0.9
       objectReference: {fileID: 0}
     - target: {fileID: 4839546973916634678, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
       propertyPath: m_LocalPosition.z

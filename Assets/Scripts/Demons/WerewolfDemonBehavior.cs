@@ -7,25 +7,30 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator anim;
+    [SerializeField] DemonsMovement movement;
 
     [Header("Attributes")]
     [SerializeField] Enum_WerewolfDemonState state = Enum_WerewolfDemonState.Walk;
     [SerializeField] float hitPoint = 100;
-    public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] internal Single walkSpeed = 1;
+    [SerializeField] public float HitPoint { get => hitPoint; set => hitPoint = value; }
+
+    [Header("Movement Attributes")]
+    [SerializeField] Single startWalkSpeed = 1.5f;
+    public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
+    Single walkSpeed = 1.5f;
+    public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
     [SerializeField] internal Single acceptableRadius = 0.33f;
-    [SerializeField] List<GameObject> walkPath = new List<GameObject>();
 
     [Header("Debug")]
-    GameObject walkTarget;
+    Enum_DemonTypes demonType = Enum_DemonTypes.Werewolf;
+    public Enum_DemonTypes DemonType { get => demonType; set => demonType = value; }
     float lastCalculateTime;
     [SerializeField] float delayCalculateTime = 0.2f;
-    Byte currentPathIndex = 0;
 
     void Start() {
-        walkPath = DemonsNavigationManager.instance.ShortcutWalkPath;
-        currentPathIndex = 0;
-        walkTarget = walkPath[currentPathIndex];
+        rb = GetComponent<Rigidbody>();
+        movement = GetComponent<DemonsMovement>();
+        walkSpeed = startWalkSpeed;
     }
 
     void Update() {
@@ -35,8 +40,8 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
         lastCalculateTime = Time.time;
         switch (state) {
             case Enum_WerewolfDemonState.Walk:
-                if (Vector3.Distance(transform.position, walkTarget.transform.position) <= acceptableRadius) {
-                    walkTarget = GetNextWalkTarget();
+                if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
+                    movement.walkTarget = movement.GetNextWalkTarget();
                 }
                 break;
             case Enum_WerewolfDemonState.Dead:
@@ -49,7 +54,7 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     void FixedUpdate() {
         switch (state) {
             case Enum_WerewolfDemonState.Walk:
-                Move(walkTarget.transform.position);
+                Move(movement.walkTarget.transform.position);
                 break;
             case Enum_WerewolfDemonState.Dead:
                 Dead();
@@ -62,10 +67,6 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
         }
     }
 
-    public void Attack(GameObject target) {
-        throw new System.NotImplementedException();
-    }
-
     public void Dead() {
         Destroy(gameObject);
     }
@@ -76,13 +77,5 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
-    }
-
-    GameObject GetNextWalkTarget() {
-        currentPathIndex++;
-        if (currentPathIndex >= walkPath.Count) {
-            currentPathIndex = 0;
-        }
-        return walkPath[currentPathIndex];
     }
 }

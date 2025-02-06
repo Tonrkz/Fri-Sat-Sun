@@ -11,6 +11,7 @@ public class BuildManager : MonoBehaviour {
     [SerializeField] internal GameObject campfirePrefab;
     [SerializeField] internal GameObject attackerTowerPrefab;
     [SerializeField] internal GameObject rangedTowerPrefab;
+    [SerializeField] internal GameObject mageTowerPrefab;
 
     [Header("Debug")]
     internal List<GameObject> builtTowerList = new List<GameObject>();

@@ -8,26 +8,37 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
     [SerializeField] GameObject normalSoldierPrefab;
     [SerializeField] Rigidbody rb;
-    [SerializeField] TextMeshProUGUI towerNameText;
+    [SerializeField] GameObject towerNamePanel;
+    [SerializeField] TextMeshPro towerNameText;
 
-    [Header("Attributes")]
+
+
+    [Header("Tower Attributes")]
     [SerializeField] string towerName = "Campfire";
     public string TowerName { get => towerName; set => towerName = value; }
     [SerializeField] Byte level = 1;
     public Byte Level { get => level; set => level = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] Single towerRange = 3f;
-    public float TowerRange { get => towerRange; set => towerRange = value; }
-    [SerializeField] Single fireRate = 1f;
-    public float FireRate { get => fireRate; set => fireRate = value; }
+    [SerializeField] bool startCanSeePhantom = false;
+    public bool StartCanSeePhantom { get => startCanSeePhantom; set => startCanSeePhantom = value; }
+    bool canSeePhantom;
+    public bool CanSeePhantom { get => canSeePhantom; set => canSeePhantom = value; }
     [SerializeField] internal Single buildTime = 5f;
 
-    [Header("Money Attributes")]
-    int buildCost = MoneyManager.campfireBuildCost;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
-    [SerializeField] int upgradeCost = 0;
-    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+
+    [Header("Activate Attributes")]
+    [SerializeField] Single startFireRate = 1f;
+    public Single StartFireRate { get => startFireRate; set => startFireRate = value; }
+    Single fireRate;
+    public float FireRate { get => fireRate; set => fireRate = value; }
+    [SerializeField] Single towerRange = 3f;
+    public float TowerRange { get => towerRange; set => towerRange = value; }
+    [SerializeField] string assignedWord = null;
+    public string AssignedWord { get => assignedWord; set => assignedWord = value; }
+
+
 
     [Header("Soldier Attributes")]
     [SerializeField] Single soldierHitPoint = 100;
@@ -40,18 +51,29 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] Single soldierAttackRange = 1f;
     [SerializeField] bool soldierCanSeePhantom = false;
 
+
+
+    [Header("Money Attributes")]
+    int buildCost = MoneyManager.campfireBuildCost;
+    public int BuildCost { get => buildCost; set => buildCost = value; }
+    [SerializeField] int upgradeCost = 0;
+    public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+
+
     [Header("Debug")]
     [SerializeField] internal Enum_CampfireState state = Enum_CampfireState.Building;
     bool hasBuilt = false;
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Campfire; }
-    [SerializeField] string assignedWord = null;
-    public string AssignedWord { get => assignedWord; set => assignedWord = value; }
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
 
+
+
     void Start() {
-        GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
-        GetComponentInChildren<UILookAtHandler>().LookAt();
+        CanSeePhantom = StartCanSeePhantom;
+        soldierCanSeePhantom = CanSeePhantom;
+        FireRate = StartFireRate;
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
             OccupiedGround = hit.collider.gameObject;
@@ -125,6 +147,9 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
             case Enum_TowerTypes.Ranged:
                 newTower = Instantiate(BuildManager.instance.rangedTowerPrefab, transform.position, Quaternion.identity);
                 break;
+            case Enum_TowerTypes.Mage:
+                newTower = Instantiate(BuildManager.instance.mageTowerPrefab, transform.position, Quaternion.identity);
+                break;
             default:
                 break;
         }
@@ -168,6 +193,19 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         StartCoroutine(GetNewWord());
     }
 
+    public IEnumerator FireRateUp(Single fireRateUpPercent) {
+        FireRate = StartFireRate * (1 - fireRateUpPercent);
+        if (FireRate <= 0.1f) {
+            FireRate = 0.1f;
+        }
+        yield return null;
+    }
+
+    public IEnumerator ResetFireRate() {
+        FireRate = StartFireRate;
+        yield return null;
+    }
+
     IEnumerator Dead() {
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);
@@ -178,9 +216,16 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         switch (state) {
             case Enum_CampfireState.Active:
                 towerNameText.text = assignedWord;
+                if (assignedWord == "" || assignedWord == null) {
+                    towerNamePanel.SetActive(false);
+                }
+                else {
+                    towerNamePanel.SetActive(true);
+                }
                 break;
             default:
                 towerNameText.text = towerName;
+                towerNamePanel.SetActive(true);
                 break;
         }
         Debug.Log($"{towerNameText.text} displayed");

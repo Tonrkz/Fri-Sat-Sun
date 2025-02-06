@@ -9,6 +9,7 @@ public class WordManager : MonoBehaviour {
     };
 
     public List<string> wordBank = new List<string>();
+    public List<string> usedWords = new List<string>();
 
     void Awake() {
         if (instance == null) {
@@ -24,14 +25,30 @@ public class WordManager : MonoBehaviour {
     }
 
     public string GetRandomWord() {
-        int randomIndex = Random.Range(0, wordBank.Count);
-        string randomWord = wordBank[randomIndex];
-        wordBank.RemoveAt(randomIndex);
+        string randomWord = null;
+        List<string> potentialWords = wordBank.FindAll(word => !usedWords.Exists(usedWord => usedWord[0] == word[0]));
+
+        if (potentialWords.Count > 0) {
+            int randomIndex = Random.Range(0, potentialWords.Count);
+            randomWord = potentialWords[randomIndex];
+            wordBank.Remove(randomWord);
+        }
+        else {
+            int randomIndex = Random.Range(0, wordBank.Count);
+            randomWord = wordBank[randomIndex];
+            wordBank.RemoveAt(randomIndex);
+        }
+
+        usedWords.Add(randomWord);
+
         if (wordBank.Count == 0) {
             wordBank.AddRange(allWords);
+            usedWords.Clear();
         }
+
         return randomWord;
     }
+    
 
     public void AssignWord(IActivatables obj) {
         obj.AssignedWord = GetRandomWord();
