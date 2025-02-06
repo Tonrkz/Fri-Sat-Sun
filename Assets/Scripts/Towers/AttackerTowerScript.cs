@@ -62,8 +62,6 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
 
 
     void Start() {
-        GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
-        GetComponentInChildren<UILookAtHandler>().LookAt();
         StartCoroutine(DisplayTowerNameOrAssignedWord());
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {

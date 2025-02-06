@@ -15,7 +15,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField]  Single startWalkSpeed = 1.5f;
     public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
-    [HideInInspector] Single walkSpeed = 1.5f;
+    Single walkSpeed = 1.5f;
     public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
     [SerializeField] internal Single acceptableRadius = 0.33f;
     [SerializeField] Single damage = 10;

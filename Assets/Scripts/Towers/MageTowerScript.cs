@@ -3,48 +3,50 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
+public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
     [Header("References")]
-    [SerializeField] GameObject arrowPrefab;
-    [SerializeField] GameObject arrowSpawnPoint;
     [SerializeField] Rigidbody rb;
     [SerializeField] TextMeshPro towerNameText;
+    [SerializeField] MageTowerActivateRadiusScript activeRadius;
 
     [Header("Attributes")]
-    [SerializeField] string towerName = "Ranged";
+    [SerializeField] string towerName = "Mage";
     public string TowerName { get => towerName; set => towerName = value; }
     [SerializeField] Byte level = 1;
     public Byte Level { get => level; set => level = value; }
     [SerializeField] Single hitPoint = 10f;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] internal Byte attackUnit = 1;
     [SerializeField] Single towerRange = 5f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
     [SerializeField] Single fireRate = 1f;
     public float FireRate { get => fireRate; set => fireRate = value; }
-    [SerializeField] internal bool canSeeAssassin = false;
+    [SerializeField] internal bool canSeePhantom = true;
 
     [Header("Money Attributes")]
-    int buildCost = MoneyManager.rangedTowerBuildCost;
+    int buildCost = MoneyManager.mageTowerBuildCost;
     public int BuildCost { get => buildCost; set => buildCost = value; }
-    [SerializeField] int upgradeCost = MoneyManager.rangedTowerBuildCost;
+    [SerializeField] int upgradeCost = MoneyManager.mageTowerBuildCost;
     public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
+
+    [Header("Mage Attributes")]
+    [SerializeField] Single mageMultiplier = 1f;
+    public float MageMultiplier { get => mageMultiplier; set => mageMultiplier = value; }
+    [SerializeField] Single duration = 5f;
+    [Range(0, 1)][SerializeField] Single slowDownPercent = 0.25f;
+    [Range(0, 1)][SerializeField] Single ATKDownPercent = 0.25f;
+    [Range(0, 1)][SerializeField] Single ATKSpeedUpPercent = 0.25f;
+
 
     [Header("Upgrade Attributes")]
     [SerializeField] Single upgradeTowerRange = 0.2f;
     [SerializeField] Single upgradeFireRate = 0.1f;
-    [SerializeField] Single upgradeArrowSpeed = 0.2f;
-    [SerializeField] Single upgradeArrowDamage = 5f;
-
-    [Header("Arrow Attributes")]
-    [SerializeField] Single arrowSpeed = 10f;
-    public Single ArrowSpeed { get => arrowSpeed; set => arrowSpeed = value; }
-    [SerializeField] Single arrowDamage = 10f;
-    public Single ArrowDamage { get => arrowDamage; set => arrowDamage = value; }
+    [SerializeField] Single upgradeMageMultiplier = 0.1f;
+    [SerializeField] Single upgradeDuration = 0.2f;
 
     [Header("Debug")]
-    [SerializeField] internal Enum_RangedTowerState state = Enum_RangedTowerState.Idle;
-    public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Ranged; }
+    [SerializeField] internal Enum_MageTowerState state = Enum_MageTowerState.Idle;
+    [SerializeField] internal Enum_MageTowerSelectedPower power = Enum_MageTowerSelectedPower.Slow;
+    public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Mage; }
     [SerializeField] string assignedWord = null;
     public string AssignedWord { get => assignedWord; set => assignedWord = value; }
     [SerializeField] GameObject occupiedGround;
@@ -63,8 +65,8 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     void Update() {
-        if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode && state == Enum_RangedTowerState.Idle) {
-            state = Enum_RangedTowerState.Active;
+        if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode && state == Enum_MageTowerState.Idle) {
+            state = Enum_MageTowerState.Active;
             if (assignedWord == null || assignedWord == "") {
                 WordManager.instance.AssignWord(this);
                 StartCoroutine(DisplayTowerNameOrAssignedWord());
@@ -73,19 +75,19 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
                 StartCoroutine(DisplayTowerNameOrAssignedWord());
             }
         }
-        else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode && state == Enum_RangedTowerState.Active) {
-            state = Enum_RangedTowerState.Idle;
+        else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode && state == Enum_MageTowerState.Active) {
+            state = Enum_MageTowerState.Idle;
             if (towerNameText.text != TowerName) {
                 StartCoroutine(DisplayTowerNameOrAssignedWord());
             }
         }
 
         switch (state) {
-            case Enum_RangedTowerState.Idle:
+            case Enum_MageTowerState.Idle:
                 break;
-            case Enum_RangedTowerState.Active:
+            case Enum_MageTowerState.Active:
                 break;
-            case Enum_RangedTowerState.Dead:
+            case Enum_MageTowerState.Dead:
                 StartCoroutine(Dead());
                 break;
             default:
@@ -93,7 +95,7 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         }
 
         if (hitPoint <= 0) {
-            state = Enum_RangedTowerState.Dead;
+            state = Enum_MageTowerState.Dead;
         }
     }
 
@@ -113,13 +115,10 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         if (FireRate > upgradeFireRate) {
             FireRate -= upgradeFireRate;
         }
-        ArrowSpeed += upgradeArrowSpeed;
-        ArrowDamage += upgradeArrowDamage;
-
-        // Upgrade Every 2 Levels
-        if (Level % 2 == 0 && attackUnit < 5) {
-            attackUnit += 1;
+        if (MageMultiplier < 2) {
+            MageMultiplier += upgradeMageMultiplier;
         }
+        duration += upgradeDuration;
         UpgradeCost = (int)(MoneyManager.rangedTowerBuildCost * Mathf.Pow(level, MoneyManager.upgradePriceExponent));
         level++;
         Debug.Log($"{TowerName} upgraded");
@@ -131,17 +130,30 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         OccupiedGround.GetComponent<GroundScript>().tower = null;
         TowerNameManager.instance.usedTowerNames.Remove(TowerName);
         BuildManager.instance.builtTowerList.Remove(gameObject);
-        state = Enum_RangedTowerState.Dead;
+        state = Enum_MageTowerState.Dead;
     }
 
     public void Activate() {
-        for (int i = 0 ; i < attackUnit ; i++) {
-            GameObject aArrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
-            SetArrowAttributes(aArrow);
-        }
         Debug.Log($"{TowerName} activated");
+        SetActiveRadiusAttributes();
+        activeRadius.gameObject.SetActive(true);
         AssignedWord = null;
-        StartCoroutine(GetNewWord());
+        StartCoroutine(WaitForDuration());
+
+        IEnumerator WaitForDuration() {
+            yield return new WaitForSeconds(duration);
+            activeRadius.ResetCollidedDemon();
+            activeRadius.gameObject.SetActive(false);
+            StartCoroutine(GetNewWord());
+        }
+    }
+
+    void SetActiveRadiusAttributes() {
+        activeRadius.power = power;
+        activeRadius.gameObject.transform.localScale = new Vector3(TowerRange, TowerRange, TowerRange);
+        activeRadius.slowDownPercentage = slowDownPercent * MageMultiplier;
+        activeRadius.ATKDownPercentage = ATKDownPercent * MageMultiplier;
+        activeRadius.ATKSpeedUpPercentage = ATKSpeedUpPercent * MageMultiplier;
     }
 
     IEnumerator Dead() {
@@ -149,26 +161,10 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         Destroy(gameObject);
     }
 
-    void SetArrowAttributes(GameObject arrow) {
-        arrow.GetComponent<ArrowScript>().Target = CheckForTarget();
-        arrow.GetComponent<ArrowScript>().Damage = arrowDamage;
-        arrow.GetComponent<ArrowScript>().Speed = arrowSpeed;
-    }
-
-    GameObject CheckForTarget() {
-        Collider[] collides = Physics.OverlapSphere(transform.position, towerRange, DemonLayer);
-        foreach (var item in collides) {
-            if (item.CompareTag("Demon") || (item.CompareTag("Assassin") && canSeeAssassin)) {
-                return item.gameObject;
-            }
-        }
-        return null;
-    }
-
     public IEnumerator DisplayTowerNameOrAssignedWord() {
         yield return new WaitForEndOfFrame();
         switch (state) {
-            case Enum_RangedTowerState.Active:
+            case Enum_MageTowerState.Active:
                 towerNameText.text = assignedWord;
                 break;
             default:
@@ -182,10 +178,5 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
         yield return new WaitForSeconds(FireRate);
         WordManager.instance.AssignWord(this);
         StartCoroutine(DisplayTowerNameOrAssignedWord());
-    }
-
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, towerRange);
     }
 }

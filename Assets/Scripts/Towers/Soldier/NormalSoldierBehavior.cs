@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     Single towerRange;
     float lastCalculateTime;
     [SerializeField] float delayCalculateTime = 0.2f;
+    [SerializeField] GroundScript occupiedPath;
     GameObject attackTarget;
     Vector3 walkPosition;
     LayerMask DemonLayer;
@@ -47,29 +49,23 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         }
         lastCalculateTime = Time.time;
         if (baseTower.gameObject.IsDestroyed()) {
-            Destroy(gameObject);
+            state = Enum_NormalSoldierState.Die;
         }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
                 if (Vector3.Distance(transform.position, walkPosition) <= acceptableRadius) {
                     state = Enum_NormalSoldierState.Idle;
                 }
-                if (baseTower != null) {
-                    RaycastHit[] hits = Physics.SphereCastAll(baseTower.transform.position, towerRange, Vector3.up, towerRange, PathLayer);
-                    foreach (var hit in hits) {
-                        Debug.Log(hit.collider.name);
-                        if (hit.collider.CompareTag("Path")) {
-                            Debug.Log("Found Path");
-                            walkPosition = hit.transform.position + Vector3.up;
-                            break;
-                        }
+                if (baseTower != null && walkPosition == new Vector3()) {
+                    if (!FindWalkPosition()) {
+                        state = Enum_NormalSoldierState.Die;
                     }
                 }
-                CheckForTarget();
+                StartCoroutine(CheckForTarget());
                 break;
             case Enum_NormalSoldierState.Idle:
-                CheckForTarget();
-                if (Vector3.Distance(transform.position, walkPosition) > 1.5f) {
+                StartCoroutine(CheckForTarget());
+                if (Vector3.Distance(transform.position, walkPosition) > 2f) {
                     // Don't forget to fix this
                     state = Enum_NormalSoldierState.Initiate;
                 }
@@ -93,6 +89,9 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     void FixedUpdate() {
+        if (HitPoint <= 0) {
+            state = Enum_NormalSoldierState.Die;
+        }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
                 if (walkPosition != new Vector3()) {
@@ -117,25 +116,40 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 break;
             case Enum_NormalSoldierState.Die:
-                Die();
+                StartCoroutine(Die());
                 break;
             default:
                 break;
         }
-        if (HitPoint <= 0) {
-            state = Enum_NormalSoldierState.Die;
-        }
     }
 
-    void CheckForTarget() {
+    bool FindWalkPosition() {
+        RaycastHit[] hits = Physics.SphereCastAll(baseTower.transform.position, towerRange, Vector3.up, towerRange, PathLayer);
+        foreach (var hit in hits) {
+            if (hit.collider.CompareTag("Path")) {
+                if (hit.collider.GetComponent<GroundScript>().hasTower) {
+                    continue;
+                }
+                occupiedPath = hit.collider.GetComponent<GroundScript>();
+                occupiedPath.hasTower = true;
+                occupiedPath.tower = gameObject;
+                walkPosition = hit.transform.position + Vector3.up * 2f;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    IEnumerator CheckForTarget() {
         Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, DemonLayer);
         foreach (var item in collides) {
-            if (item.CompareTag("Demon") || (item.CompareTag("Assassin") && canSeePhantom)) {
+            if (item.CompareTag("Demon") || (item.CompareTag("Phantom") && canSeePhantom)) {
                 attackTarget = item.gameObject;
                 state = Enum_NormalSoldierState.Engage;
                 break;
             }
         }
+        yield return null;
     }
 
     private void OnDrawGizmos() {
@@ -151,7 +165,12 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         target.GetComponent<IDemons>().TakeDamage(damage * Time.fixedDeltaTime * 3);  // Don't forget to fix this
     }
 
-    public void Die() {
+    public IEnumerator Die() {
+        yield return new WaitForEndOfFrame();
+        if (occupiedPath != null) {
+            occupiedPath.hasTower = false;
+            occupiedPath.tower = null;
+        }
         Destroy(gameObject);
     }
     public void Move(Vector3 position) {

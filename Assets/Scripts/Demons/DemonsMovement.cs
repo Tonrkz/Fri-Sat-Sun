@@ -27,8 +27,12 @@ public class DemonsMovement : MonoBehaviour {
         walkTarget = walkPath[currentPathIndex];
     }
 
-    public void SlowDown(Single slowDownPercent) {
+    public void SlowWalkSpeed(Single slowDownPercent) {
         demons.WalkSpeed = demons.StartWalkSpeed * (1 - slowDownPercent);
+    }
+
+    public void ResetWalkSpeed() {
+        demons.WalkSpeed = demons.StartWalkSpeed;
     }
 
     public GameObject GetNextWalkTarget() {

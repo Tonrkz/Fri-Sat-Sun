@@ -50,8 +50,6 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
 
     void Start() {
-        GetComponentInChildren<UILookAtHandler>().lookedAtObj = Camera.main.gameObject;
-        GetComponentInChildren<UILookAtHandler>().LookAt();
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
             OccupiedGround = hit.collider.gameObject;
@@ -124,6 +122,9 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
                 break;
             case Enum_TowerTypes.Ranged:
                 newTower = Instantiate(BuildManager.instance.rangedTowerPrefab, transform.position, Quaternion.identity);
+                break;
+            case Enum_TowerTypes.Mage:
+                newTower = Instantiate(BuildManager.instance.mageTowerPrefab, transform.position, Quaternion.identity);
                 break;
             default:
                 break;

@@ -5,6 +5,7 @@ public class UILookAtHandler : MonoBehaviour {
     [SerializeField] internal GameObject lookedAtObj;
 
     private void Start() {
+        lookedAtObj = Camera.main.gameObject;
         LookAt();
     }
 
