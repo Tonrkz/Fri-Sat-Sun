@@ -118,7 +118,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 catch {
                     attackTarget = null;
-                    state = Enum_NormalSoldierState.Idle;
+                    state = Enum_NormalSoldierState.Initiate;
                 }
                 break;
             case Enum_NormalSoldierState.Die:
