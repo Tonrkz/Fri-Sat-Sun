@@ -20,6 +20,7 @@ public class UserInterfaceManager : MonoBehaviour {
     /// <param name="message">Message to change</param>
     public void ChangeTextMessage(TextMeshProUGUI textObject, string message) {
         textObject.text = message;
+        Debug.Log($"{textObject.name} message changed to {message}");
     }
 
     /// <summary>

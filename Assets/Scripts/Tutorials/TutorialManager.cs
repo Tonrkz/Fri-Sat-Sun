@@ -30,10 +30,24 @@ public class TutorialManager : MonoBehaviour {
     };
     List<string> buildCommandTutorialMessages = new List<string> {
         $"Let's plan our defense.",
-        $"In Kingdom Kome, you have to build a campfire first.",
+        $"In Kingdom Kome, before you can build any tower, you have to build a campfire first.",
         $"To build a campfire, type 'build' and press enter.",
         $"Now, try building a campfire by typing 'build' and press enter.",
-        $"Good job! You have successfully built a campfire."
+        $"Good job! You have successfully built a campfire. Each tower will have their own name displaying above it."
+    };
+    List<string> modeSwitchingTutorialMessages = new List<string> {
+        $"Next step is how to defense our kingdom.",
+        $"There are few ways to withstand against the demon horde.",
+        $"One of them is to send out some soldiers to fight.",
+        $"In order to do that, press 'Space Bar'."
+    };
+    List<string> towerActivationTutorialMessages = new List<string> {
+        $"As you can see, your campfire's name has been changed into another word.",
+        $"This is because you are now in 'Activation Mode'.",
+        $"In this mode, you can activate your tower by typing the word above it.",
+        $"Each tower has their own ability when activated.",
+        $"Try activate your campfire by typing word above it.",
+        $"Great job, you have sent a soldier to defend our kingdom!"
     };
 
     [Header("Debug")]
@@ -78,8 +92,10 @@ public class TutorialManager : MonoBehaviour {
                 UserInterfaceManager.instance.ChangeTextMessage(tutorialText, buildCommandTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.ModeSwitching:
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, modeSwitchingTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.TowerActivation:
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, towerActivationTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.DestroyCommmand:
                 break;
@@ -162,6 +178,12 @@ public class TutorialManager : MonoBehaviour {
                         return;
                     }
                 }
+                if (!"build".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
+                    if (Input.GetKeyDown(KeyCode.Backspace)) {
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, buildCommandTutorialMessages[buildCommandTutorialMessages.Count - 2]);
+                    }
+                }
                 if (BuildManager.instance.builtTowerList.Count > 0) {
                     if (!IsConditionMeet) {
                         OnTutorialConditionMeet();
@@ -170,9 +192,53 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case Enum_TutorialState.ModeSwitching:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < modeSwitchingTutorialMessages.Count - 2) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, modeSwitchingTutorialMessages[tutorialTextIndex]);
+                    }
+                    else {
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, modeSwitchingTutorialMessages[modeSwitchingTutorialMessages.Count - 1]);
+                        pressEnterToContinueText.SetActive(false);
+                        InputStateManager.instance.GameInputState = Enum_GameInputState.CommandMode;
+                    }
+                    if (IsConditionMeet) {
+                        UpdateStep();
+                        return;
+                    }
+                }
+                if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode) {
+                    if (!IsConditionMeet) {
+                        OnTutorialConditionMeet();
+                    }
+                }
                 break;
+
             case Enum_TutorialState.TowerActivation:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < towerActivationTutorialMessages.Count - 3) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, towerActivationTutorialMessages[tutorialTextIndex]);
+                    }
+                    else {
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, towerActivationTutorialMessages[towerActivationTutorialMessages.Count - 2]);
+                        pressEnterToContinueText.SetActive(false);
+                        InputStateManager.instance.GameInputState = Enum_GameInputState.ActivateMode;
+                    }
+                    if (IsConditionMeet) {
+                        UpdateStep();
+                        return;
+                    }
+                }
+                //if (BuildManager.instance.builtTowerList.Count > 0) {
+                //    if (BuildManager.instance.builtTowerList.Any(tower => tower.GetComponent<IActivatables>().AssignedWord == "")) {
+                //        if (!IsConditionMeet) {
+                //            OnTutorialConditionMeet();
+                //        }
+                //    }
+                //}
                 break;
+
             case Enum_TutorialState.DestroyCommmand:
                 break;
             case Enum_TutorialState.PlayerTest1:
@@ -220,8 +286,13 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case Enum_TutorialState.ModeSwitching:
+                UpdateStep();
                 break;
+
             case Enum_TutorialState.TowerActivation:
+                InputStateManager.instance.GameInputState = Enum_GameInputState.Tutorial;
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, towerActivationTutorialMessages[towerActivationTutorialMessages.Count - 1]);
+                pressEnterToContinueText.SetActive(true);
                 break;
             case Enum_TutorialState.DestroyCommmand:
                 break;
