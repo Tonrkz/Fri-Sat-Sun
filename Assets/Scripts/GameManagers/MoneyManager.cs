@@ -9,9 +9,10 @@ public class MoneyManager : MonoBehaviour {
     [SerializeField] TextMeshProUGUI moneyText;
 
     [Header("Attributes")]
-    public Single startingMoney = 100;
+    public Single startingMoney = 75;
     public Single money = 0;
     public Single moneyPerSecond = 4f;
+    public bool IsAddingMoney { get; set; } = false;
     public Single percentRefund = 0.5f;
 
     [Header("Build and Differentiate Cost Attributes")]
@@ -53,7 +54,9 @@ public class MoneyManager : MonoBehaviour {
         if (Time.time < lastCalculatedTime + calcTimeDelay) {
             return;
         }
-        AddMoney(moneyPerSecond);
+        if (IsAddingMoney) {
+            AddMoney(moneyPerSecond);
+        }
         UpdateMoneyText();
         if (money < 0) {
             money = 0;

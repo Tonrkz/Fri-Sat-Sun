@@ -21623,7 +21623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moneyText: {fileID: 1143287732}
-  startingMoney: 100
+  startingMoney: 75
   money: 0
   moneyPerSecond: 4
   percentRefund: 0.5
@@ -21644,7 +21644,7 @@ MonoBehaviour:
   tutorialText: {fileID: 265169535}
   pressEnterToContinueText: {fileID: 1933906616}
   player: {fileID: 581817012}
-  playerMovementTutorialTargetLocation: {fileID: 1955919897}
+  playerMovementTutorialTargetLocation: {fileID: 1662269261}
   state: 0
 --- !u!1 &1441623857
 GameObject:
@@ -25297,6 +25297,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661137817}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1662269261 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4948914340780845907, guid: 838f63d018367214b8302cc00a39489a, type: 3}
+  m_PrefabInstance: {fileID: 973397831}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1663563320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1547208004216900948, guid: 838f63d018367214b8302cc00a39489a, type: 3}
@@ -30204,11 +30209,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1948224642}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1955919897 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4948914340780845907, guid: 838f63d018367214b8302cc00a39489a, type: 3}
-  m_PrefabInstance: {fileID: 86794626}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1958064949 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1547208004216900948, guid: 838f63d018367214b8302cc00a39489a, type: 3}

@@ -18,9 +18,20 @@ public class TutorialManager : MonoBehaviour {
     [Header("Attributes")]
     [SerializeField] Enum_TutorialState state = Enum_TutorialState.Start;
     List<string> startTutorialMessages = new List<string> {
-        $"Welcome to Kingdom Kome!",
-        $"Because you are a new king to this kingdom, I am going to teach you the basics of managing your army.",
-        $"Let's get started!"
+        $"Welcome to Kingdom Kome! My new king.",
+        $"You are the chosen one to be the king, in the hard time like this, when that Demon King trying to conquer our kingdom.",
+        $"Because you are a new king to this kingdom, I am going to teach you the basics of managing your army."
+    };
+    List<string> uiIntroductionTutorialMessages = new List<string> {
+        $"I'll introduce what are you seeing now.",
+        $"The big land you are seeing now is our battlefield.",
+        $"The square frame on a land is a space which you have selected.",
+        $"On top of the screen you will see a bar, which indicates time left in a day or night.",
+        $"Left side of it is a day count. The scouts told me that Demon King's army would last around 5 days.",
+        $"So, we have to survive for 5 days to win this war.",
+        $"On the right side, there is a paper which you will write the command, in order to withstand the demon horde.",
+        $"Above that, it's the money you are holding. Of course, every war have to use money.",
+        $"That's all you need to know for now. Let's get start!"
     };
     List<string> playerMovementTutorialMessages = new List<string> {
         $"First, you need to move your king to the desired location.",
@@ -30,7 +41,8 @@ public class TutorialManager : MonoBehaviour {
     };
     List<string> buildCommandTutorialMessages = new List<string> {
         $"Let's plan our defense.",
-        $"In Kingdom Kome, before you can build any tower, you have to build a campfire first.",
+        $"In Kingdom Kome, before you can build any tower, you must build a campfire first.",
+        $"Campfire's cost is {MoneyManager.campfireBuildCost}. Make sure you have enough money to built it.",
         $"To build a campfire, type 'build' and press enter.",
         $"Now, try building a campfire by typing 'build' and press enter.",
         $"Good job! You have successfully built a campfire. Each tower will have their own name displaying above it."
@@ -48,6 +60,13 @@ public class TutorialManager : MonoBehaviour {
         $"Each tower has their own ability when activated.",
         $"Try activate your campfire by typing word above it.",
         $"Great job, you have sent a soldier to defend our kingdom!"
+    };
+    List<string> destroyCommandTutorialMessages = new List<string> {
+        $"But I think that campfire is a little bit too far from where the horde will come.",
+        $"It'd be better if you build towers close to the frontline.",
+        $"Let's build another campfire.",
+        $"Now, try to destroy the tower by typing 'destroy' and press enter.",
+        $"Good job! You have successfully destroyed the tower."
     };
 
     [Header("Debug")]
@@ -84,6 +103,9 @@ public class TutorialManager : MonoBehaviour {
         switch (state) {
             case Enum_TutorialState.Start:
                 UserInterfaceManager.instance.ChangeTextMessage(tutorialText, startTutorialMessages[tutorialTextIndex]);
+                break;
+            case Enum_TutorialState.UIIntroduction:
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, uiIntroductionTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.PlayerMovement:
                 UserInterfaceManager.instance.ChangeTextMessage(tutorialText, playerMovementTutorialMessages[tutorialTextIndex]);
@@ -130,6 +152,20 @@ public class TutorialManager : MonoBehaviour {
                     if (tutorialTextIndex < startTutorialMessages.Count - 1) {
                         tutorialTextIndex++;
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, startTutorialMessages[tutorialTextIndex]);
+                    }
+                    else {
+                        if (!IsConditionMeet) {
+                            OnTutorialConditionMeet();
+                        }
+                    }
+                }
+                break;
+
+            case Enum_TutorialState.UIIntroduction:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < uiIntroductionTutorialMessages.Count - 1) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, uiIntroductionTutorialMessages[tutorialTextIndex]);
                     }
                     else {
                         if (!IsConditionMeet) {
@@ -270,6 +306,10 @@ public class TutorialManager : MonoBehaviour {
         IsConditionMeet = true;
         switch (state) {
             case Enum_TutorialState.Start:
+                UpdateStep();
+                break;
+
+            case Enum_TutorialState.UIIntroduction:
                 UpdateStep();
                 break;
 

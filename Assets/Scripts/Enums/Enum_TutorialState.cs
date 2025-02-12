@@ -1,5 +1,6 @@
 public enum Enum_TutorialState {
     Start,
+    UIIntroduction,
     PlayerMovement,
     BuildCommand,
     ModeSwitching,
