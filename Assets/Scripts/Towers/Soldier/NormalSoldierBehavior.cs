@@ -27,12 +27,12 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
 
     [Header("Debug")]
+    [SerializeField] float delayCalculateTime = 0.2f;
+    [SerializeField] GroundScript occupiedPath;
     internal GameObject baseTower;
     public GameObject BaseTower { get => baseTower; set => baseTower = value; }
     Single towerRange;
     float lastCalculateTime;
-    [SerializeField] float delayCalculateTime = 0.2f;
-    [SerializeField] GroundScript occupiedPath;
     GameObject attackTarget;
     Vector3 walkPosition;
     LayerMask DemonLayer;

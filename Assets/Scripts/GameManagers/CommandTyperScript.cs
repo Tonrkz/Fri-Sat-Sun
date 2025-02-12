@@ -11,6 +11,7 @@ public class CommandTyperScript : MonoBehaviour {
     [Header("References")]
     [SerializeField] TextMeshProUGUI commandText;
 
+    [Header("Attributes")]
     public string inputString = "";
     string commandString = "";
     List<string> splitedCommand = new List<string>();
