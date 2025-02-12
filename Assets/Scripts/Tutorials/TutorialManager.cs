@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class TutorialManager : MonoBehaviour {
     public static TutorialManager instance;
@@ -13,6 +14,7 @@ public class TutorialManager : MonoBehaviour {
     [SerializeField] GameObject pressEnterToContinueText;
     [SerializeField] GameObject player;
     [SerializeField] GameObject playerMovementTutorialTargetLocation;
+    GameObject builtTower;
 
 
     [Header("Attributes")]
@@ -20,12 +22,12 @@ public class TutorialManager : MonoBehaviour {
     List<string> startTutorialMessages = new List<string> {
         $"Welcome to Kingdom Kome! My new king.",
         $"You are the chosen one to be the king, in the hard time like this, when that Demon King trying to conquer our kingdom.",
-        $"Because you are a new king to this kingdom, I am going to teach you the basics of managing your army."
+        $"Because you are a new king to this kingdom, I am going to teach you the basics of managing the army."
     };
     List<string> uiIntroductionTutorialMessages = new List<string> {
         $"I'll introduce what are you seeing now.",
         $"The big land you are seeing now is our battlefield.",
-        $"The square frame on a land is a space which you have selected.",
+        $"The square frame on a land is a space which you are selecting.",
         $"On top of the screen you will see a bar, which indicates time left in a day or night.",
         $"Left side of it is a day count. The scouts told me that Demon King's army would last around 5 days.",
         $"So, we have to survive for 5 days to win this war.",
@@ -59,14 +61,16 @@ public class TutorialManager : MonoBehaviour {
         $"In this mode, you can activate your tower by typing the word above it.",
         $"Each tower has their own ability when activated.",
         $"Try activate your campfire by typing word above it.",
-        $"Great job, you have sent a soldier to defend our kingdom!"
+        $"Great job, you have sent a soldier to defend our kingdom! Remember that one soldier can occupy one tile."
     };
     List<string> destroyCommandTutorialMessages = new List<string> {
         $"But I think that campfire is a little bit too far from where the horde will come.",
         $"It'd be better if you build towers close to the frontline.",
         $"Let's build another campfire.",
-        $"Now, try to destroy the tower by typing 'destroy' and press enter.",
-        $"Good job! You have successfully destroyed the tower."
+        $"You would have ask that you have not enough money to build another one, wouldn't you?",
+        $"That's why you can destroy it! To get some money back!",
+        $"To destroy a tower, type 'destroy' and the tower's name.",
+        $"Now you can build another campfire, because you have enough money!"
     };
 
     [Header("Debug")]
@@ -120,6 +124,7 @@ public class TutorialManager : MonoBehaviour {
                 UserInterfaceManager.instance.ChangeTextMessage(tutorialText, towerActivationTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.DestroyCommmand:
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.PlayerTest1:
                 break;
@@ -215,13 +220,14 @@ public class TutorialManager : MonoBehaviour {
                     }
                 }
                 if (!"build".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
-                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
                     if (Input.GetKeyDown(KeyCode.Backspace)) {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, buildCommandTutorialMessages[buildCommandTutorialMessages.Count - 2]);
                     }
                 }
                 if (BuildManager.instance.builtTowerList.Count > 0) {
                     if (!IsConditionMeet) {
+                        builtTower = BuildManager.instance.builtTowerList[0];
                         OnTutorialConditionMeet();
                     }
                 }
@@ -251,6 +257,11 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case Enum_TutorialState.TowerActivation:
+                if (GameObject.FindGameObjectWithTag("Soldier")) {
+                    if (!IsConditionMeet) {
+                        OnTutorialConditionMeet();
+                    }
+                }
                 if (Input.GetKeyDown(KeyCode.Return)) {
                     if (tutorialTextIndex < towerActivationTutorialMessages.Count - 3) {
                         tutorialTextIndex++;
@@ -266,16 +277,41 @@ public class TutorialManager : MonoBehaviour {
                         return;
                     }
                 }
-                //if (BuildManager.instance.builtTowerList.Count > 0) {
-                //    if (BuildManager.instance.builtTowerList.Any(tower => tower.GetComponent<IActivatables>().AssignedWord == "")) {
-                //        if (!IsConditionMeet) {
-                //            OnTutorialConditionMeet();
-                //        }
-                //    }
-                //}
                 break;
 
             case Enum_TutorialState.DestroyCommmand:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < destroyCommandTutorialMessages.Count - 2) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
+                    }
+                    if (tutorialTextIndex == destroyCommandTutorialMessages.Count - 2) {
+                        tutorialTextIndex++;
+                        pressEnterToContinueText.SetActive(false);
+                        InputStateManager.instance.GameInputState = Enum_GameInputState.ActivateMode;
+                    }
+                    if (IsConditionMeet) {
+                        UpdateStep();
+                        return;
+                    }
+                }
+                if (builtTower.IsDestroyed()) {
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
+                        if (BuildManager.instance.builtTowerList.Count > 0) {
+                            OnTutorialConditionMeet();
+                        }
+                    return;
+                }
+                if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode) {
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"Don't forget to return back to command mode, in order to write a command! (Pressing 'Space Bar')");
+
+                }
+                else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, try '{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ITowers>().TowerName}'!");
+                    if (!$"{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ITowers>().TowerName}".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
+                    }
+                }
                 break;
             case Enum_TutorialState.PlayerTest1:
                 break;
@@ -335,6 +371,7 @@ public class TutorialManager : MonoBehaviour {
                 pressEnterToContinueText.SetActive(true);
                 break;
             case Enum_TutorialState.DestroyCommmand:
+                UpdateStep();
                 break;
             case Enum_TutorialState.PlayerTest1:
                 break;
