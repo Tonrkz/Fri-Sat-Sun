@@ -154,7 +154,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
         SetAllDemonsLimit(goblinCount);
         while (goblinCount > 0) {
             for (Byte i = 0 ; i < goblinCount ; i++) {
-                SpawnDemon(Enum_DemonTypes.Goblin).GetComponent<IDemons>().MoneyOnDead = 120;
+                SpawnDemon(Enum_DemonTypes.Goblin).GetComponent<IDemons>().MoneyOnDead = 125;
                 goblinCount--;
                 yield return new WaitForSeconds(1 / spawnRate);
             }

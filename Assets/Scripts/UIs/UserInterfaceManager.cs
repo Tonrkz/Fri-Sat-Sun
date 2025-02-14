@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
 
 public class UserInterfaceManager : MonoBehaviour {
     public static UserInterfaceManager instance;
@@ -30,5 +32,20 @@ public class UserInterfaceManager : MonoBehaviour {
     public void ToggleUI(GameObject uiObject) {
         uiObject.SetActive(!uiObject.activeSelf);
         Debug.Log(Equals(uiObject.activeSelf, true) ? $"{uiObject.name} is active" : $"{uiObject.name} is inactive");
+    }
+
+    /// <summary>
+    /// Load a scene via scene index
+    /// </summary>
+    /// <param name="sceneName">Name of a scene to be loaded</param>
+    public void LoadSceneViaName(string sceneName) {
+        SceneManager.LoadScene(sceneName);
+    }
+
+    /// <summary>
+    /// Quit the game
+    /// </summary>
+    public void QuitGame() {
+        Application.Quit();
     }
 }

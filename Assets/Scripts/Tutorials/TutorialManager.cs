@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System.Linq;
 using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 
 public class TutorialManager : MonoBehaviour {
     public static TutorialManager instance;
