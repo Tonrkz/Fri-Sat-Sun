@@ -12,7 +12,10 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
     [Header("Attributes")]
     [SerializeField] Enum_PhantomDemonState state = Enum_PhantomDemonState.Walk;
     [SerializeField] float hitPoint = 100;
-    [SerializeField] public float HitPoint { get => hitPoint; set => hitPoint = value; }
+    public float HitPoint { get => hitPoint; set => hitPoint = value; }
+    [SerializeField] Single moneyOnDead = 100;
+    public Single MoneyOnDead { get { return moneyOnDead; } set { moneyOnDead = value; } }
+
 
 
 
@@ -72,6 +75,7 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void Dead() {
+        DemonsSpawnerManager.instance.OnDemonDead(this);
         Destroy(gameObject);
     }
 

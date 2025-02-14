@@ -39,6 +39,11 @@ public class ActivateTyperScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Find a tower from the first letter of the input
+    /// </summary>
+    /// <param name="c">First letter of tower's assigned word</param>
+    /// <returns></returns>
     IEnumerator FindTowerFromFirstLetter(char c) {
         foreach (var tower in BuildManager.instance.builtTowerList) {
             if (tower.GetComponent<IActivatables>().AssignedWord == "" || tower.GetComponent<IActivatables>().AssignedWord == null) {
@@ -55,6 +60,9 @@ public class ActivateTyperScript : MonoBehaviour {
         yield return null;
     }
 
+    /// <summary>
+    /// Remove the first letter of the input
+    /// </summary>
     void RemoveInputLetter() {
         if (selectedTower != null) {
             selectedTower.GetComponent<IActivatables>().AssignedWord = selectedTower.GetComponent<IActivatables>().AssignedWord.Substring(1);
@@ -65,6 +73,10 @@ public class ActivateTyperScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Activate the selected tower
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ActivateSelectedTower() {
         if (selectedTower != null) {
             selectedTower.GetComponent<IActivatables>().Activate();

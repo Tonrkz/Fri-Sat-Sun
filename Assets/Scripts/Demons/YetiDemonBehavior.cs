@@ -15,11 +15,14 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     [SerializeField] Enum_YetiDemonState state = Enum_YetiDemonState.Walk;
     [SerializeField] float hitPoint = 300;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] Single startWalkSpeed = 1.5f;
+    [SerializeField] Single moneyOnDead = 120;
+    public Single MoneyOnDead { get { return moneyOnDead; } set { moneyOnDead = value; } }
+
 
 
 
     [Header("Movement Attributes")]
+    [SerializeField] Single startWalkSpeed = 1.5f;
     public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
     Single walkSpeed;
     public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
@@ -139,6 +142,7 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     }
 
     public void Dead() {
+        DemonsSpawnerManager.instance.OnDemonDead(this);
         Destroy(gameObject);
     }
 

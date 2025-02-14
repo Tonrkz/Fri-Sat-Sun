@@ -4,39 +4,9 @@ using UnityEngine;
 public class TowerNameManager : MonoBehaviour {
     public static TowerNameManager instance;
 
-    readonly List<string> allTowerNames = new List<string>
-{
-    "Emberhold", "Frostspire", "Thunderkeep", "Venomfang", "Starfall", "Ironclad", "Voidspire",
-    "Arcanum", "Shadowmere", "Sunforge", "Stoneclaw", "Nightbane", "Stormguard", "Crimsonwatch",
-    "Lunarforge", "Dragonroost", "Chaosfang", "Glacium", "Serpentis", "Radiantspire", "Firebrand",
-    "Frostfang", "Thunderspire", "Venomhold", "Starward", "Ironheart", "Voidguard", "Arcantor",
-    "Shadowcrest", "Sunward", "Stoneward", "Nightspire", "Stormcall", "Crimsonspire", "Lunaris",
-    "Dragonkeep", "Chaosspire", "Glacierfall", "Serpenthorn", "Radiantfall", "Emberflame",
-    "Frostclaw", "Thunderclad", "Venomspire", "Starchaser", "Ironspire", "Voidbane", "Arcanis",
-    "Shadowfall", "Sunclad", "Stoneforge", "Nightguard", "Stormspire", "Crimsonclaw", "Lunaguard",
-    "Dragonflame", "Chaosguard", "Glaciumspire", "Serpentclaw", "Radiantclaw", "Emberwatch",
-    "Frostfang", "Thunderward", "Venomclaw", "Stonemist", "Ironspire", "Voidspire", "Arcforge",
-    "Shadowforge", "Sunclaw", "Stoneclad", "Nightclaw", "Stormforge", "Crimsonward", "Lunarspire",
-    "Dragonward", "Chaosward", "Glacierward", "Serpentward", "Radiantward", "Flamehold", "Frostwatch",
-    "Thunderfall", "Venomward", "Starfall", "Ironforge", "Voidclaw", "Arcward", "Shadowclaw",
-    "Sunforge", "Stoneclaw", "Nightfall", "Stormclaw", "Crimsonforge", "Lunarhold", "Dragonwatch",
-    "Chaoshold", "Glacierforge", "Serpentfall", "Radiantfall", "Emberflame", "Frostguard",
-    "Thunderclaw", "Venomspire", "Stonereach", "Ironward", "Voidreach", "Arcflame", "Shadowreach",
-    "Sunward", "Stoneforge", "Nightforge", "Stormreach", "Crimsonspire", "Lunarforge", "Dragonspire",
-    "Chaosspire", "Glacierreach", "Serpentforge", "Radiantforge", "Flameguard", "Frostward",
-    "Thunderreach", "Venomreach", "Starspire", "Ironreach", "Voidward", "Arcfire", "Shadowfire",
-    "Sunflare", "Stoneflare", "Nightflare", "Stormflare", "Crimsonflare", "Lunarflare", "Dragonflare",
-    "Chaosflare", "Glacierflare", "Serpentflare", "Radiantflare", "Emberstrike", "Froststrike",
-    "Thunderstrike", "Venomstrike", "Starstrike", "Ironstrike", "Voidstrike", "Arcstrike",
-    "Shadowstrike", "Sunstrike", "Stonestrike", "Nightstrike", "Stormstrike", "Crimsonstrike",
-    "Lunarstrike", "Dragonstrike", "Chaosstrike", "Glacierstrike", "Serpentstrike", "Radiantstrike",
-    "Fireward", "Frostward", "Thunderward", "Venomward", "Starward", "Ironward", "Voidward",
-    "Arcward", "Shadowward", "Sunward", "Stoneward", "Nightward", "Stormward", "Crimsonward",
-    "Lunarward", "Dragonward", "Chaosward", "Glacierward", "Serpentward", "Radiantward", "Flameward",
-    "Frostspire", "Thunderforge", "Venomforge", "Starforge", "Ironforge", "Voidforge", "Arcforge",
-    "Shadowforge", "Sunforge", "Stoneforge", "Nightforge", "Stormforge", "Crimsonforge", "Lunarforge",
-    "Dragonforge", "Chaosforge", "Glacierforge", "Serpentforge", "Radiantforge"
-};
+    readonly List<string> allTowerNames = new List<string> {
+        "Arcana", "Arcane", "Aegis", "Azure", "Bastion", "Beacon", "Behold", "Blazon", "Bulwark", "Cairn", "Citadel", "Cinder", "Cobalt", "Colossus", "Crag", "Crimson", "Crypt", "Daunt", "Deacon", "Dragon", "Druid", "Dusk", "Elder", "Ember", "Enigma", "Ethereal", "Faerie", "Falcon", "Fathom", "Fencer", "Fiend", "Fort", "Gargoyle", "Glyph", "Grim", "Hallow", "Havoc", "Haven", "Hex", "Hornet", "Hound", "Hydra", "Inferno", "Ironclad", "Jade", "Jester", "Jinx", "Knight", "Kraken", "Legion", "Lore", "Lucent", "Lunar", "Magus", "Malice", "Mantle", "Marauder", "Marshal", "Mystic", "Nexus", "Night", "Nimbus", "Nodes", "Nova", "Nyx", "Omen", "Oracle", "Orb", "Onyx", "Paladin", "Phantom", "Phoenix", "Pike", "Pylon", "Quartz", "Quasar", "Raven", "Reaver", "Regent", "Rift", "Rune", "Sage", "Scion", "Sentry", "Shadow", "Shade", "Sigil", "Specter", "Spire", "Storm", "Sultan", "Talon", "Tempest", "Titan", "Tomb", "Torch", "Trek", "Umbra", "Valor", "Vanguard", "Venom", "Vertex", "Vigil", "Vortex", "Warden", "Warlock", "Wyvern", "Zenith", "Zephyr", "Zinc"
+    };
     public List<string> towerNames = new List<string>();
     public List<string> usedTowerNames = new List<string>();
 
@@ -53,6 +23,10 @@ public class TowerNameManager : MonoBehaviour {
         towerNames = allTowerNames;
     }
 
+    /// <summary>
+    /// Get a random tower name from the list of tower names
+    /// </summary>
+    /// <returns>A string of random tower name</returns>
     public string GetRandomTowerName() {
         int randomIndex = Random.Range(0, towerNames.Count);
         string randomName = towerNames[randomIndex].ToLower();
@@ -66,6 +40,11 @@ public class TowerNameManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Check if a tower name has been used
+    /// </summary>
+    /// <param name="name">Tower's name to check if used</param>
+    /// <returns>A boolean</returns>
     public bool CheckIfNameUsed(string name) {
         foreach (string n in usedTowerNames) {
             if (n == name) {

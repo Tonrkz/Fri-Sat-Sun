@@ -27,6 +27,11 @@ public class BuildManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Find a tower via its name
+    /// </summary>
+    /// <param name="towerName">Name of a tower to be found</param>
+    /// <returns>GameObject of a searched tower</returns>
     public GameObject FindTowerViaName(string towerName) {
         towerName = towerName.ToLower();
         foreach (var tower in builtTowerList) {
@@ -37,6 +42,10 @@ public class BuildManager : MonoBehaviour {
         return null;
     }
 
+    /// <summary>
+    /// Check if the ground is available to build a tower
+    /// </summary>
+    /// <returns>A boolean</returns>
     public bool CheckIfGroundAvailable() {
         Debug.Log("CheckIfGroundAvailable");
         Physics.Raycast(PlayerMovement.instance.GetCurrentPosition(), Vector3.down, out hit, 2f);
@@ -49,6 +58,10 @@ public class BuildManager : MonoBehaviour {
         return false;
     }
 
+    /// <summary>
+    /// Build a tower
+    /// </summary>
+    /// <returns></returns>
     public bool BuildTower() {
         string buildTowerName = TowerNameManager.instance.GetRandomTowerName();
         GameObject builtTower = Instantiate(campfirePrefab, PlayerMovement.instance.GetCurrentPosition() + new Vector3(0, 0.35f, 0), Quaternion.identity);

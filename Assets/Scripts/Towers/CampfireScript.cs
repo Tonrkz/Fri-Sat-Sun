@@ -228,6 +228,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         switch (state) {
             case Enum_CampfireState.Active:
                 towerNameText.text = assignedWord;
+                towerNameText.fontStyle = FontStyles.Normal;
                 if (assignedWord == "" || assignedWord == null) {
                     towerNamePanel.SetActive(false);
                 }
@@ -237,6 +238,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
                 break;
             default:
                 towerNameText.text = towerName;
+                towerNameText.fontStyle = FontStyles.UpperCase;
                 towerNamePanel.SetActive(true);
                 break;
         }
