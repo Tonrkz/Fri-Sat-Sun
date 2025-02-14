@@ -75,7 +75,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
 
     [Header("Debug")]
     [SerializeField] internal Enum_AttackerTowerState state = Enum_AttackerTowerState.Idle;
-    public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Campfire; }
+    public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Attacker; }
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
 

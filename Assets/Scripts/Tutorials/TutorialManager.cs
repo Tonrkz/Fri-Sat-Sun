@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
 
 public class TutorialManager : MonoBehaviour {
     public static TutorialManager instance;
@@ -20,62 +21,95 @@ public class TutorialManager : MonoBehaviour {
     [Header("Attributes")]
     [SerializeField] Enum_TutorialState state = Enum_TutorialState.Start;
     List<string> startTutorialMessages = new List<string> {
-        $"Welcome to Kingdom Kome! My new king.",
-        $"You are the chosen one to be the king, in the hard time like this, when that Demon King trying to conquer our kingdom.",
-        $"Because you are a new king to this kingdom, I am going to teach you the basics of managing the army."
+        $"Welcome to Kingdom Kome, my liege!",
+        $"You are our chosen king, come to us in this dire hour as the Demon King seeks to conquer our realm.",
+        $"As you are new to the throne, allow me to guide you through the basics of commanding our armies."
     };
+
     List<string> uiIntroductionTutorialMessages = new List<string> {
-        $"I'll introduce what are you seeing now.",
-        $"The big land you are seeing now is our battlefield.",
-        $"The square frame on a land is a space which you are selecting.",
-        $"On top of the screen you will see a bar, which indicates time left in a day or night.",
-        $"Left side of it is a day count. The scouts told me that Demon King's army would last around 5 days.",
-        $"So, we have to survive for 5 days to win this war.",
-        $"On the right side, there is a paper which you will write the command, in order to withstand the demon horde.",
-        $"Above that, it's the money you are holding. Of course, every war have to use money.",
-        $"That's all you need to know for now. Let's get start!"
+        $"Let me acquaint you with your surroundings, Your Majesty.",
+        $"This vast expanse before you is our battlefield.",
+        $"Each square upon the land denotes a space you may select.",
+        $"Above, you will see a bar indicating the passage of day and night.",
+        $"To its left, the count of days. Our scouts foretell the Demon King's onslaught will endure for five days.",
+        $"Thus, we must withstand the onslaught for five days to claim victory in this war.",
+        $"To the right, you see the parchment where you shall issue commands to repel the demonic horde.",
+        $"And above, your treasury, for even war demands coin.",
+        $"That is all you require for now. Let us begin!"
     };
+
     List<string> playerMovementTutorialMessages = new List<string> {
-        $"First, you need to move your king to the desired location.",
-        $"Use the arrow keys to move your king.",
-        $"Now, move to the highlighted location.",
-        $"Good job! You have successfully moved into the desired location."
+        $"Firstly, you must command your king to a strategic location.", // 0
+        $"Utilize the arrow keys to direct your royal personage.", // 1
+        $"Now, move to the location marked for you.", // 2
+        // Player move to the target location
+        $"Excellent! You have successfully positioned yourself at the designated location." // 3
     };
+
     List<string> buildCommandTutorialMessages = new List<string> {
-        $"Let's plan our defense.",
-        $"In Kingdom Kome, before you can build any tower, you must build a campfire first.",
-        $"Campfire's cost is {MoneyManager.campfireBuildCost}. Make sure you have enough money to built it.",
-        $"To build a campfire, type 'build' and press enter.",
-        $"Now, try building a campfire by typing 'build' and press enter.",
-        $"Good job! You have successfully built a campfire. Each tower will have their own name displaying above it."
+        $"Let us devise our defenses.", // 0
+        $"In Kingdom Kome, ere any tower may rise, a campfire must first be established.", // 1
+        $"A campfire's cost is {MoneyManager.campfireBuildCost}. Ensure you possess sufficient funds to construct it.", // 2
+        $"To raise a campfire, type 'build' and press enter.", // 3
+        // Player build a campfire
+        $"Well done! A campfire has been erected. Each tower will bear its name above it for ease of command." // 4
     };
+
     List<string> modeSwitchingTutorialMessages = new List<string> {
-        $"Next step is how to defense our kingdom.",
-        $"There are few ways to withstand against the demon horde.",
-        $"One of them is to send out some soldiers to fight.",
-        $"In order to do that, press 'Space Bar'."
+        $"Now we shall turn our attention to defending our kingdom.",
+        $"There are several strategies to resist the demonic horde.",
+        $"One such tactic is to dispatch soldiers into the fray.",
+        $"To achieve this, press the 'Space Bar'."
+        // Player switch to activation mode
     };
+
     List<string> towerActivationTutorialMessages = new List<string> {
-        $"As you can see, your campfire's name has been changed into another word.",
-        $"This is because you are now in 'Activation Mode'.",
-        $"In this mode, you can activate your tower by typing the word above it.",
-        $"Each tower has their own ability when activated.",
-        $"Try activate your campfire by typing word above it.",
-        $"Great job, you have sent a soldier to defend our kingdom! Remember that one soldier can occupy one tile."
+        $"Observe! The campfire's designation has shifted.", // 0
+        $"This signifies your entry into 'Activation Mode'.", // 1
+        $"In this mode, you may activate your towers by inputting the word displayed above them.", // 2
+        $"Each tower boasts a unique ability upon activation.", // 3
+        $"Attempt to activate your campfire by typing the word now displayed above it.", // 4 
+        // Player activate the campfire
+        $"Magnificent! You have dispatched a soldier to defend our kingdom! Remember, each soldier occupies a single tile." // 5
     };
+
     List<string> destroyCommandTutorialMessages = new List<string> {
-        $"But I think that campfire is a little bit too far from where the horde will come.",
-        $"It'd be better if you build towers close to the frontline.",
-        $"Let's build another campfire.",
-        $"You would have ask that you have not enough money to build another one, wouldn't you?",
-        $"That's why you can destroy it! To get some money back!",
-        $"To destroy a tower, type 'destroy' and the tower's name.",
-        $"Now you can build another campfire, because you have enough money!"
+        $"However, I believe this campfire is somewhat distant from the impending assault.", // 0
+        $"It would serve us better to construct towers closer to the front lines.", // 1
+        $"Let us erect another campfire.", // 2
+        $"You might inquire if your coffers are sufficient for another, would you not?", // 3
+        $"Hence, you possess the power to dismantle it! To reclaim a portion of your investment!", // 4
+        $"To dismantle a tower, type 'destroy' followed by the tower's name.", // 5
+        // Player destroy the campfire
+        $"Now, you possess the funds to build another campfire in a more advantageous position!" // 6
+        // Player build another campfire
+    };
+
+    List<string> playerTest1Messages = new List<string> {
+        $"Hark! Look! A demon approaches!", // 0
+        $"You must deploy your soldier to engage it in combat!" // 1
+        // Player kills the demon
+    };
+
+    List<string> evolveCommandTutorialMessages = new List<string> {
+        $"You have proven yourself a capable commander, Your Majesty.", // 0
+        $"Now, let us delve into the intricacies of tower evolution.", // 1
+        $"Each tower may be upgraded to enhance its abilities.", // 2
+        $"To evolve a tower, type '[Tower name] evolve [Tower Type]' ", // 3
+        $"The cost of evolution is dependent upon the tower's type.", // 4
+        $"Let's evolve the campfire into an attacker tower.", // 5
+        // Player evolve the campfire into an attacker tower
+        $"A new tower has been born! It shall serve us well in the battles to come.", // 6
+        $"Here is the cost to evolve each tower type and it's power: {Enum_TowerTypes.Attacker} = {MoneyManager.attackerTowerBuildCost} (Sends a stronger soldier)", // 
+        $"{Enum_TowerTypes.Ranged} = {MoneyManager.rangedTowerBuildCost} (Shoots enemies from afar)", // 7
+        $"{Enum_TowerTypes.Supply} = {MoneyManager.supplyTowerBuildCost} (More money from TAXing)", // 8
+        $"{Enum_TowerTypes.Mage} = {MoneyManager.mageTowerBuildCost} (Slows down demons)" // 9
     };
 
     [Header("Debug")]
     public bool IsConditionMeet { get; private set; }
     Byte tutorialTextIndex = 0;
+    Enum_GameInputState previousInputState;
 
     private void Awake() {
         if (instance == null) {
@@ -93,6 +127,10 @@ public class TutorialManager : MonoBehaviour {
     }
 
     void Update() {
+        if (Input.GetKeyDown(KeyCode.F12)) {
+            state++;
+            OnInitiateTutorial();
+        }
         OnTutorialConditionCheck();
     }
 
@@ -103,6 +141,7 @@ public class TutorialManager : MonoBehaviour {
     void OnInitiateTutorial() {
         pressEnterToContinueText.SetActive(true);
         IsConditionMeet = false;
+        previousInputState = InputStateManager.instance.GameInputState;
         InputStateManager.instance.GameInputState = Enum_GameInputState.Tutorial;
         switch (state) {
             case Enum_TutorialState.Start:
@@ -127,8 +166,10 @@ public class TutorialManager : MonoBehaviour {
                 UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.PlayerTest1:
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, playerTest1Messages[tutorialTextIndex]);
                 break;
-            case Enum_TutorialState.DifferentiateCommand:
+            case Enum_TutorialState.EvolveCommand:
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.UpgradeCommand:
                 break;
@@ -181,6 +222,11 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case Enum_TutorialState.PlayerMovement:
+                if (Vector3.Distance(player.transform.position, playerMovementTutorialTargetLocation.transform.position) < 1.5f) {
+                    if (!IsConditionMeet) {
+                        OnTutorialConditionMeet();
+                    }
+                }
                 if (Input.GetKeyDown(KeyCode.Return)) {
                     if (tutorialTextIndex < playerMovementTutorialMessages.Count - 3) {
                         tutorialTextIndex++;
@@ -189,21 +235,33 @@ public class TutorialManager : MonoBehaviour {
                     else {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, playerMovementTutorialMessages[playerMovementTutorialMessages.Count - 2]);
                         pressEnterToContinueText.SetActive(false);
+                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", Color.yellow);
                         InputStateManager.instance.GameInputState = Enum_GameInputState.CommandMode;
                     }
                     if (IsConditionMeet) {
                         UpdateStep();
+                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color32(0, 115, 6, 255));
                         return;
-                    }
-                }
-                if (Vector3.Distance(player.transform.position, playerMovementTutorialTargetLocation.transform.position) < 1.5f) {
-                    if (!IsConditionMeet) {
-                        OnTutorialConditionMeet();
                     }
                 }
                 break;
 
             case Enum_TutorialState.BuildCommand:
+                if (BuildManager.instance.builtTowerList.Count > 0) {
+                    if (!IsConditionMeet) {
+                        builtTower = BuildManager.instance.builtTowerList[0];
+                        if (builtTower.GetComponent<CampfireScript>().state != Enum_CampfireState.Building) {
+                            OnTutorialConditionMeet();
+                        }
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.Backspace)) {
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, buildCommandTutorialMessages[buildCommandTutorialMessages.Count - 2]);
+                }
+                if (!"build".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
+
+                }
                 if (Input.GetKeyDown(KeyCode.Return)) {
                     if (tutorialTextIndex < buildCommandTutorialMessages.Count - 3) {
                         tutorialTextIndex++;
@@ -212,28 +270,21 @@ public class TutorialManager : MonoBehaviour {
                     else {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, buildCommandTutorialMessages[buildCommandTutorialMessages.Count - 2]);
                         pressEnterToContinueText.SetActive(false);
-                        InputStateManager.instance.GameInputState = Enum_GameInputState.CommandMode;
+                        InputStateManager.instance.GameInputState = previousInputState;
                     }
                     if (IsConditionMeet) {
                         UpdateStep();
                         return;
                     }
                 }
-                if (!"build".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
-                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
-                    if (Input.GetKeyDown(KeyCode.Backspace)) {
-                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, buildCommandTutorialMessages[buildCommandTutorialMessages.Count - 2]);
-                    }
-                }
-                if (BuildManager.instance.builtTowerList.Count > 0) {
-                    if (!IsConditionMeet) {
-                        builtTower = BuildManager.instance.builtTowerList[0];
-                        OnTutorialConditionMeet();
-                    }
-                }
                 break;
 
             case Enum_TutorialState.ModeSwitching:
+                if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode) {
+                    if (!IsConditionMeet) {
+                        OnTutorialConditionMeet();
+                    }
+                }
                 if (Input.GetKeyDown(KeyCode.Return)) {
                     if (tutorialTextIndex < modeSwitchingTutorialMessages.Count - 2) {
                         tutorialTextIndex++;
@@ -242,16 +293,11 @@ public class TutorialManager : MonoBehaviour {
                     else {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, modeSwitchingTutorialMessages[modeSwitchingTutorialMessages.Count - 1]);
                         pressEnterToContinueText.SetActive(false);
-                        InputStateManager.instance.GameInputState = Enum_GameInputState.CommandMode;
+                        InputStateManager.instance.GameInputState = previousInputState;
                     }
                     if (IsConditionMeet) {
                         UpdateStep();
                         return;
-                    }
-                }
-                if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode) {
-                    if (!IsConditionMeet) {
-                        OnTutorialConditionMeet();
                     }
                 }
                 break;
@@ -270,7 +316,7 @@ public class TutorialManager : MonoBehaviour {
                     else {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, towerActivationTutorialMessages[towerActivationTutorialMessages.Count - 2]);
                         pressEnterToContinueText.SetActive(false);
-                        InputStateManager.instance.GameInputState = Enum_GameInputState.ActivateMode;
+                        InputStateManager.instance.GameInputState = previousInputState;
                     }
                     if (IsConditionMeet) {
                         UpdateStep();
@@ -280,26 +326,11 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case Enum_TutorialState.DestroyCommmand:
-                if (Input.GetKeyDown(KeyCode.Return)) {
-                    if (tutorialTextIndex < destroyCommandTutorialMessages.Count - 2) {
-                        tutorialTextIndex++;
-                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
-                    }
-                    if (tutorialTextIndex == destroyCommandTutorialMessages.Count - 2) {
-                        tutorialTextIndex++;
-                        pressEnterToContinueText.SetActive(false);
-                        InputStateManager.instance.GameInputState = Enum_GameInputState.ActivateMode;
-                    }
-                    if (IsConditionMeet) {
-                        UpdateStep();
-                        return;
-                    }
-                }
                 if (builtTower.IsDestroyed()) {
-                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
-                        if (BuildManager.instance.builtTowerList.Count > 0) {
-                            OnTutorialConditionMeet();
-                        }
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
+                    if (BuildManager.instance.builtTowerList.Count > 0) {
+                        OnTutorialConditionMeet();
+                    }
                     return;
                 }
                 if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode) {
@@ -312,10 +343,71 @@ public class TutorialManager : MonoBehaviour {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
                     }
                 }
+
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < destroyCommandTutorialMessages.Count - 2) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
+                    }
+                    if (tutorialTextIndex == destroyCommandTutorialMessages.Count - 2) {
+                        tutorialTextIndex++;
+                        pressEnterToContinueText.SetActive(false);
+                        InputStateManager.instance.GameInputState = previousInputState;
+                    }
+                    if (IsConditionMeet) {
+                        UpdateStep();
+                        return;
+                    }
+                }
                 break;
+
             case Enum_TutorialState.PlayerTest1:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < playerTest1Messages.Count - 1) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, playerTest1Messages[tutorialTextIndex]);
+                        InputStateManager.instance.GameInputState = previousInputState;
+                        pressEnterToContinueText.SetActive(false);
+                        StartCoroutine(DemonsSpawnerManager.instance.TutorialPlayerTest1());
+                    }
+                }
+                if (DemonsSpawnerManager.instance.DemonCount == 0 && DemonsSpawnerManager.instance.DemonLimit == 0) {
+                    if (!IsConditionMeet) {
+                        OnTutorialConditionMeet();
+                    }
+                }
                 break;
-            case Enum_TutorialState.DifferentiateCommand:
+            case Enum_TutorialState.EvolveCommand:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < 5) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
+                    }
+                    else if (tutorialTextIndex == 5) {
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, type {builtTower.GetComponent<ITowers>().TowerName} evolve attacker");
+                        pressEnterToContinueText.SetActive(false);
+                        InputStateManager.instance.GameInputState = previousInputState;
+                    }
+                    else if (tutorialTextIndex <= evolveCommandTutorialMessages.Count - 1) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
+                        pressEnterToContinueText.SetActive(true);
+                        if (tutorialTextIndex == evolveCommandTutorialMessages.Count - 1) {
+                            OnTutorialConditionMeet();
+                        }
+                    }
+                }
+                builtTower = BuildManager.instance.builtTowerList[0];
+                if (builtTower.GetComponent<ITowers>().TowerType != Enum_TowerTypes.Campfire) {
+                    if (!IsConditionMeet) {
+                        IsConditionMeet = true;
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
+                        previousInputState = InputStateManager.instance.GameInputState;
+                        InputStateManager.instance.GameInputState = Enum_GameInputState.Tutorial;
+                        pressEnterToContinueText.SetActive(true);
+                    }
+                }
                 break;
             case Enum_TutorialState.UpgradeCommand:
                 break;
@@ -371,11 +463,14 @@ public class TutorialManager : MonoBehaviour {
                 pressEnterToContinueText.SetActive(true);
                 break;
             case Enum_TutorialState.DestroyCommmand:
+                builtTower = BuildManager.instance.builtTowerList[0];
                 UpdateStep();
                 break;
             case Enum_TutorialState.PlayerTest1:
+                UpdateStep();
                 break;
-            case Enum_TutorialState.DifferentiateCommand:
+            case Enum_TutorialState.EvolveCommand:
+                UpdateStep();
                 break;
             case Enum_TutorialState.UpgradeCommand:
                 break;

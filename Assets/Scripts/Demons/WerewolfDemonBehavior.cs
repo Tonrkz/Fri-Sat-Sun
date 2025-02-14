@@ -14,7 +14,9 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     [Header("Attributes")]
     [SerializeField] Enum_WerewolfDemonState state = Enum_WerewolfDemonState.Walk;
     [SerializeField] float hitPoint = 100;
-    [SerializeField] public float HitPoint { get => hitPoint; set => hitPoint = value; }
+    public float HitPoint { get => hitPoint; set => hitPoint = value; }
+    [SerializeField] Single moneyOnDead = 70;
+    public Single MoneyOnDead { get { return moneyOnDead; } set { moneyOnDead = value; } }
 
 
 
@@ -76,6 +78,7 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void Dead() {
+        DemonsSpawnerManager.instance.OnDemonDead(this);
         Destroy(gameObject);
     }
 

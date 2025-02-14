@@ -7,7 +7,7 @@ public enum Enum_TutorialState {
     TowerActivation,
     DestroyCommmand,
     PlayerTest1,
-    DifferentiateCommand,
+    EvolveCommand,
     UpgradeCommand,
     PlayerTest2,
     TaxCommand,

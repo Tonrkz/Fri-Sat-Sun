@@ -15,6 +15,8 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     [SerializeField] Enum_GoblinDemonState state = Enum_GoblinDemonState.Walk;
     [SerializeField] float hitPoint = 100;
     public float HitPoint { get => hitPoint; set => hitPoint = value; }
+    [SerializeField] Single moneyOnDead = 20;
+    public Single MoneyOnDead { get { return moneyOnDead; } set { moneyOnDead = value; } }
 
 
 
@@ -141,6 +143,8 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     }
 
     public void Dead() {
+        DemonsSpawnerManager.instance.OnDemonDead(this);
+        //Play Dead Animation
         Destroy(gameObject);
     }
 

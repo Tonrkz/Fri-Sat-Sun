@@ -55,11 +55,20 @@ public class CommandTyperScript : MonoBehaviour {
         commandText.text = inputString;
     }
 
+    /// <summary>
+    /// Add a character to the input string after a frame
+    /// </summary>
+    /// <param name="c">A char to be add to command string</param>
+    /// <returns></returns>
     IEnumerator AddChar(char c) {
         yield return new WaitForEndOfFrame();
         inputString += c;
     }
 
+    /// <summary>
+    /// Set the command string by splitting the input string
+    /// </summary>
+    /// <param name="command">inputString</param>
     void SetCommand(string command) {
         commandString = command;
         commandString = commandString.ToLower();
@@ -69,6 +78,9 @@ public class CommandTyperScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Check the command and execute the command
+    /// </summary>
     void CheckCommand() {
         ITowers tower;
         if (splitedCommand.Count < 1) {
@@ -133,10 +145,15 @@ public class CommandTyperScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Check the command for towers
+    /// </summary>
+    /// <param name="inputCommand"></param>
+    /// <returns></returns>
     string CheckCommandForTowers(string inputCommand) {
         switch (inputCommand) {
-            case "differentiate":
-                Debug.Log("Differentiate command");
+            case "evolve":
+                Debug.Log("Evolve command");
                 GameObject towerObject = BuildManager.instance.FindTowerViaName(splitedCommand[0]);
                 if (towerObject.GetComponent<ITowers>().TowerType == Enum_TowerTypes.Campfire) {
                     switch (splitedCommand[2]) {
@@ -168,7 +185,7 @@ public class CommandTyperScript : MonoBehaviour {
                             break;
                     }
                 }
-                return "differentiate command";
+                return "evolve command";
             default:
                 return "No Exisited Command.";
         }

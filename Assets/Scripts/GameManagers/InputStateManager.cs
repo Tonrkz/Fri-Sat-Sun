@@ -4,12 +4,12 @@ using TMPro;
 using UnityEngine;
 
 public class InputStateManager : MonoBehaviour {
-    [Header("References")]
-    [SerializeField] TextMeshProUGUI stateText;
-
     public static InputStateManager instance;
 
-    Enum_GameInputState gameInputState = Enum_GameInputState.CommandMode;
+    [Header("References")]
+    [SerializeField] TextMeshProUGUI stateText; // Text to display the current state
+
+    Enum_GameInputState gameInputState = Enum_GameInputState.CommandMode; // Current game input state
     public Enum_GameInputState GameInputState { get => gameInputState; set => gameInputState = value; }
 
     void Awake() {
@@ -22,16 +22,19 @@ public class InputStateManager : MonoBehaviour {
     }
 
     void Update() {
+        if (GameInputState == Enum_GameInputState.Tutorial) {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Space) && CommandTyperScript.instance.inputString == "") {
-            if (gameInputState == Enum_GameInputState.ActivateMode) {
+            if (GameInputState == Enum_GameInputState.ActivateMode) {
                 StartCoroutine(ClearInputString());
-                gameInputState = Enum_GameInputState.CommandMode;
+                GameInputState = Enum_GameInputState.CommandMode;
                 Debug.Log("Command Mode");
                 stateText.text = "Command";
                 return;
             }
             else {
-                gameInputState = Enum_GameInputState.ActivateMode;
+                GameInputState = Enum_GameInputState.ActivateMode;
                 Debug.Log("Activate Mode");
                 StartCoroutine(ClearInputString());
                 stateText.text = "Activation";
@@ -40,6 +43,10 @@ public class InputStateManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Clear the input string after a frame
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ClearInputString() {
         yield return new WaitForEndOfFrame();
         CommandTyperScript.instance.inputString = "";
