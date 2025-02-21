@@ -70,6 +70,7 @@ public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Mage; }
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
+    public bool IsSelected { get; set; }
     [SerializeField] LayerMask DemonLayer;
 
 

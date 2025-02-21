@@ -78,6 +78,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Attacker; }
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
+    public bool IsSelected { get; set; } = false;
 
 
     void Start() {

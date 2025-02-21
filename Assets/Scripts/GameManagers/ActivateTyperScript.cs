@@ -21,6 +21,12 @@ public class ActivateTyperScript : MonoBehaviour {
         if (InputStateManager.instance.GameInputState != Enum_GameInputState.ActivateMode) {
             return;
         }
+        if (Input.GetKeyDown(KeyCode.Space) && selectedTower != null) {
+            PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
+            selectedTower.GetComponent<ITowers>().IsSelected = false;
+            WordManager.instance.AssignWord(selectedTower.GetComponent<IActivatables>());
+            selectedTower = null;
+        }
         if (Input.anyKeyDown) {
             foreach (var c in Input.inputString) {
                 if (selectedTower == null) {
@@ -33,10 +39,6 @@ public class ActivateTyperScript : MonoBehaviour {
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.Space) && selectedTower != null) {
-            WordManager.instance.AssignWord(selectedTower.GetComponent<IActivatables>());
-            selectedTower = null;
-        }
     }
 
     /// <summary>
@@ -47,11 +49,14 @@ public class ActivateTyperScript : MonoBehaviour {
     IEnumerator FindTowerFromFirstLetter(char c) {
         foreach (var tower in BuildManager.instance.builtTowerList) {
             if (tower.GetComponent<IActivatables>().AssignedWord == "" || tower.GetComponent<IActivatables>().AssignedWord == null) {
+                tower.GetComponent<ITowers>().IsSelected = false;
                 continue;
             }
             if (tower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
                 Debug.Log($"Word found {tower.GetComponent<IActivatables>().AssignedWord}");
                 selectedTower = tower;
+                tower.GetComponent<ITowers>().IsSelected = true;
+                PlayerTowerSelectionHandler.instance.OnTowerSelected.Invoke();
                 towerAssignedWord = tower.GetComponent<IActivatables>().AssignedWord;
                 RemoveInputLetter();
                 break;
@@ -82,6 +87,8 @@ public class ActivateTyperScript : MonoBehaviour {
             selectedTower.GetComponent<IActivatables>().Activate();
             WordManager.instance.usedWords.Remove(towerAssignedWord);
             towerAssignedWord = "";
+            selectedTower.GetComponent<ITowers>().IsSelected = false;
+            PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
             selectedTower = null;
         }
         yield return null;

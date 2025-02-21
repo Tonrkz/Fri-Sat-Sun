@@ -69,6 +69,7 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Ranged; }
     [SerializeField] GameObject occupiedGround;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
+    public bool IsSelected { get; set; } = false;
     [SerializeField] LayerMask DemonLayer;
 
 

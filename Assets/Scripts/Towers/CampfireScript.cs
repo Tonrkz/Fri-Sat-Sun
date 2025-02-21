@@ -66,11 +66,14 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
     bool hasBuilt = false;
     public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Campfire; }
     [SerializeField] GameObject occupiedGround;
+    public bool IsSelected { get; set; } = false;
     public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
 
 
 
     void Start() {
+        PlayerTowerSelectionHandler.instance.OnTowerSelected.AddListener(this.OnSelected);
+        PlayerTowerSelectionHandler.instance.OnTowerDeselected.AddListener(this.OnDeselected);
         CanSeePhantom = StartCanSeePhantom;
         soldierCanSeePhantom = CanSeePhantom;
         FireRate = StartFireRate;
@@ -228,7 +231,7 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         switch (state) {
             case Enum_CampfireState.Active:
                 towerNameText.text = assignedWord;
-                towerNameText.fontStyle = FontStyles.Normal;
+                towerNameText.fontStyle = FontStyles.Bold;
                 if (assignedWord == "" || assignedWord == null) {
                     towerNamePanel.SetActive(false);
                 }
@@ -256,6 +259,25 @@ public class CampfireScript : MonoBehaviour, ITowers, IActivatables {
         soldier.GetComponent<NormalSoldierBehavior>().attackCooldown = soldierAttackCooldown;
         soldier.GetComponent<NormalSoldierBehavior>().attackRange = soldierAttackRange;
         soldier.GetComponent<NormalSoldierBehavior>().startCanSeePhantom = soldierCanSeePhantom;
+    }
+
+    public void OnSelected() {
+        if (IsSelected) {
+            Debug.Log("Selected");
+            transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
+            transform.GetChild(1).gameObject.SetActive(true);
+        }
+        else {
+            Debug.Log("Fade");
+            transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 0.25f));
+            transform.GetChild(1).gameObject.SetActive(false);
+        }
+    }
+
+    public void OnDeselected() {
+        Debug.Log("Deselected");
+        transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
+        transform.GetChild(1).gameObject.SetActive(true);
     }
 
     IEnumerator GetNewWord() {
