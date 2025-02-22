@@ -151,7 +151,7 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     public void DestroyTower() {
-        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
+        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund * GlobalAttributeMultipliers.PercentRefundMultiplier);
         OccupiedGround.GetComponent<GroundScript>().hasTower = false;
         OccupiedGround.GetComponent<GroundScript>().tower = null;
         TowerNameManager.instance.usedTowerNames.Remove(TowerName);
@@ -189,8 +189,8 @@ public class RangedTowerScript : MonoBehaviour, ITowers, IActivatables {
 
     void SetArrowAttributes(GameObject arrow) {
         arrow.GetComponent<ArrowScript>().Target = CheckForTarget();
-        arrow.GetComponent<ArrowScript>().Damage = arrowDamage;
-        arrow.GetComponent<ArrowScript>().Speed = arrowSpeed;
+        arrow.GetComponent<ArrowScript>().Damage = arrowDamage * GlobalAttributeMultipliers.ArrowDamageMultiplier;
+        arrow.GetComponent<ArrowScript>().Speed = arrowSpeed * GlobalAttributeMultipliers.ArrowSpeedMultiplier;
     }
 
     GameObject CheckForTarget() {

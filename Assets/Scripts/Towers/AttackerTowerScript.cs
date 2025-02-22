@@ -165,7 +165,7 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     public void DestroyTower() {
-        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
+        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund * GlobalAttributeMultipliers.PercentRefundMultiplier);
         OccupiedGround.GetComponent<GroundScript>().hasTower = false;
         OccupiedGround.GetComponent<GroundScript>().tower = null;
         TowerNameManager.instance.usedTowerNames.Remove(TowerName);
@@ -234,15 +234,15 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
 
     void SetSoldierAttributes(GameObject soldier) {
         soldier.GetComponent<ISoldiers>().BaseTower = gameObject;
-        soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint;
-        soldier.GetComponent<NormalSoldierBehavior>().walkSpeed = soldierWalkSpeed;
-        soldier.GetComponent<NormalSoldierBehavior>().acceptableRadius = soldierAcceptableRadius;
-        soldier.GetComponent<NormalSoldierBehavior>().damage = soldierDamage;
-        soldier.GetComponent<NormalSoldierBehavior>().sightRange = soldierSightRange;
-        soldier.GetComponent<NormalSoldierBehavior>().attackSpeed = soldierAttackSpeed;
-        soldier.GetComponent<NormalSoldierBehavior>().attackCooldown = soldierAttackCooldown;
-        soldier.GetComponent<NormalSoldierBehavior>().attackRange = soldierAttackRange;
-        soldier.GetComponent<NormalSoldierBehavior>().startCanSeePhantom = soldierCanSeePhantom;
+        soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint * GlobalAttributeMultipliers.SoldierHitPointMultiplier;
+        soldier.GetComponent<NormalSoldierBehavior>().WalkSpeed = soldierWalkSpeed * GlobalAttributeMultipliers.SoldierWalkSpeedMultiplier;
+        soldier.GetComponent<NormalSoldierBehavior>().AcceptableRadius = soldierAcceptableRadius;
+        soldier.GetComponent<NormalSoldierBehavior>().Damage = soldierDamage * GlobalAttributeMultipliers.SoldierDamageMultiplier;
+        soldier.GetComponent<NormalSoldierBehavior>().SightRange = soldierSightRange * GlobalAttributeMultipliers.SoldierSightRangeMultiplier;
+        soldier.GetComponent<NormalSoldierBehavior>().AttackSpeed = soldierAttackSpeed * GlobalAttributeMultipliers.SoldierAttackSpeedMultiplier;
+        soldier.GetComponent<NormalSoldierBehavior>().AttackCooldown = soldierAttackCooldown * GlobalAttributeMultipliers.SoldierAttackCooldownMultiplier;
+        soldier.GetComponent<NormalSoldierBehavior>().AttackRange = soldierAttackRange;
+        soldier.GetComponent<NormalSoldierBehavior>().StartCanSeePhantom = soldierCanSeePhantom;
     }
 
     IEnumerator GetNewWord() {

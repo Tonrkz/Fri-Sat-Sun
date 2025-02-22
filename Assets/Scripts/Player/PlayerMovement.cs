@@ -1,15 +1,15 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
     public static PlayerMovement instance;
 
     [Header("Attributes")]
-    [SerializeField] float moveCooldown = 0.15f;
-    [SerializeField] float holdCooldown = 0.1f;
-    int movePerInput = 2;
-    float calcMoveCooldown = 0f;
-    float calcHoldCooldown = 0f;
+    internal Single moveCooldown = 0.15f; // Time between each movement
+    Single holdCooldown = 0.1f; // Threadhold for holding the key
+    Byte movePerInput = 2;
+    Single calcMoveCooldown = 0f;
+    Single calcHoldCooldown = 0f;
 
     void Awake() {
         instance = this;
@@ -80,6 +80,10 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Get the current position of the player
+    /// </summary>
+    /// <returns>Player's world position</returns>
     public Vector3 GetCurrentPosition() {
         Debug.Log($"Current Position: {transform.position}");
         return transform.position;

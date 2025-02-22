@@ -149,7 +149,7 @@ public class MageTowerScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     public void DestroyTower() {
-        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund);
+        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund * GlobalAttributeMultipliers.PercentRefundMultiplier);
         OccupiedGround.GetComponent<GroundScript>().hasTower = false;
         OccupiedGround.GetComponent<GroundScript>().tower = null;
         TowerNameManager.instance.usedTowerNames.Remove(TowerName);

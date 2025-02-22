@@ -8680,45 +8680,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8349353592681051844, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
   m_PrefabInstance: {fileID: 6670254660735623693}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &581817015
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581817012}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 256
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 2147484407
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &581817016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581817012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 485378bbbf92c464eb43b2f265a60e07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnTowerSelected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnTowerDeselected:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &584142010
 GameObject:
   m_ObjectHideFlags: 0
@@ -36130,20 +36091,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8349353592681051844, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8349353592681051844, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 581817016}
-    - targetCorrespondingSourceObject: {fileID: 8349353592681051844, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 581817015}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8dc79364433bde74584ca1f28145d3fe, type: 3}
 --- !u!1 &6719051055326589967
 GameObject:
