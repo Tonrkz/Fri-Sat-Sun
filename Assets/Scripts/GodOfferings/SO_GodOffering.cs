@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public abstract class SO_GodOffering : ScriptableObject {
@@ -6,7 +7,7 @@ public abstract class SO_GodOffering : ScriptableObject {
     public string offeringName; // This will be used to display the offering name
     public string offeringDescription; // This will be used to display the offering description
     public int offeringCost; // This will be used to display the offering cost
-    protected bool isActivated; // This will be used to check if the offering is activated
+    public bool isActivated; // This will be used to check if the offering is activated
 
     /// <summary>
     /// This method will be called when the offering is assigned to the player
