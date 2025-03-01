@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5301911523658575639}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: -0.6}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 6463909333190640776}
   - component: {fileID: 540427046439860620}
   - component: {fileID: 695562685379062782}
+  - component: {fileID: 5852964591741663799}
   m_Layer: 8
   m_Name: Attacker
   m_TagString: Tower
@@ -183,13 +184,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0cd990ebf9529d4f9f5b6cb89d87e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackerSoldierPrefab: {fileID: 2225985748608282072, guid: b5774b0d464940143acbfec0be978239, type: 3}
   rb: {fileID: 540427046439860620}
   towerNamePanel: {fileID: 7794826963352448128}
-  towerNameText: {fileID: 2607964081602877135}
+  towerNameText: {fileID: 1447108557167711258}
+  render: {fileID: 0}
+  health: {fileID: 5852964591741663799}
+  occupiedGround: {fileID: 0}
+  attackerSoldierPrefab: {fileID: 2225985748608282072, guid: b5774b0d464940143acbfec0be978239, type: 3}
   towerName: Attacker
   level: 1
-  hitPoint: 10
   startCanSeePhantom: 0
   attackUnit: 1
   startFireRate: 1
@@ -202,7 +205,6 @@ MonoBehaviour:
   upgradeSoldierDamage: 5
   upgradeSoldierAttackSpeed: 0.1
   upgradeSoldierAttackCooldown: 0.1
-  soldierList: []
   soldierHitPoint: 150
   soldierWalkSpeed: 2
   soldierAcceptableRadius: 0.33
@@ -212,8 +214,19 @@ MonoBehaviour:
   soldierAttackCooldown: 1
   soldierAttackRange: 1
   soldierCanSeePhantom: 0
-  state: 0
-  occupiedGround: {fileID: 0}
+--- !u!114 &5852964591741663799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7726950801907583317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b6fc4a33364414ab8afb0c40e39db4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoint: 20
 --- !u!1001 &3599477184391882378
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -311,9 +324,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
---- !u!114 &2607964081602877135 stripped
+--- !u!114 &1447108557167711258 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1568010156898775109, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2731082418611417744, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
   m_PrefabInstance: {fileID: 3599477184391882378}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

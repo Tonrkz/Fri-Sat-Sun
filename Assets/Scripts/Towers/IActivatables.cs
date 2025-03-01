@@ -10,6 +10,7 @@ public interface IActivatables {
     bool StartCanSeePhantom { get; set; }
     bool CanSeePhantom { get; set; }
     void Activate();
+    IEnumerator GetNewWord();
     IEnumerator SetCanSeePhantom(bool canSee);
     IEnumerator ResetCanSeePhantom();
     IEnumerator FireRateUp(Single fireRateUpPercent);

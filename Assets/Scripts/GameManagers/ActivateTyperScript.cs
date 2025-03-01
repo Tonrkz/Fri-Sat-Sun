@@ -23,7 +23,7 @@ public class ActivateTyperScript : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.Space) && selectedTower != null) {
             PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
-            selectedTower.GetComponent<ITowers>().IsSelected = false;
+            selectedTower.GetComponent<ATowers>().IsSelected = false;
             WordManager.instance.AssignWord(selectedTower.GetComponent<IActivatables>());
             selectedTower = null;
         }
@@ -49,13 +49,13 @@ public class ActivateTyperScript : MonoBehaviour {
     IEnumerator FindTowerFromFirstLetter(char c) {
         foreach (var tower in BuildManager.instance.builtTowerList) {
             if (tower.GetComponent<IActivatables>().AssignedWord == "" || tower.GetComponent<IActivatables>().AssignedWord == null) {
-                tower.GetComponent<ITowers>().IsSelected = false;
+                tower.GetComponent<ATowers>().IsSelected = false;
                 continue;
             }
             if (tower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
                 Debug.Log($"Word found {tower.GetComponent<IActivatables>().AssignedWord}");
                 selectedTower = tower;
-                tower.GetComponent<ITowers>().IsSelected = true;
+                tower.GetComponent<ATowers>().IsSelected = true;
                 PlayerTowerSelectionHandler.instance.OnTowerSelected.Invoke();
                 towerAssignedWord = tower.GetComponent<IActivatables>().AssignedWord;
                 RemoveInputLetter();
@@ -71,7 +71,7 @@ public class ActivateTyperScript : MonoBehaviour {
     void RemoveInputLetter() {
         if (selectedTower != null) {
             selectedTower.GetComponent<IActivatables>().AssignedWord = selectedTower.GetComponent<IActivatables>().AssignedWord.Substring(1);
-            StartCoroutine(selectedTower.GetComponent<ITowers>().DisplayTowerNameOrAssignedWord());
+            StartCoroutine(selectedTower.GetComponent<ATowers>().DisplayTowerNameOrAssignedWord());
             if (selectedTower.GetComponent<IActivatables>().AssignedWord.Length == 0) {
             StartCoroutine(ActivateSelectedTower());
             }
@@ -87,7 +87,7 @@ public class ActivateTyperScript : MonoBehaviour {
             selectedTower.GetComponent<IActivatables>().Activate();
             WordManager.instance.usedWords.Remove(towerAssignedWord);
             towerAssignedWord = "";
-            selectedTower.GetComponent<ITowers>().IsSelected = false;
+            selectedTower.GetComponent<ATowers>().IsSelected = false;
             PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
             selectedTower = null;
         }

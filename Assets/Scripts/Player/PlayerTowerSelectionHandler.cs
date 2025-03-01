@@ -19,7 +19,7 @@ public class PlayerTowerSelectionHandler : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         Debug.Log("OnTriggerEnterPlayer" + other);
         if (other.CompareTag("Tower") && InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
-            other.GetComponent<ITowers>().IsSelected = true;
+            other.GetComponent<ATowers>().IsSelected = true;
             OnTowerSelected.Invoke();
         }
     }
@@ -27,7 +27,7 @@ public class PlayerTowerSelectionHandler : MonoBehaviour {
     void OnTriggerExit(Collider other) {
         Debug.Log("OnTriggerExitPlayer" + other);
         if (other.CompareTag("Tower") && InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
-            other.GetComponent<ITowers>().IsSelected = false;
+            other.GetComponent<ATowers>().IsSelected = false;
             OnTowerDeselected.Invoke();
         }
     }

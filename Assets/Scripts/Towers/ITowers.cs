@@ -7,13 +7,9 @@ public interface ITowers {
     Enum_TowerTypes TowerType { get; }
     Byte Level { get; set; }
     int BuildCost { get; set; }
-    int UpgradeCost { get; set; }
-    Single HitPoint { get; set; }
     GameObject OccupiedGround { get; set; }
     bool IsSelected { get; set; }
-    void UpdradeTower();
     void DestroyTower();
-    void TakeDamage(Single damage);
     void SetTowerName(string towerNameInput);
     IEnumerator DisplayTowerNameOrAssignedWord();
 }

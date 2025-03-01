@@ -5,26 +5,16 @@ using Unity;
 using UnityEngine;
 using TMPro;
 
-public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
+public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
     [Header("References")]
     [SerializeField] GameObject attackerSoldierPrefab;
-    [SerializeField] Rigidbody rb;
-    [SerializeField] GameObject towerNamePanel;
-    [SerializeField] TextMeshPro towerNameText;
 
 
 
     [Header("Tower Attributes")]
-    [SerializeField] string towerName = "Attacker";
-    public string TowerName { get => towerName; set => towerName = value; }
     [SerializeField] Byte level = 1;
-    public Byte Level { get => level; set => level = value; }
-    [SerializeField] Single hitPoint = 10f;
-    public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] bool startCanSeePhantom;
-    public bool StartCanSeePhantom { get => startCanSeePhantom; set => startCanSeePhantom = value; }
     bool canSeePhantom;
-    public bool CanSeePhantom { get => canSeePhantom; set => canSeePhantom = value; }
     [SerializeField] internal Byte attackUnit = 1;
 
 
@@ -36,14 +26,11 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] Single towerRange = 3f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
-    [SerializeField] string assignedWord = null;
-    public string AssignedWord { get => assignedWord; set => assignedWord = value; }
+    public string AssignedWord { get; set; } = null;
 
 
 
     [Header("Money Attributes")]
-    int buildCost = MoneyManager.attackerTowerBuildCost;
-    public int BuildCost { get => buildCost; set => buildCost = value; }
     [SerializeField] int upgradeCost = MoneyManager.attackerTowerBuildCost;
     public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
 
@@ -60,7 +47,6 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
 
 
     [Header("Soldier Attributes")]
-    [SerializeField] List<GameObject> soldierList = new List<GameObject>();
     [SerializeField] Single soldierHitPoint = 150;
     [SerializeField] Single soldierWalkSpeed = 2;
     [SerializeField] Single soldierAcceptableRadius = 0.33f;
@@ -72,19 +58,29 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     [SerializeField] bool soldierCanSeePhantom = false;
 
 
-
-    [Header("Debug")]
-    [SerializeField] internal Enum_AttackerTowerState state = Enum_AttackerTowerState.Idle;
-    public Enum_TowerTypes TowerType { get => Enum_TowerTypes.Attacker; }
-    [SerializeField] GameObject occupiedGround;
-    public GameObject OccupiedGround { get => occupiedGround; set => occupiedGround = value; }
-    public bool IsSelected { get; set; } = false;
-
-
     void Start() {
+        // Subscribe to events
+        PlayerTowerSelectionHandler.instance.OnTowerSelected.AddListener(this.OnSelected);
+        PlayerTowerSelectionHandler.instance.OnTowerDeselected.AddListener(this.OnDeselected);
+
+        // Set Initial attributes
+        // ATowers attributes
+        Level = level;
+        StartCanSeePhantom = startCanSeePhantom;
+        ChangeTowerState(Enum_AttackerTowerState.Idle);
+        TowerType = Enum_TowerTypes.Attacker;
+        BuildCost += MoneyManager.attackerTowerBuildCost;
+        OccupiedGround = null;
+        IsSelected = false;
+
+        // IActivatables attributes
         CanSeePhantom = StartCanSeePhantom;
+        soldierCanSeePhantom = CanSeePhantom;
         FireRate = StartFireRate;
+
+        // Display tower name
         StartCoroutine(DisplayTowerNameOrAssignedWord());
+
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
             OccupiedGround = hit.collider.gameObject;
@@ -94,51 +90,41 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
     }
 
     void Update() {
-        if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode && state == Enum_AttackerTowerState.Idle) {
-            state = Enum_AttackerTowerState.Active;
-            if (assignedWord == null || assignedWord == "") {
+        if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode && (Enum_AttackerTowerState)state == Enum_AttackerTowerState.Idle) {
+            if (AssignedWord == null || AssignedWord == "") {
                 WordManager.instance.AssignWord(this);
-                StartCoroutine(DisplayTowerNameOrAssignedWord());
             }
-            else if (towerNameText.text != assignedWord) {
-                StartCoroutine(DisplayTowerNameOrAssignedWord());
-            }
+            ChangeTowerState(Enum_AttackerTowerState.Active);
         }
-        else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode && state == Enum_AttackerTowerState.Active) {
-            state = Enum_AttackerTowerState.Idle;
-            if (towerNameText.text != TowerName) {
-                StartCoroutine(DisplayTowerNameOrAssignedWord());
-            }
+        else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode && (Enum_AttackerTowerState)state == Enum_AttackerTowerState.Active) {
+            ChangeTowerState(Enum_AttackerTowerState.Idle);
         }
 
-        switch (state) {
+        if (health.HitPoint <= 0) {
+            ChangeTowerState(Enum_AttackerTowerState.Dead);
+        }
+    }
+
+    public override void ChangeTowerState(Enum newState) {
+        base.ChangeTowerState((Enum_AttackerTowerState)newState);
+        switch ((Enum_AttackerTowerState)state) {
             case Enum_AttackerTowerState.Idle:
                 break;
             case Enum_AttackerTowerState.Active:
+                if (AssignedWord == null || AssignedWord == "") {
+                    WordManager.instance.AssignWord(this);
+                }
                 break;
             case Enum_AttackerTowerState.Dead:
-                StartCoroutine(Dead());
+                Dead();
                 break;
             default:
-                break;
+                return;
         }
-
-        if (hitPoint <= 0) {
-            state = Enum_AttackerTowerState.Dead;
-        }
-    }
-
-    public void SetTowerName(string towerNameInput) {
-        towerName = towerNameInput;
-        towerName[0].ToString().ToUpper();
         StartCoroutine(DisplayTowerNameOrAssignedWord());
     }
 
-    public void TakeDamage(Single damage) {
-        hitPoint -= damage;
-    }
-
-    public void UpdradeTower() {
+    public void UpgradeTower() {
         // Upgrade Every Level
         if (FireRate > upgradeFireRate) {
             FireRate -= upgradeFireRate;
@@ -153,6 +139,9 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         // Upgrade Every 2 Levels
         if (Level % 2 == 0) {
             soldierAttackSpeed += upgradeSoldierAttackSpeed;
+            startCanSeePhantom = true;
+            canSeePhantom = startCanSeePhantom;
+            soldierCanSeePhantom = canSeePhantom;
         }
 
         // Upgrade Every 4 Levels
@@ -164,21 +153,14 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         Debug.Log($"{TowerName} upgraded");
     }
 
-    public void DestroyTower() {
-        MoneyManager.instance.AddMoney(buildCost * MoneyManager.instance.percentRefund * GlobalAttributeMultipliers.PercentRefundMultiplier);
-        OccupiedGround.GetComponent<GroundScript>().hasTower = false;
-        OccupiedGround.GetComponent<GroundScript>().tower = null;
-        TowerNameManager.instance.usedTowerNames.Remove(TowerName);
-        BuildManager.instance.builtTowerList.Remove(gameObject);
-        state = Enum_AttackerTowerState.Dead;
+    public override void DestroyTower() {
+        base.DestroyTower();
+        ChangeTowerState(Enum_CampfireState.Dead);
     }
 
     public void Activate() {
-        for (int i = 0 ; i < attackUnit ; i++) {
-            GameObject aSoldier = Instantiate(attackerSoldierPrefab, transform.position, Quaternion.identity);
-            soldierList.Add(aSoldier);
-            SetSoldierAttributes(aSoldier);
-        }
+        GameObject aSoldier = Instantiate(attackerSoldierPrefab, transform.position, Quaternion.identity);
+        SetSoldierAttributes(aSoldier);
         Debug.Log($"{TowerName} activated");
         AssignedWord = null;
         StartCoroutine(GetNewWord());
@@ -199,37 +181,14 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
 
     public IEnumerator SetCanSeePhantom(bool canSee) {
         CanSeePhantom = canSee;
+        soldierCanSeePhantom = canSee;
         yield return null;
     }
 
     public IEnumerator ResetCanSeePhantom() {
         CanSeePhantom = StartCanSeePhantom;
+        soldierCanSeePhantom = StartCanSeePhantom;
         yield return null;
-    }
-
-    IEnumerator Dead() {
-        yield return new WaitForEndOfFrame();
-        Destroy(gameObject);
-    }
-
-    public IEnumerator DisplayTowerNameOrAssignedWord() {
-        yield return new WaitForEndOfFrame();
-        switch (state) {
-            case Enum_AttackerTowerState.Active:
-                towerNameText.text = assignedWord;
-                if (assignedWord == "" || assignedWord == null) {
-                    towerNamePanel.SetActive(false);
-                }
-                else {
-                    towerNamePanel.SetActive(true);
-                }
-                break;
-            default:
-                towerNameText.text = towerName;
-                towerNamePanel.SetActive(true);
-                break;
-        }
-        Debug.Log($"{towerNameText.text} displayed");
     }
 
     void SetSoldierAttributes(GameObject soldier) {
@@ -245,13 +204,13 @@ public class AttackerTowerScript : MonoBehaviour, ITowers, IActivatables {
         soldier.GetComponent<NormalSoldierBehavior>().StartCanSeePhantom = soldierCanSeePhantom;
     }
 
-    IEnumerator GetNewWord() {
+    public IEnumerator GetNewWord() {
         yield return new WaitForSeconds(FireRate);
         WordManager.instance.AssignWord(this);
         StartCoroutine(DisplayTowerNameOrAssignedWord());
     }
 
-    void OnDrawGizmos() {
+    private void OnDrawGizmos() {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, towerRange);
     }

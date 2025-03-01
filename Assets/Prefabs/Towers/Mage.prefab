@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5301911523658575639}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: -0.6}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 6463909333190640776}
   - component: {fileID: 540427046439860620}
   - component: {fileID: 6279541505502249037}
+  - component: {fileID: 3954411295423745799}
   m_Layer: 8
   m_Name: Mage
   m_TagString: Tower
@@ -313,11 +314,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 540427046439860620}
   towerNamePanel: {fileID: 555477885726926240}
-  towerNameText: {fileID: 5740088830782742511}
+  towerNameText: {fileID: 9190884158690041146}
+  render: {fileID: 0}
+  health: {fileID: 3954411295423745799}
+  occupiedGround: {fileID: 0}
   activeRadius: {fileID: 5959679933665240961}
   towerName: Mage
   level: 1
-  hitPoint: 10
   startCanSeePhantom: 1
   startFireRate: 1
   towerRange: 7.5
@@ -332,12 +335,20 @@ MonoBehaviour:
   upgradeFireRate: 0.1
   upgradeMageMultiplier: 0.1
   upgradeDuration: 0.2
-  state: 0
   power: 0
-  occupiedGround: {fileID: 0}
-  DemonLayer:
-    serializedVersion: 2
-    m_Bits: 0
+--- !u!114 &3954411295423745799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7726950801907583317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b6fc4a33364414ab8afb0c40e39db4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoint: 15
 --- !u!1001 &6515112784367841194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -445,9 +456,9 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6764161168510503434, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
   m_PrefabInstance: {fileID: 6515112784367841194}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5740088830782742511 stripped
+--- !u!114 &9190884158690041146 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1568010156898775109, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2731082418611417744, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
   m_PrefabInstance: {fileID: 6515112784367841194}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
