@@ -1,8 +1,11 @@
+using DG.Tweening;
+using DG.Tweening.Core;
 using System;
 using System.Collections;
 using TMPro;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ATowers : MonoBehaviour, ITowers {
     [Header("References")]
@@ -54,6 +57,20 @@ public class ATowers : MonoBehaviour, ITowers {
                     towerNamePanel.SetActive(false);
                 }
                 else {
+                    switch (TowerType) {
+                        case Enum_TowerTypes.Campfire:
+                            towerNamePanel.GetComponent<SpriteRenderer>().color = new Color32(249, 255, 90, 255);
+                            break;
+                        case Enum_TowerTypes.Attacker:
+                            towerNamePanel.GetComponent<SpriteRenderer>().color = new Color32(249, 255, 90, 255);
+                            break;
+                        case Enum_TowerTypes.Ranged:
+                            towerNamePanel.GetComponent<SpriteRenderer>().color = new Color32(157, 245, 243, 255);
+                            break;
+                        case Enum_TowerTypes.Mage:
+                            towerNamePanel.GetComponent<SpriteRenderer>().color = new Color32(151, 121, 255, 255);
+                            break;
+                    }
                     towerNamePanel.SetActive(true);
                 }
             }
@@ -65,6 +82,7 @@ public class ATowers : MonoBehaviour, ITowers {
             towerNameText.text = TowerName;
             towerNameText.fontStyle = FontStyles.UpperCase;
             towerNamePanel.SetActive(true);
+            towerNamePanel.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
         }
     }
 
@@ -90,17 +108,20 @@ public class ATowers : MonoBehaviour, ITowers {
 
     public void OnSelected() {
         if (IsSelected) {
-            transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
+            DOVirtual.Color(transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetColor("_Tint"), new Color(1, 1, 1, 1), 0.15f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", x));
+            //transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
             transform.GetChild(1).gameObject.SetActive(true);
         }
         else {
-            transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 0.25f));
+            DOVirtual.Color(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0.25f), 0.15f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", x));
+            //transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 0.25f));
             transform.GetChild(1).gameObject.SetActive(false);
         }
     }
 
     public void OnDeselected() {
-        transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
+        DOVirtual.Color(transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetColor("_Tint"), new Color(1, 1, 1, 1), 0.15f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", x));
+        //transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
         transform.GetChild(1).gameObject.SetActive(true);
     }
 }

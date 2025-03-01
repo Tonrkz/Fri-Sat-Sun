@@ -100,11 +100,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1975301545574397154}
   anim: {fileID: 0}
-  movement: {fileID: 0}
+  movement: {fileID: -7488874263059044657}
   state: 1
-  hitPoint: 300
+  hitPoint: 120
   moneyOnDead: 120
-  startWalkSpeed: 0.75
+  startWalkSpeed: 0.7
   acceptableRadius: 0.33
   startDamage: 20
   sightRange: 1.5

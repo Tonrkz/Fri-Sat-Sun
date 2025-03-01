@@ -191,13 +191,11 @@ MonoBehaviour:
   health: {fileID: 5852964591741663799}
   occupiedGround: {fileID: 0}
   attackerSoldierPrefab: {fileID: 2225985748608282072, guid: b5774b0d464940143acbfec0be978239, type: 3}
-  towerName: Attacker
   level: 1
   startCanSeePhantom: 0
   attackUnit: 1
   startFireRate: 1
   towerRange: 3
-  assignedWord: 
   upgradeCost: 100
   upgradeFireRate: 0.1
   upgradeSoldierHitPoint: 10
@@ -318,6 +316,14 @@ PrefabInstance:
     - target: {fileID: 6764161168510503434, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
       propertyPath: m_Name
       value: Tower Name Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.b
+      value: 0.3529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.r
+      value: 0.972549
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

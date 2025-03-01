@@ -319,12 +319,10 @@ MonoBehaviour:
   health: {fileID: 3954411295423745799}
   occupiedGround: {fileID: 0}
   activeRadius: {fileID: 5959679933665240961}
-  towerName: Mage
   level: 1
   startCanSeePhantom: 1
   startFireRate: 1
   towerRange: 7.5
-  assignedWord: 
   mageMultiplier: 1
   duration: 5
   slowDownPercent: 0.25
@@ -440,6 +438,18 @@ PrefabInstance:
     - target: {fileID: 6764161168510503434, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
       propertyPath: m_Name
       value: Tower Name Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.b
+      value: 0.95391643
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.r
+      value: 0.61698115
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

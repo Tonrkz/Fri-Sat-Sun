@@ -30,7 +30,7 @@ public class ActivateTyperScript : MonoBehaviour {
         if (Input.anyKeyDown) {
             foreach (var c in Input.inputString) {
                 if (selectedTower == null) {
-                    StartCoroutine(FindTowerFromFirstLetter(c));
+                    StartCoroutine(FindTowerFromFirstLetter(char.ToLower(c)));
                 }
                 else {
                     if (selectedTower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
@@ -56,6 +56,7 @@ public class ActivateTyperScript : MonoBehaviour {
                 Debug.Log($"Word found {tower.GetComponent<IActivatables>().AssignedWord}");
                 selectedTower = tower;
                 tower.GetComponent<ATowers>().IsSelected = true;
+                PlayerTowerSelectionHandler.instance.SelectedTower = tower.GetComponent<ATowers>();
                 PlayerTowerSelectionHandler.instance.OnTowerSelected.Invoke();
                 towerAssignedWord = tower.GetComponent<IActivatables>().AssignedWord;
                 RemoveInputLetter();

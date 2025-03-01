@@ -193,13 +193,11 @@ MonoBehaviour:
   occupiedGround: {fileID: 0}
   arrowPrefab: {fileID: 4342468968940038269, guid: dd308c9c45a031d4d945cf11d3e1f034, type: 3}
   arrowSpawnPoint: {fileID: 8473894353468488687}
-  towerName: Ranged
   level: 1
   startCanSeePhantom: 0
   attackUnit: 1
   startFireRate: 1
   towerRange: 5
-  assignedWord: 
   arrowSpeed: 10
   arrowDamage: 50
   upgradeCost: 150
@@ -345,6 +343,22 @@ PrefabInstance:
     - target: {fileID: 6764161168510503434, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
       propertyPath: m_Name
       value: Tower Name Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.b
+      value: 0.3830188
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.g
+      value: 0.39636147
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
