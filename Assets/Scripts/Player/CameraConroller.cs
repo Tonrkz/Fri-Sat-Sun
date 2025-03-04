@@ -15,14 +15,10 @@ public class CameraConroller : MonoBehaviour {
     [SerializeField] float cameraSpeed = 5f;
     [SerializeField] float cameraZoomSpeed = 5f;
     [SerializeField] float cameraRotationSpeed = 5f;
-    [SerializeField] float cameraMinFOV = 30f;
+    [SerializeField] float cameraMinFOV = 50f;
     [SerializeField] float cameraMaxFOV = 70f;
     [SerializeField] float cameraMinY = 5f;
-    [SerializeField] float cameraMaxX = -5f;
-
-    [Header("Damping Attributes")]
-    [SerializeField] float positionDamping = 0.2f;
-    [SerializeField] float rotationDamping = 0.2f;
+    [SerializeField] float cameraMaxZ = -10f;
 
     void Awake() {
         if (instance == null) {
@@ -44,10 +40,14 @@ public class CameraConroller : MonoBehaviour {
     public IEnumerator SmoothDampFocusObject() {
         FocusingObject = PlayerTowerSelectionHandler.instance.SelectedTower.transform;
         while (FocusingObject != null) {
-            Quaternion targetRotation = Quaternion.LookRotation(FocusingObject.position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, cameraRotationSpeed * Time.deltaTime);
-
             self.DOFieldOfView(cameraMinFOV, cameraZoomSpeed);
+
+            Vector3 targetPosition = FocusingObject.position + Vector3.up * cameraMinY - Vector3.back * cameraMaxZ;
+            transform.position = Vector3.Lerp(transform.position, targetPosition, cameraSpeed * Time.deltaTime);
+
+            Quaternion lookAt = Quaternion.LookRotation(new Vector3(transform.position.x, FocusingObject.transform.position.y, FocusingObject.transform.position.z) - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookAt, cameraRotationSpeed * Time.deltaTime);
+
             yield return null;
         }
     }
@@ -55,6 +55,7 @@ public class CameraConroller : MonoBehaviour {
     public IEnumerator ResetCamera() {
         FocusingObject = null;
         while (FocusingObject == null) {
+            transform.position = Vector3.Lerp(transform.position, startCameraPosition, cameraSpeed * Time.deltaTime);
             transform.rotation = Quaternion.Slerp(transform.rotation, startCameraRotation, cameraRotationSpeed * Time.deltaTime);
             self.DOFieldOfView(cameraMaxFOV, cameraZoomSpeed);
             yield return null;

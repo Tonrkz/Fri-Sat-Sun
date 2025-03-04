@@ -5792,15 +5792,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf1a41cd9edaf8d4180a3b60c4a0b583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraSpeed: 5
+  cameraSpeed: 2
   cameraZoomSpeed: 1.5
-  cameraRotationSpeed: 5
-  cameraMinFOV: 30
+  cameraRotationSpeed: 2
+  cameraMinFOV: 50
   cameraMaxFOV: 70
-  cameraMinY: 10
-  cameraMaxX: -5
-  positionDamping: 0.2
-  rotationDamping: 0.2
+  cameraMinY: 5
+  cameraMaxZ: -10
 --- !u!1 &334720625
 GameObject:
   m_ObjectHideFlags: 0
