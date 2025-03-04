@@ -12,9 +12,12 @@ public class CameraConroller : MonoBehaviour {
     public Transform FocusingObject { get; set; }
 
     [Header("Camera Attributes")]
-    [SerializeField] float cameraSpeed = 5f;
-    [SerializeField] float cameraZoomSpeed = 5f;
-    [SerializeField] float cameraRotationSpeed = 5f;
+    [SerializeField] float cameraSpeed = 2f;
+    [SerializeField] float resetCameraSpeedMultiplier = 1.25f;
+    [SerializeField] float cameraZoomSpeed = 1.5f;
+    [SerializeField] float resetCameraZoomSpeedMultiplier = 1.25f;
+    [SerializeField] float cameraRotationSpeed = 2f;
+    [SerializeField] float resetCameraRotationSpeedMultiplier = 1.25f;
     [SerializeField] float cameraMinFOV = 50f;
     [SerializeField] float cameraMaxFOV = 70f;
     [SerializeField] float cameraMinY = 5f;
@@ -55,9 +58,9 @@ public class CameraConroller : MonoBehaviour {
     public IEnumerator ResetCamera() {
         FocusingObject = null;
         while (FocusingObject == null) {
-            transform.position = Vector3.Lerp(transform.position, startCameraPosition, cameraSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Slerp(transform.rotation, startCameraRotation, cameraRotationSpeed * Time.deltaTime);
-            self.DOFieldOfView(cameraMaxFOV, cameraZoomSpeed);
+            transform.position = Vector3.Lerp(transform.position, startCameraPosition, cameraSpeed * Time.deltaTime * resetCameraSpeedMultiplier);
+            transform.rotation = Quaternion.Slerp(transform.rotation, startCameraRotation, cameraRotationSpeed * Time.deltaTime * resetCameraRotationSpeedMultiplier);
+            self.DOFieldOfView(cameraMaxFOV, cameraZoomSpeed * resetCameraZoomSpeedMultiplier);
             yield return null;
         }
     }

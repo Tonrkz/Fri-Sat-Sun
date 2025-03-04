@@ -9,6 +9,7 @@ public class SO_IncreasePlayerMovementSpeed : SO_GodOffering {
     public override void OnAssigned() {
         if (!isActivated) {
             isActivated = true;
+            Debug.Log("IncreasePlayerMovementSpeed activated");
             oldMoveCooldown = PlayerMovement.instance.moveCooldown;
             PlayerMovement.instance.moveCooldown = newMoveCooldown;
         }
@@ -17,6 +18,7 @@ public class SO_IncreasePlayerMovementSpeed : SO_GodOffering {
     public override void OnUnassigned() {
         if (isActivated) {
             isActivated = false;
+            Debug.Log("IncreasePlayerMovementSpeed deactivated");
             PlayerMovement.instance.moveCooldown = oldMoveCooldown;
         }
     }

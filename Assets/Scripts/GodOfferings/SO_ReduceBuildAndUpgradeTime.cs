@@ -7,15 +7,17 @@ public class SO_ReduceBuildAndUpgradeTime : SO_GodOffering {
 
     public override void OnAssigned() {
         if (!isActivated) {
-            GlobalAttributeMultipliers.CampfireBuildTimeMultiplier = buildTimeMultiplier;
             isActivated = true;
+            Debug.Log("ReduceBuildAndUpgradeTime activated");
+            GlobalAttributeMultipliers.CampfireBuildTimeMultiplier = buildTimeMultiplier;
         }
     }
 
     public override void OnUnassigned() {
         if (isActivated) {
-            GlobalAttributeMultipliers.CampfireBuildTimeMultiplier = 1f;
             isActivated = false;
+            Debug.Log("ReduceBuildAndUpgradeTime deactivated");
+            GlobalAttributeMultipliers.CampfireBuildTimeMultiplier = 1f;
         }
     }
 }

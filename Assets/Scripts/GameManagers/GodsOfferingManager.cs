@@ -9,10 +9,12 @@ public class GodsOfferingManager : MonoBehaviour {
 
     [Header("References")]
     [SerializeField] PlayerGodOfferingHandler playerGodOfferingHandler; // Reference to the player god offering handler
-    [SerializeField] GameObject Panel_godOffering; // Reference to the god offering panel
+    [SerializeField] GameObject Panel_GodOffering; // Reference to the god offering panel
+    [SerializeField] Button Button_BuyableGodOffering1; // Reference to the buyable offering 1 button
     [SerializeField] Image Image_BuyableOffering1; // Reference to the buyable offering 1 button
     [SerializeField] TextMeshProUGUI Text_BuyableOffering1; // Reference to the buyable offering 1 text
     [SerializeField] TextMeshProUGUI Text_CostOffering1; // Reference to the cost offering 1 text
+    [SerializeField] Button Button_BuyableGodOffering2; // Reference to the buyable offering 2 button`
     [SerializeField] Image Image_BuyableOffering2; // Reference to the buyable offering 2 button
     [SerializeField] TextMeshProUGUI Text_BuyableOffering2; // Reference to the buyable offering 2 text
     [SerializeField] TextMeshProUGUI Text_CostOffering2; // Reference to the cost offering 2 text
@@ -39,6 +41,21 @@ public class GodsOfferingManager : MonoBehaviour {
     }
 
     /// <summary>
+    /// This method will be called when end of the wave
+    /// </summary>
+    public void InitiateGodOfferingsUI() {
+        RandomBuyableOfferings();
+        UpdateOfferingsUI();
+        Panel_GodOffering.SetActive(true);
+        Time.timeScale = 0; // Pause the game
+    }
+
+    public void DeinitiateGodOfferingsUI() {
+        Panel_GodOffering.SetActive(false);
+        Time.timeScale = 1; // Resume the game
+    }
+
+    /// <summary>
     /// This method will be called when the player wants to buy an offering
     /// </summary>
     void RandomBuyableOfferings() {
@@ -52,15 +69,23 @@ public class GodsOfferingManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// This method will be called when the player wants to buy an offering
+    /// This method will be called InitiateGodOfferingsUI() is called
     /// </summary>
     void UpdateOfferingsUI() {
         Text_Money.text = MoneyManager.instance.money.ToString(); // Update the money text
 
         if (buyableOfferings.Count > 0) {
+            // Update the buyable offering 1 UI
             Image_BuyableOffering1.sprite = buyableOfferings[0].offeringSprite;
             Text_BuyableOffering1.text = buyableOfferings[0].offeringName;
             Text_CostOffering1.text = buyableOfferings[0].offeringCost.ToString();
+
+            // Add listener to the buyable offering 1 button
+            Button_BuyableGodOffering1.onClick.RemoveAllListeners();
+            Button_BuyableGodOffering1.onClick.AddListener(() => buyableOfferings[0].OnAssigned());
+            Button_BuyableGodOffering1.onClick.AddListener(() => DeinitiateGodOfferingsUI());
+
+            // Set the buyable offering 1 to active
             Image_BuyableOffering1.gameObject.SetActive(true);
         }
         else {
@@ -68,9 +93,17 @@ public class GodsOfferingManager : MonoBehaviour {
         }
 
         if (buyableOfferings.Count > 1) {
+            // Update the buyable offering 2 UI
             Image_BuyableOffering2.sprite = buyableOfferings[1].offeringSprite;
             Text_BuyableOffering2.text = buyableOfferings[1].offeringName;
             Text_CostOffering2.text = buyableOfferings[1].offeringCost.ToString();
+
+            // Add listener to the buyable offering 2 button
+            Button_BuyableGodOffering2.onClick.RemoveAllListeners();
+            Button_BuyableGodOffering2.onClick.AddListener(() => buyableOfferings[1].OnAssigned());
+            Button_BuyableGodOffering2.onClick.AddListener(() => DeinitiateGodOfferingsUI());
+
+            // Set the buyable offering 2 to active
             Image_BuyableOffering2.gameObject.SetActive(true);
         }
         else {

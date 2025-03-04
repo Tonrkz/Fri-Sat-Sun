@@ -8,6 +8,7 @@ public class SO_AllSoldiersDealMoreDamage : SO_GodOffering {
     public override void OnAssigned() {
         if (!isActivated) {
             isActivated = true;
+            Debug.Log("AllSoldiersDealMoreDamage activated");
             foreach (var soldier in GameObject.FindGameObjectsWithTag("Soldier")) {
                 soldier.GetComponent<ISoldiers>().Damage *= damageMultiplier; // Increase the damage of all soldiers
             }
@@ -18,6 +19,7 @@ public class SO_AllSoldiersDealMoreDamage : SO_GodOffering {
     public override void OnUnassigned() {
         if (isActivated) {
             isActivated = false;
+            Debug.Log("AllSoldiersDealMoreDamage deactivated");
             foreach (var soldier in GameObject.FindGameObjectsWithTag("Soldier")) {
                 soldier.GetComponent<ISoldiers>().Damage /= damageMultiplier; // Reset the damage of all soldiers
             }

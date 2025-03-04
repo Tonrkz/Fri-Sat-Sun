@@ -5792,9 +5792,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf1a41cd9edaf8d4180a3b60c4a0b583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraSpeed: 2
-  cameraZoomSpeed: 1.5
-  cameraRotationSpeed: 2
+  cameraSpeed: 2.5
+  resetCameraSpeedMultiplier: 1.25
+  cameraZoomSpeed: 1.75
+  resetCameraZoomSpeedMultiplier: 1.25
+  cameraRotationSpeed: 2.5
+  resetCameraRotationSpeedMultiplier: 1.25
   cameraMinFOV: 50
   cameraMaxFOV: 70
   cameraMinY: 5
@@ -16473,7 +16476,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &949563360
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26623,10 +26626,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerGodOfferingHandler: {fileID: 6670254660735623694}
-  Panel_godOffering: {fileID: 949563359}
+  Panel_GodOffering: {fileID: 949563359}
+  Button_BuyableGodOffering1: {fileID: 734608523}
   Image_BuyableOffering1: {fileID: 734608524}
   Text_BuyableOffering1: {fileID: 1636235000}
   Text_CostOffering1: {fileID: 1048602737}
+  Button_BuyableGodOffering2: {fileID: 558065539}
   Image_BuyableOffering2: {fileID: 558065540}
   Text_BuyableOffering2: {fileID: 198563577}
   Text_CostOffering2: {fileID: 1939481272}
@@ -43455,9 +43460,9 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 330585546}
   - {fileID: 1441553692}
   - {fileID: 1079180929}
-  - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 920322812}

@@ -7,12 +7,14 @@ public class SO_AdditionalMoneyPerSecond : SO_GodOffering {
     public override void OnAssigned() {
         if (!isActivated) {
             isActivated = true;
+            Debug.Log("AdditionalMoneyPerSecond activated");
             GlobalAttributeMultipliers.MoneyPerSecondMultiplier = moneyPerSecondMultiplier;
         }
     }
     public override void OnUnassigned() {
         if (isActivated) {
             isActivated = false;
+            Debug.Log("AdditionalMoneyPerSecond deactivated");
             GlobalAttributeMultipliers.MoneyPerSecondMultiplier = 1f;
         }
     }

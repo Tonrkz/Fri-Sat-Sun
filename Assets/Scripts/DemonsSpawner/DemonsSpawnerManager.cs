@@ -205,7 +205,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
                         return Enum_DemonTypes.Phantom;
                     }
                     break;
-                    default:
+                default:
                     return Enum_DemonTypes.Goblin;
             }
         }
@@ -255,6 +255,11 @@ public class DemonsSpawnerManager : MonoBehaviour {
         isSpawning = false;
         wave++;
         CalculateNextWaveDemonLimit();
+
+        if (wave > 1) {
+            GodsOfferingManager.instance.InitiateGodOfferingsUI();
+        }
+
         Single elapsedTime = 0;
         while (elapsedTime < waveCooldown) {
             elapsedTime += Time.deltaTime;

@@ -6,6 +6,7 @@ public class SO_AllTowersAndSoldiersCanSeePhantom : SO_GodOffering {
     public override void OnAssigned() {
         if (!isActivated) {
             isActivated = true;
+            Debug.Log("AllTowersAndSoldiersCanSeePhantom activated");
             foreach (var towers in BuildManager.instance.builtTowerList) {
                 towers.GetComponent<IActivatables>().SetCanSeePhantom(true); // Set all towers to see the phantom
             }
@@ -18,6 +19,7 @@ public class SO_AllTowersAndSoldiersCanSeePhantom : SO_GodOffering {
     public override void OnUnassigned() {
         if (isActivated) {
             isActivated = false;
+            Debug.Log("AllTowersAndSoldiersCanSeePhantom deactivated");
             foreach (var towers in BuildManager.instance.builtTowerList) {
                 towers.GetComponent<IActivatables>().ResetCanSeePhantom(); // Reset all towers to unsee the phantom
             }

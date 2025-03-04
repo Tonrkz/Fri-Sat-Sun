@@ -1,6 +1,7 @@
-using System.Security.Cryptography.X509Certificates;
+using System;
 using UnityEngine;
 
+[Serializable]
 public abstract class SO_GodOffering : ScriptableObject {
     public string godOfferingID; // This will be used to identify the offering
     public Sprite offeringSprite; // This will be used to display the offering sprite
