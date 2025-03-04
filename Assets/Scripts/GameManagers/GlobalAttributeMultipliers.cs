@@ -30,6 +30,7 @@ public class GlobalAttributeMultipliers : MonoBehaviour {
     public static Single AttackerFireRateMultiplier { get; set; } = 1f;
     public static Single RangedFireRateMultiplier { get; set; } = 1f;
     public static Single MageFireRateMultiplier { get; set; } = 1f;
+    public static bool GlobalCanSeePhantom { get; set; } = false;
 
     [Header("Range Attributes")]
     public static Single CampfireRangeMultiplier { get; set; } = 1f;

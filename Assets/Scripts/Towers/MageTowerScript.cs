@@ -11,8 +11,6 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
 
     [Header("Tower Attributes")]
     [SerializeField] Byte level = 1;
-    [SerializeField] bool startCanSeePhantom = true;
-    bool canSeePhantom;
 
 
 
@@ -23,6 +21,8 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] Single towerRange = 5f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
+    public bool StartCanSeePhantom { get; set; } = true;
+    public bool CanSeePhantom { get; set; }
     public string AssignedWord { get; set; } = null;
 
 
@@ -71,6 +71,9 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
         IsSelected = false;
 
         // IActivatables attributes
+        if (GlobalAttributeMultipliers.GlobalCanSeePhantom) {
+            StartCanSeePhantom = GlobalAttributeMultipliers.GlobalCanSeePhantom;
+        }
         CanSeePhantom = StartCanSeePhantom;
         FireRate = StartFireRate;
 

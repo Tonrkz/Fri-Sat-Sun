@@ -60,10 +60,10 @@ public class GodsOfferingManager : MonoBehaviour {
     /// </summary>
     void RandomBuyableOfferings() {
         buyableOfferings.Clear();
-        while (buyableOfferings.Count < 2) {
-            SO_GodOffering randomGodOffering = godOfferings[Random.Range(0, godOfferings.Count)];
-            if (!randomGodOffering.isActivated) {
-                buyableOfferings.Add(randomGodOffering);
+        godOfferings.Sort((x, y) => Random.Range(-1, 1)); // Shuffle the god offerings
+        for (int i = 0 ; buyableOfferings.Count < 2 ; i++) {
+            if (godOfferings[i] != playerGodOfferingHandler.godOffering_1 && godOfferings[i] != playerGodOfferingHandler.godOffering_2) {
+                buyableOfferings.Add(godOfferings[i]);
             }
         }
     }
@@ -82,8 +82,7 @@ public class GodsOfferingManager : MonoBehaviour {
 
             // Add listener to the buyable offering 1 button
             Button_BuyableGodOffering1.onClick.RemoveAllListeners();
-            Button_BuyableGodOffering1.onClick.AddListener(() => buyableOfferings[0].OnAssigned());
-            Button_BuyableGodOffering1.onClick.AddListener(() => DeinitiateGodOfferingsUI());
+            Button_BuyableGodOffering1.onClick.AddListener(() => OnBuyableGodOfferingButtonClick(buyableOfferings[0]));
 
             // Set the buyable offering 1 to active
             Image_BuyableOffering1.gameObject.SetActive(true);
@@ -100,8 +99,7 @@ public class GodsOfferingManager : MonoBehaviour {
 
             // Add listener to the buyable offering 2 button
             Button_BuyableGodOffering2.onClick.RemoveAllListeners();
-            Button_BuyableGodOffering2.onClick.AddListener(() => buyableOfferings[1].OnAssigned());
-            Button_BuyableGodOffering2.onClick.AddListener(() => DeinitiateGodOfferingsUI());
+            Button_BuyableGodOffering2.onClick.AddListener(() => OnBuyableGodOfferingButtonClick(buyableOfferings[1]));
 
             // Set the buyable offering 2 to active
             Image_BuyableOffering2.gameObject.SetActive(true);
@@ -124,6 +122,17 @@ public class GodsOfferingManager : MonoBehaviour {
         }
         else {
             Image_OwnedOffering2.gameObject.SetActive(false);
+        }
+    }
+
+    void OnBuyableGodOfferingButtonClick(SO_GodOffering godOffering) {
+        if (MoneyManager.instance.CanAfford(godOffering.offeringCost)) {
+            MoneyManager.instance.AddMoney(-godOffering.offeringCost);
+            playerGodOfferingHandler.AssignGodOffering(godOffering);
+            DeinitiateGodOfferingsUI();
+        }
+        else {
+            Debug.Log("Not enough money");
         }
     }
 }

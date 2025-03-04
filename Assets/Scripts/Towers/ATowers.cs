@@ -20,8 +20,6 @@ public class ATowers : MonoBehaviour, ITowers {
     [Header("Tower Attributes")]
     public string TowerName { get; set; }
     public Byte Level { get; set; }
-    public bool StartCanSeePhantom { get; set; }
-    public bool CanSeePhantom { get; set; }
 
 
 

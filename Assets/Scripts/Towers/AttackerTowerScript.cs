@@ -13,8 +13,6 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
 
     [Header("Tower Attributes")]
     [SerializeField] Byte level = 1;
-    [SerializeField] bool startCanSeePhantom;
-    bool canSeePhantom;
     [SerializeField] internal Byte attackUnit = 1;
 
 
@@ -26,6 +24,8 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] Single towerRange = 3f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
+    public bool StartCanSeePhantom { get; set; } = false;
+    public bool CanSeePhantom { get; set; }
     public string AssignedWord { get; set; } = null;
 
 
@@ -66,7 +66,9 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
         // Set Initial attributes
         // ATowers attributes
         Level = level;
-        StartCanSeePhantom = startCanSeePhantom;
+        if (GlobalAttributeMultipliers.GlobalCanSeePhantom) {
+            StartCanSeePhantom = GlobalAttributeMultipliers.GlobalCanSeePhantom;
+        }
         ChangeTowerState(Enum_AttackerTowerState.Idle);
         TowerType = Enum_TowerTypes.Attacker;
         BuildCost += MoneyManager.attackerTowerBuildCost;
@@ -139,9 +141,9 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
         // Upgrade Every 2 Levels
         if (Level % 2 == 0) {
             soldierAttackSpeed += upgradeSoldierAttackSpeed;
-            startCanSeePhantom = true;
-            canSeePhantom = startCanSeePhantom;
-            soldierCanSeePhantom = canSeePhantom;
+            StartCanSeePhantom = true;
+            CanSeePhantom = StartCanSeePhantom;
+            soldierCanSeePhantom = CanSeePhantom;
         }
 
         // Upgrade Every 4 Levels

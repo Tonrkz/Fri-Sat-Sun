@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: GO_ReduceBuildAndUpgradeTime
   m_EditorClassIdentifier: 
   godOfferingID: GO01
+  offeringSprite: {fileID: 0}
   offeringName: God of Creation
   offeringDescription: Reduce building and evolving time for 50%.
-  offeringCost: 0
+  offeringCost: 100
   buildTimeMultiplier: 0.5

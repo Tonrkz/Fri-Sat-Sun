@@ -13,8 +13,6 @@ public class CampfireScript : ATowers, IActivatables {
 
     [Header("Tower Attributes")]
     [SerializeField] Byte level = 1;
-    [SerializeField] bool startCanSeePhantom = false;
-    bool canSeePhantom;
     [SerializeField] internal Single buildTime = 5f;
 
 
@@ -26,6 +24,8 @@ public class CampfireScript : ATowers, IActivatables {
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] Single towerRange = 3f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
+    public bool StartCanSeePhantom { get; set; } = false;
+    public bool CanSeePhantom { get; set; }
     public string AssignedWord { get; set; } = null;
 
 
@@ -58,6 +58,10 @@ public class CampfireScript : ATowers, IActivatables {
         IsSelected = false;
 
         // IActivatables attributes
+        if (GlobalAttributeMultipliers.GlobalCanSeePhantom) {
+            StartCanSeePhantom = GlobalAttributeMultipliers.GlobalCanSeePhantom;
+
+        }
         CanSeePhantom = StartCanSeePhantom;
         soldierCanSeePhantom = CanSeePhantom;
         FireRate = StartFireRate;

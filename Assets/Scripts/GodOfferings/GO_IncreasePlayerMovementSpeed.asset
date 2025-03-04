@@ -16,5 +16,5 @@ MonoBehaviour:
   offeringSprite: {fileID: 0}
   offeringName: God of Communication
   offeringDescription: Increase player's movement speed by 33%
-  offeringCost: 0
+  offeringCost: 240
   newMoveCooldown: 0.1

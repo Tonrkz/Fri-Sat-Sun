@@ -16,4 +16,4 @@ MonoBehaviour:
   offeringSprite: {fileID: 0}
   offeringName: Third Eye View
   offeringDescription: All campfires, towers, and soldiers can target phantom.
-  offeringCost: 0
+  offeringCost: 500

@@ -15,6 +15,6 @@ MonoBehaviour:
   godOfferingID: GO03
   offeringSprite: {fileID: 0}
   offeringName: God of Wealth
-  offeringDescription: Earn 100% more  money per second.
-  offeringCost: 0
+  offeringDescription: Earn 100% more money per second.
+  offeringCost: 200
   moneyPerSecondMultiplier: 2

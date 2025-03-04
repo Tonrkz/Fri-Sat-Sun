@@ -12,8 +12,6 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
 
     [Header("Tower Attributes")]
     [SerializeField] Byte level = 1;
-    [SerializeField] bool startCanSeePhantom;
-    bool canSeePhantom;
     [SerializeField] internal Byte attackUnit = 1;
 
 
@@ -25,6 +23,8 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
     public float FireRate { get => fireRate; set => fireRate = value; }
     [SerializeField] Single towerRange = 5f;
     public float TowerRange { get => towerRange; set => towerRange = value; }
+    public bool StartCanSeePhantom { get; set; } = false;
+    public bool CanSeePhantom { get; set; }
     public string AssignedWord { get; set; } = null;
 
 
@@ -71,6 +71,9 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
         IsSelected = false;
 
         // IActivatables attributes
+        if (GlobalAttributeMultipliers.GlobalCanSeePhantom) {
+            StartCanSeePhantom = GlobalAttributeMultipliers.GlobalCanSeePhantom;
+        }
         CanSeePhantom = StartCanSeePhantom;
         FireRate = StartFireRate;
         DemonLayer = LayerMask.GetMask("Demon");
@@ -134,8 +137,8 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
         // Upgrade Every 2 Levels
         if (Level % 2 == 0 && attackUnit < 5) {
             attackUnit += 1;
-            startCanSeePhantom = true;
-            canSeePhantom = startCanSeePhantom;
+            StartCanSeePhantom = true;
+            CanSeePhantom = StartCanSeePhantom;
         }
         UpgradeCost = (int)(MoneyManager.rangedTowerBuildCost * Mathf.Pow(level, MoneyManager.upgradePriceExponent));
         level++;
