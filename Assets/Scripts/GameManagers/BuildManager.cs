@@ -38,6 +38,9 @@ public class BuildManager : MonoBehaviour {
             if (tower.GetComponent<ATowers>().TowerName == towerName) {
                 return tower;
             }
+            else if (tower.GetComponent<ATowers>().TowerName.StartsWith(towerName)) {
+                return tower;
+            }
         }
         return null;
     }

@@ -97,6 +97,10 @@ public class ATowers : MonoBehaviour, ITowers {
 
     protected virtual void Dead() {
         // Unsuscribe from events
+        if (IsSelected) {
+            PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
+        }
+
         PlayerTowerSelectionHandler.instance.OnTowerSelected.RemoveListener(this.OnSelected);
         PlayerTowerSelectionHandler.instance.OnTowerDeselected.RemoveListener(this.OnDeselected);
 

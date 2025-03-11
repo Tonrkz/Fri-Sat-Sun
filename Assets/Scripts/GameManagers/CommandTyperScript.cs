@@ -37,6 +37,7 @@ public class CommandTyperScript : MonoBehaviour {
             inputString = "";
             splitedCommand.Clear();
             commandText.SetText(inputString);
+            ForecastCommandScript.instance.ForecastCommand(inputString);
             return;
         }
 
@@ -44,11 +45,13 @@ public class CommandTyperScript : MonoBehaviour {
             foreach (char c in Input.inputString) {
                 if ((c == '\n') || (c == '\r')) {
                     Debug.Log("User entered: " + inputString);
+                    inputString = inputString.Trim();
                     SetCommand(inputString);
                     CheckCommand();
                     inputString = "";
                     splitedCommand.Clear();
                     commandText.SetText(inputString);
+                    ForecastCommandScript.instance.ForecastCommand(inputString);
                 }
                 if (!char.IsLetterOrDigit(c) && !Input.GetKeyDown(KeyCode.Backspace) && !Input.GetKeyDown(KeyCode.Space)) {
                     return;
@@ -60,7 +63,15 @@ public class CommandTyperScript : MonoBehaviour {
         }
 
         // Set initial letter to uppercase and biggger font size
-        commandText.SetText("<size=64>" + char.ToUpper(inputString[0]) + "</size>" + inputString.Substring(1));
+        if (inputString.Length > 0) {
+            commandText.SetText("<size=64>" + char.ToUpper(inputString[0]) + "</size>" + inputString.Substring(1));
+        }
+        else {
+            commandText.SetText(inputString);
+        }
+
+        // Forcast Command
+        ForecastCommandScript.instance.ForecastCommand(inputString);
     }
 
     /// <summary>
@@ -104,6 +115,36 @@ public class CommandTyperScript : MonoBehaviour {
                     }
                     else {
                         Debug.Log("Ground is occupied.");
+                    }
+                    break;
+                case "upgrade":
+                    Debug.Log("Upgrade command");
+                    try {
+                        tower = PlayerTowerSelectionHandler.instance.SelectedTower;
+                    }
+                    catch (Exception) {
+                        Debug.Log("No tower selected.");
+                        return;
+                    }
+                    if (tower.GetComponent<IUpgradables>() != null) {
+                        IUpgradables upgradableTower = tower.GetComponent<IUpgradables>();
+                        if (MoneyManager.instance.CanAfford(upgradableTower.UpgradeCost * GlobalAttributeMultipliers.UpgradeCostMultiplier)) {
+                            upgradableTower.UpgradeTower();
+                        }
+                    }
+                    else {
+                        Debug.Log("Tower is not upgradable.");
+                    }
+                    break;
+                case "destroy":
+                    Debug.Log("Destroy command");
+                    try {
+                        tower = PlayerTowerSelectionHandler.instance.SelectedTower;
+                        tower.DestroyTower();
+                    }
+                    catch (Exception) {
+                        Debug.Log("No tower selected.");
+                        return;
                     }
                     break;
                 case "tax":
