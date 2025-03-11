@@ -82,7 +82,7 @@ public class CommandTyperScript : MonoBehaviour {
     /// Check the command and execute the command
     /// </summary>
     void CheckCommand() {
-        ITowers tower;
+        ATowers tower;
         if (splitedCommand.Count < 1) {
             return;
         }
@@ -90,8 +90,8 @@ public class CommandTyperScript : MonoBehaviour {
             switch (splitedCommand[0]) {
                 case "build":
                     Debug.Log("Build command");
-                    if (BuildManager.instance.CheckIfGroundAvailable() && MoneyManager.instance.CanAfford(MoneyManager.campfireBuildCost)) {
-                        MoneyManager.instance.AddMoney(-MoneyManager.campfireBuildCost);
+                    if (BuildManager.instance.CheckIfGroundAvailable() && MoneyManager.instance.CanAfford(MoneyManager.campfireBuildCost * GlobalAttributeMultipliers.CampfireBuildCostMultiplier)) {
+                        MoneyManager.instance.AddMoney(-MoneyManager.campfireBuildCost * GlobalAttributeMultipliers.CampfireBuildCostMultiplier);
                         BuildManager.instance.BuildTower();
                     }
                     else {
@@ -111,7 +111,7 @@ public class CommandTyperScript : MonoBehaviour {
                 case "destroy":
                     Debug.Log("Destroy command");
                     try {
-                        tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>();
+                        tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ATowers>();
                     }
                     catch (Exception) {
                         return;
@@ -121,16 +121,21 @@ public class CommandTyperScript : MonoBehaviour {
                 case "upgrade":
                     Debug.Log("Upgrade command");
                     try {
-                        tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ITowers>();
+                        tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ATowers>();
                     }
                     catch (Exception) {
                         return;
                     }
-                    if (tower.TowerType != Enum_TowerTypes.Campfire) {
-                        if (MoneyManager.instance.CanAfford(tower.UpgradeCost)) {
-                            tower.UpdradeTower();
+                    if (tower.GetComponent<IUpgradables>() != null) {
+                        IUpgradables upgradableTower = tower.GetComponent<IUpgradables>();
+                        if (MoneyManager.instance.CanAfford(upgradableTower.UpgradeCost * GlobalAttributeMultipliers.UpgradeCostMultiplier)) {
+                            upgradableTower.UpgradeTower();
                         }
                     }
+                    break;
+                case "evolve":
+                    Debug.Log("Evolve command");
+                    EvolveSelectedTower(PlayerTowerSelectionHandler.instance.SelectedTower.gameObject, splitedCommand[1]);
                     break;
                 default:
                     foreach (string n in TowerNameManager.instance.usedTowerNames) {
@@ -155,39 +160,43 @@ public class CommandTyperScript : MonoBehaviour {
             case "evolve":
                 Debug.Log("Evolve command");
                 GameObject towerObject = BuildManager.instance.FindTowerViaName(splitedCommand[0]);
-                if (towerObject.GetComponent<ITowers>().TowerType == Enum_TowerTypes.Campfire) {
-                    switch (splitedCommand[2]) {
-                        case "attacker":
-                            if (MoneyManager.instance.CanAfford(MoneyManager.attackerTowerBuildCost)) {
-                                MoneyManager.instance.AddMoney(-MoneyManager.attackerTowerBuildCost);
-                                StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Attacker));
-                            }
-                            break;
-                        case "ranged":
-                            if (MoneyManager.instance.CanAfford(MoneyManager.rangedTowerBuildCost)) {
-                                MoneyManager.instance.AddMoney(-MoneyManager.rangedTowerBuildCost);
-                                StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Ranged));
-                            }
-                            break;
-                        case "supply":
-                            if (MoneyManager.instance.CanAfford(MoneyManager.supplyTowerBuildCost)) {
-                                MoneyManager.instance.AddMoney(-MoneyManager.supplyTowerBuildCost);
-                                StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Supply));
-                            }
-                            break;
-                        case "mage":
-                            if (MoneyManager.instance.CanAfford(MoneyManager.mageTowerBuildCost)) {
-                                MoneyManager.instance.AddMoney(-MoneyManager.mageTowerBuildCost);
-                                StartCoroutine(towerObject.GetComponent<CampfireScript>().Differentiate(Enum_TowerTypes.Mage));
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                if (towerObject.GetComponent<ATowers>().TowerType == Enum_TowerTypes.Campfire) {
+                    EvolveSelectedTower(towerObject, splitedCommand[2]);
                 }
                 return "evolve command";
             default:
                 return "No Exisited Command.";
+        }
+    }
+
+    void EvolveSelectedTower(GameObject campfire, string towerType) {
+        switch (towerType) {
+            case "attacker":
+                if (MoneyManager.instance.CanAfford(MoneyManager.attackerTowerBuildCost * GlobalAttributeMultipliers.AttackerBuildCostMultiplier)) {
+                    MoneyManager.instance.AddMoney(-MoneyManager.attackerTowerBuildCost * GlobalAttributeMultipliers.AttackerBuildCostMultiplier);
+                    StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Attacker));
+                }
+                break;
+            case "ranged":
+                if (MoneyManager.instance.CanAfford(MoneyManager.rangedTowerBuildCost * GlobalAttributeMultipliers.RangedBuildCostMultiplier)) {
+                    MoneyManager.instance.AddMoney(-MoneyManager.rangedTowerBuildCost * GlobalAttributeMultipliers.RangedBuildCostMultiplier);
+                    StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Ranged));
+                }
+                break;
+            case "supply":
+                if (MoneyManager.instance.CanAfford(MoneyManager.supplyTowerBuildCost * GlobalAttributeMultipliers.SupplyBuildCostMultiplier)) {
+                    MoneyManager.instance.AddMoney(-MoneyManager.supplyTowerBuildCost * GlobalAttributeMultipliers.SupplyBuildCostMultiplier);
+                    StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Supply));
+                }
+                break;
+            case "mage":
+                if (MoneyManager.instance.CanAfford(MoneyManager.mageTowerBuildCost * GlobalAttributeMultipliers.MageBuildCostMultiplier)) {
+                    MoneyManager.instance.AddMoney(-MoneyManager.mageTowerBuildCost * GlobalAttributeMultipliers.MageBuildCostMultiplier);
+                    StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Mage));
+                }
+                break;
+            default:
+                break;
         }
     }
 }

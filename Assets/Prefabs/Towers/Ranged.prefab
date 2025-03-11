@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5301911523658575639}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: -0.6}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 6463909333190640776}
   - component: {fileID: 540427046439860620}
   - component: {fileID: -1527144294245224348}
+  - component: {fileID: 842488624390130929}
   m_Layer: 8
   m_Name: Ranged
   m_TagString: Tower
@@ -184,19 +185,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b048f55b7363c4bb5fe8201a564908, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowPrefab: {fileID: 4342468968940038269, guid: dd308c9c45a031d4d945cf11d3e1f034, type: 3}
-  arrowSpawnPoint: {fileID: 8473894353468488687}
   rb: {fileID: 540427046439860620}
   towerNamePanel: {fileID: 5965976601445683174}
-  towerNameText: {fileID: 1934006097750717865}
-  towerName: Ranged
+  towerNameText: {fileID: 3094685839357966204}
+  render: {fileID: 0}
+  health: {fileID: 842488624390130929}
+  occupiedGround: {fileID: 0}
+  arrowPrefab: {fileID: 4342468968940038269, guid: dd308c9c45a031d4d945cf11d3e1f034, type: 3}
+  arrowSpawnPoint: {fileID: 8473894353468488687}
   level: 1
-  hitPoint: 10
   startCanSeePhantom: 0
   attackUnit: 1
   startFireRate: 1
   towerRange: 5
-  assignedWord: 
   arrowSpeed: 10
   arrowDamage: 50
   upgradeCost: 150
@@ -204,11 +205,22 @@ MonoBehaviour:
   upgradeFireRate: 0.1
   upgradeArrowSpeed: 0.2
   upgradeArrowDamage: 5
-  state: 0
-  occupiedGround: {fileID: 0}
   DemonLayer:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &842488624390130929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7726950801907583317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b6fc4a33364414ab8afb0c40e39db4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoint: 15
 --- !u!1 &8473894353468488687
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,14 +344,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower Name Panel
       objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.b
+      value: 0.3830188
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.g
+      value: 0.39636147
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
---- !u!114 &1934006097750717865 stripped
+--- !u!114 &3094685839357966204 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1568010156898775109, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2731082418611417744, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
   m_PrefabInstance: {fileID: 1086573273006278124}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

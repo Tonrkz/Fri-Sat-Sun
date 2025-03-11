@@ -12,17 +12,16 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     [Header("Attributes")]
     [SerializeField] Enum_NormalSoldierState state = Enum_NormalSoldierState.Initiate;
-    [SerializeField] float hitPoint = 100;
-    public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] internal Single walkSpeed = 1;
-    [SerializeField] internal Single acceptableRadius = 0.33f;
-    [SerializeField] internal Single damage = 10;
-    [SerializeField] internal Single sightRange = 1.5f;
-    [SerializeField] internal Single attackSpeed = 1;
-    [SerializeField] internal Single attackCooldown = 1;
-    [SerializeField] internal Single attackRange = 1f;
-    [SerializeField] internal bool startCanSeePhantom = false;
-    bool canSeePhantom;
+    public float HitPoint { get; set; } = 100;
+    public Single WalkSpeed { get; set; }
+    public Single AcceptableRadius { get; set; }
+    public Single Damage { get; set; }
+    public Single SightRange { get; set; }
+    public Single AttackSpeed { get; set; }
+    public Single AttackCooldown { get; set; }
+    public Single AttackRange { get; set; }
+    public bool StartCanSeePhantom { get; set; }
+    public bool CanSeePhantom { get; set; }
 
 
 
@@ -40,7 +39,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
 
     void Start() {
-        canSeePhantom = startCanSeePhantom;
+        CanSeePhantom = StartCanSeePhantom;
         if (baseTower != null) {
             towerRange = baseTower.GetComponent<IActivatables>().TowerRange;
         }
@@ -59,7 +58,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
-                if (Vector3.Distance(transform.position, walkPosition) <= acceptableRadius) {
+                if (Vector3.Distance(transform.position, walkPosition) <= AcceptableRadius) {
                     state = Enum_NormalSoldierState.Idle;
                 }
                 if (baseTower != null && walkPosition == new Vector3()) {
@@ -77,7 +76,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 break;
             case Enum_NormalSoldierState.Engage:
-                if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {
+                if (Vector3.Distance(transform.position, attackTarget.transform.position) <= AttackRange) {
                     state = Enum_NormalSoldierState.Attack;
                 }
                 break;
@@ -147,8 +146,8 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     IEnumerator CheckForTarget() {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, DemonLayer);
-        if (canSeePhantom) {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, SightRange, DemonLayer);
+        if (CanSeePhantom) {
             foreach (Collider collider in colliders) {
                 if (collider.CompareTag("Phantom")) {
                     attackTarget = collider.gameObject;
@@ -168,26 +167,26 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     public IEnumerator SetCanSeePhantom(bool canSee) {
-        canSeePhantom = canSee;
+        CanSeePhantom = canSee;
         yield return null;
     }
 
     public IEnumerator ResetCanSeePhantom() {
-        canSeePhantom = startCanSeePhantom;
+        CanSeePhantom = StartCanSeePhantom;
         yield return null;
     }
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, AttackRange);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, sightRange);
+        Gizmos.DrawWireSphere(transform.position, SightRange);
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(walkPosition, acceptableRadius);
+        Gizmos.DrawWireSphere(walkPosition, AcceptableRadius);
     }
 
     public void Attack(GameObject target) {
-        target.GetComponent<IDemons>().TakeDamage(damage * Time.fixedDeltaTime * 3);  // Don't forget to fix this
+        target.GetComponent<IDemons>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier * Time.fixedDeltaTime * 3);  // Don't forget to fix this
     }
 
     public IEnumerator Die() {
@@ -199,7 +198,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         Destroy(gameObject);
     }
     public void Move(Vector3 position) {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, position, walkSpeed * Time.fixedDeltaTime));
+        rb.MovePosition(Vector3.MoveTowards(transform.position, position, WalkSpeed * Time.fixedDeltaTime));
     }
 
     public void TakeDamage(Single damage) {

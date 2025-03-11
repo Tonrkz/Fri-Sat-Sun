@@ -7,6 +7,8 @@ public class PlayerTowerSelectionHandler : MonoBehaviour {
     public UnityEvent OnTowerSelected = new UnityEvent();
     public UnityEvent OnTowerDeselected = new UnityEvent();
 
+    public ATowers SelectedTower { get; set; }
+
     void Awake() {
         if (instance == null) {
             instance = this;
@@ -19,7 +21,8 @@ public class PlayerTowerSelectionHandler : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         Debug.Log("OnTriggerEnterPlayer" + other);
         if (other.CompareTag("Tower") && InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
-            other.GetComponent<ITowers>().IsSelected = true;
+            other.GetComponent<ATowers>().IsSelected = true;
+            SelectedTower = other.GetComponent<ATowers>();
             OnTowerSelected.Invoke();
         }
     }
@@ -27,7 +30,8 @@ public class PlayerTowerSelectionHandler : MonoBehaviour {
     void OnTriggerExit(Collider other) {
         Debug.Log("OnTriggerExitPlayer" + other);
         if (other.CompareTag("Tower") && InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
-            other.GetComponent<ITowers>().IsSelected = false;
+            other.GetComponent<ATowers>().IsSelected = false;
+            SelectedTower = null;
             OnTowerDeselected.Invoke();
         }
     }

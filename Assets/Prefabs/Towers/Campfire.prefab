@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1541739477384394527}
   - component: {fileID: 3832061312113440336}
+  - component: {fileID: 3716829628506708122}
+  - component: {fileID: 7886685893508382235}
   m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
@@ -26,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5301911523658575639}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.353, z: -0.6}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -87,6 +89,41 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3716829628506708122
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5301911523658575639}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: e2746792347676641a293a1a89ef6191, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7886685893508382235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5301911523658575639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c41d45bc098e01044ba51468e6abad4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 3716829628506708122}
 --- !u!1 &7726950801907583317
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,6 +136,7 @@ GameObject:
   - component: {fileID: 6463909333190640776}
   - component: {fileID: 540427046439860620}
   - component: {fileID: 7537740158042319459}
+  - component: {fileID: 4842633970787108065}
   m_Layer: 8
   m_Name: Campfire
   m_TagString: Tower
@@ -183,18 +221,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b64f56197db4ed4da649e3709ab4320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSoldierPrefab: {fileID: 2225985748608282072, guid: 9e7ebc637e9b00b48b9a3d16b6fc7608, type: 3}
   rb: {fileID: 540427046439860620}
   towerNamePanel: {fileID: 1798223095165436920}
-  towerNameText: {fileID: 5830193598269094327}
-  towerName: Campfire
+  towerNameText: {fileID: 6975356894380030818}
+  render: {fileID: 7886685893508382235}
+  health: {fileID: 4842633970787108065}
+  occupiedGround: {fileID: 0}
+  normalSoldierPrefab: {fileID: 2225985748608282072, guid: 9e7ebc637e9b00b48b9a3d16b6fc7608, type: 3}
   level: 1
-  hitPoint: 10
   startCanSeePhantom: 0
-  buildTime: 5
+  buildTime: 3
   startFireRate: 1
   towerRange: 3
-  assignedWord: 
   soldierHitPoint: 100
   soldierWalkSpeed: 2
   soldierAcceptableRadius: 0.33
@@ -204,9 +242,19 @@ MonoBehaviour:
   soldierAttackCooldown: 1
   soldierAttackRange: 1
   soldierCanSeePhantom: 0
-  upgradeCost: 0
-  state: 0
-  occupiedGround: {fileID: 0}
+--- !u!114 &4842633970787108065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7726950801907583317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b6fc4a33364414ab8afb0c40e39db4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoint: 10
 --- !u!1001 &4984274079347509746
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -215,6 +263,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8173159802208214877}
     m_Modifications:
+    - target: {fileID: 1441160994056721315, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6625966627885894070, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -299,6 +351,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower Name Panel
       objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.b
+      value: 0.35283017
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6876356016647840133, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9736846
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -314,9 +378,9 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6625966627885894070, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
   m_PrefabInstance: {fileID: 4984274079347509746}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5830193598269094327 stripped
+--- !u!114 &6975356894380030818 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1568010156898775109, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2731082418611417744, guid: 88751f65d64002d43a1b00d8c13876dd, type: 3}
   m_PrefabInstance: {fileID: 4984274079347509746}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

@@ -248,7 +248,7 @@ public class TutorialManager : MonoBehaviour {
                 if (BuildManager.instance.builtTowerList.Count > 0) {
                     if (!IsConditionMeet) {
                         builtTower = BuildManager.instance.builtTowerList[0];
-                        if (builtTower.GetComponent<CampfireScript>().state != Enum_CampfireState.Building) {
+                        if ((Enum_CampfireState)builtTower.GetComponent<CampfireScript>().state != Enum_CampfireState.Building) {
                             OnTutorialConditionMeet();
                         }
                     }
@@ -336,8 +336,8 @@ public class TutorialManager : MonoBehaviour {
 
                 }
                 else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
-                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, try '{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ITowers>().TowerName}'!");
-                    if (!$"{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ITowers>().TowerName}".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, try '{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ATowers>().TowerName}'!");
+                    if (!$"{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ATowers>().TowerName}".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
                     }
                 }
@@ -382,7 +382,7 @@ public class TutorialManager : MonoBehaviour {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
                     }
                     else if (tutorialTextIndex == 5) {
-                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, type {builtTower.GetComponent<ITowers>().TowerName} evolve attacker");
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, type {builtTower.GetComponent<ATowers>().TowerName} evolve attacker");
                         pressEnterToContinueText.SetActive(false);
                         InputStateManager.instance.GameInputState = previousInputState;
                     }
@@ -396,7 +396,7 @@ public class TutorialManager : MonoBehaviour {
                     }
                 }
                 builtTower = BuildManager.instance.builtTowerList[0];
-                if (builtTower.GetComponent<ITowers>().TowerType != Enum_TowerTypes.Campfire) {
+                if (builtTower.GetComponent<ATowers>().TowerType != Enum_TowerTypes.Campfire) {
                     if (!IsConditionMeet) {
                         IsConditionMeet = true;
                         tutorialTextIndex++;

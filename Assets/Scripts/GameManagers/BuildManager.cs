@@ -35,7 +35,7 @@ public class BuildManager : MonoBehaviour {
     public GameObject FindTowerViaName(string towerName) {
         towerName = towerName.ToLower();
         foreach (var tower in builtTowerList) {
-            if (tower.GetComponent<ITowers>().TowerName == towerName) {
+            if (tower.GetComponent<ATowers>().TowerName == towerName) {
                 return tower;
             }
         }
@@ -65,7 +65,7 @@ public class BuildManager : MonoBehaviour {
     public bool BuildTower() {
         string buildTowerName = TowerNameManager.instance.GetRandomTowerName();
         GameObject builtTower = Instantiate(campfirePrefab, PlayerMovement.instance.GetCurrentPosition() + new Vector3(0, 0.35f, 0), Quaternion.identity);
-        builtTower.GetComponent<CampfireScript>().SetTowerName(buildTowerName);
+        builtTower.GetComponent<ATowers>().SetTowerName(buildTowerName);
         Debug.Log($"{buildTowerName}: Built");
         builtTowerList.Add(builtTower);
         return true;
