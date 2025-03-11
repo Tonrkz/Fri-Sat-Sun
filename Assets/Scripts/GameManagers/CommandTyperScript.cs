@@ -25,6 +25,10 @@ public class CommandTyperScript : MonoBehaviour {
         }
     }
 
+    void Start() {
+        commandText.SetText(inputString);
+    }
+
     void Update() {
         if (InputStateManager.instance.GameInputState != Enum_GameInputState.CommandMode) {
             return;
@@ -32,6 +36,7 @@ public class CommandTyperScript : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Backspace)) {
             inputString = "";
             splitedCommand.Clear();
+            commandText.SetText(inputString);
             return;
         }
 
@@ -43,6 +48,7 @@ public class CommandTyperScript : MonoBehaviour {
                     CheckCommand();
                     inputString = "";
                     splitedCommand.Clear();
+                    commandText.SetText(inputString);
                 }
                 if (!char.IsLetterOrDigit(c) && !Input.GetKeyDown(KeyCode.Backspace) && !Input.GetKeyDown(KeyCode.Space)) {
                     return;
@@ -52,7 +58,9 @@ public class CommandTyperScript : MonoBehaviour {
                 }
             }
         }
-        commandText.text = inputString;
+
+        // Set initial letter to uppercase and biggger font size
+        commandText.SetText("<size=64>" + char.ToUpper(inputString[0]) + "</size>" + inputString.Substring(1));
     }
 
     /// <summary>
