@@ -13,6 +13,10 @@ public class BuildManager : MonoBehaviour {
     [SerializeField] internal GameObject rangedTowerPrefab;
     [SerializeField] internal GameObject mageTowerPrefab;
 
+    public static readonly string attackerStringRef = "army";
+    public static readonly string rangedStringRef = "archer";
+    public static readonly string mageStringRef = "mage";
+
     [Header("Debug")]
     internal List<GameObject> builtTowerList = new List<GameObject>();
 

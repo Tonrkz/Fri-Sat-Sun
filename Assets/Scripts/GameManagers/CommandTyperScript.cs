@@ -16,6 +16,12 @@ public class CommandTyperScript : MonoBehaviour {
     string commandString = "";
     List<string> splitedCommand = new List<string>();
 
+    public static readonly string buildStringRef = "build";
+    public static readonly string upgradeStringRef = "upgrade";
+    public static readonly string destroyStringRef = "destroy";
+    public static readonly string evolveStringRef = "evolve";
+    public static readonly string taxStringRef = "tax";
+
     void Awake() {
         if (instance == null) {
             instance = this;
@@ -107,7 +113,7 @@ public class CommandTyperScript : MonoBehaviour {
         }
         else if (splitedCommand.Count == 1) {
             switch (splitedCommand[0]) {
-                case "build":
+                case string build when build == buildStringRef:
                     Debug.Log("Build command");
                     if (BuildManager.instance.CheckIfGroundAvailable() && MoneyManager.instance.CanAfford(MoneyManager.campfireBuildCost * GlobalAttributeMultipliers.CampfireBuildCostMultiplier)) {
                         MoneyManager.instance.AddMoney(-MoneyManager.campfireBuildCost * GlobalAttributeMultipliers.CampfireBuildCostMultiplier);
@@ -117,7 +123,7 @@ public class CommandTyperScript : MonoBehaviour {
                         Debug.Log("Ground is occupied.");
                     }
                     break;
-                case "upgrade":
+                case string upgrade when upgrade == upgradeStringRef:
                     Debug.Log("Upgrade command");
                     try {
                         tower = PlayerTowerSelectionHandler.instance.SelectedTower;
@@ -136,7 +142,7 @@ public class CommandTyperScript : MonoBehaviour {
                         Debug.Log("Tower is not upgradable.");
                     }
                     break;
-                case "destroy":
+                case string destroy when destroy == destroyStringRef:
                     Debug.Log("Destroy command");
                     try {
                         tower = PlayerTowerSelectionHandler.instance.SelectedTower;
@@ -147,7 +153,7 @@ public class CommandTyperScript : MonoBehaviour {
                         return;
                     }
                     break;
-                case "tax":
+                case string tax when tax == taxStringRef:
                     Debug.Log("Tax command");
                     break;
                 default:
@@ -157,7 +163,7 @@ public class CommandTyperScript : MonoBehaviour {
         }
         else if (splitedCommand.Count == 2 || splitedCommand.Count == 3) {
             switch (splitedCommand[0]) {
-                case "destroy":
+                case string destroy when destroy == destroyStringRef:
                     Debug.Log("Destroy command");
                     try {
                         tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ATowers>();
@@ -167,7 +173,7 @@ public class CommandTyperScript : MonoBehaviour {
                     }
                     tower.DestroyTower();
                     break;
-                case "upgrade":
+                case string upgrade when upgrade == upgradeStringRef:
                     Debug.Log("Upgrade command");
                     try {
                         tower = BuildManager.instance.FindTowerViaName(splitedCommand[1]).GetComponent<ATowers>();
@@ -182,7 +188,7 @@ public class CommandTyperScript : MonoBehaviour {
                         }
                     }
                     break;
-                case "evolve":
+                case string evolve when evolve == evolveStringRef:
                     Debug.Log("Evolve command");
                     EvolveSelectedTower(PlayerTowerSelectionHandler.instance.SelectedTower.gameObject, splitedCommand[1]);
                     break;
@@ -206,7 +212,7 @@ public class CommandTyperScript : MonoBehaviour {
     /// <returns></returns>
     string CheckCommandForTowers(string inputCommand) {
         switch (inputCommand) {
-            case "evolve":
+            case string evolve when evolve == evolveStringRef:
                 Debug.Log("Evolve command");
                 GameObject towerObject = BuildManager.instance.FindTowerViaName(splitedCommand[0]);
                 if (towerObject.GetComponent<ATowers>().TowerType == Enum_TowerTypes.Campfire) {
@@ -220,25 +226,25 @@ public class CommandTyperScript : MonoBehaviour {
 
     void EvolveSelectedTower(GameObject campfire, string towerType) {
         switch (towerType) {
-            case "attacker":
+            case string attacker when attacker == BuildManager.attackerStringRef:
                 if (MoneyManager.instance.CanAfford(MoneyManager.attackerTowerBuildCost * GlobalAttributeMultipliers.AttackerBuildCostMultiplier)) {
                     MoneyManager.instance.AddMoney(-MoneyManager.attackerTowerBuildCost * GlobalAttributeMultipliers.AttackerBuildCostMultiplier);
                     StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Attacker));
                 }
                 break;
-            case "ranged":
+            case string ranged when ranged == BuildManager.rangedStringRef:
                 if (MoneyManager.instance.CanAfford(MoneyManager.rangedTowerBuildCost * GlobalAttributeMultipliers.RangedBuildCostMultiplier)) {
                     MoneyManager.instance.AddMoney(-MoneyManager.rangedTowerBuildCost * GlobalAttributeMultipliers.RangedBuildCostMultiplier);
                     StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Ranged));
                 }
                 break;
-            case "supply":
-                if (MoneyManager.instance.CanAfford(MoneyManager.supplyTowerBuildCost * GlobalAttributeMultipliers.SupplyBuildCostMultiplier)) {
-                    MoneyManager.instance.AddMoney(-MoneyManager.supplyTowerBuildCost * GlobalAttributeMultipliers.SupplyBuildCostMultiplier);
-                    StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Supply));
-                }
-                break;
-            case "mage":
+            //case "supply":
+            //    if (MoneyManager.instance.CanAfford(MoneyManager.supplyTowerBuildCost * GlobalAttributeMultipliers.SupplyBuildCostMultiplier)) {
+            //        MoneyManager.instance.AddMoney(-MoneyManager.supplyTowerBuildCost * GlobalAttributeMultipliers.SupplyBuildCostMultiplier);
+            //        StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Supply));
+            //    }
+            //    break;
+            case string mage when mage == BuildManager.mageStringRef:
                 if (MoneyManager.instance.CanAfford(MoneyManager.mageTowerBuildCost * GlobalAttributeMultipliers.MageBuildCostMultiplier)) {
                     MoneyManager.instance.AddMoney(-MoneyManager.mageTowerBuildCost * GlobalAttributeMultipliers.MageBuildCostMultiplier);
                     StartCoroutine(campfire.GetComponent<CampfireScript>().Evolve(Enum_TowerTypes.Mage));

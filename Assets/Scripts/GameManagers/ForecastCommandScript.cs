@@ -36,20 +36,20 @@ public class ForecastCommandScript : MonoBehaviour {
         // Check length of command
         if (words.Length == 1) {
             // Check if command is "build"
-            if ("build".StartsWith(words[0])) {
-                forecast = "build";
+            if (CommandTyperScript.buildStringRef.StartsWith(words[0])) {
+                forecast = CommandTyperScript.buildStringRef;
             }
             // Check if command is "upgrade" and selecting a tower that can be upgraded
-            else if ("upgrade".StartsWith(words[0])) {
-                forecast = "upgrade";
+            else if (CommandTyperScript.upgradeStringRef.StartsWith(words[0])) {
+                forecast = CommandTyperScript.upgradeStringRef;
             }
             // Check if command is "sell" and selecting a tower that can be sold
-            else if ("destroy".StartsWith(words[0])) {
-                forecast = "destroy";
+            else if (CommandTyperScript.destroyStringRef.StartsWith(words[0])) {
+                forecast = CommandTyperScript.destroyStringRef;
             }
             // Check if command is "evolve" and selecting a campfire
-            else if ("evolve".StartsWith(words[0]) && PlayerTowerSelectionHandler.instance.SelectedTower.GetComponent<CampfireScript>() != null) {
-                forecast = "evolve";
+            else if (CommandTyperScript.evolveStringRef.StartsWith(words[0]) && PlayerTowerSelectionHandler.instance.SelectedTower.GetComponent<CampfireScript>() != null) {
+                forecast = CommandTyperScript.evolveStringRef;
             }
             // else, Find a tower with the name
             else if (BuildManager.instance.FindTowerViaName(words[0])) {
@@ -61,34 +61,31 @@ public class ForecastCommandScript : MonoBehaviour {
         }
         else if (words.Length == 2) {
             // Check if command is "destroy" and selecting a tower that can be sold
-            if (words[0] == "destroy" && BuildManager.instance.FindTowerViaName(words[1]).GetComponent<ATowers>()) {
-                forecast = "destroy " + BuildManager.instance.FindTowerViaName(words[1]).GetComponent<ATowers>().TowerName;
+            if (words[0] == CommandTyperScript.destroyStringRef && BuildManager.instance.FindTowerViaName(words[1]).GetComponent<ATowers>()) {
+                forecast = $"{CommandTyperScript.destroyStringRef} " + BuildManager.instance.FindTowerViaName(words[1]).GetComponent<ATowers>().TowerName;
             }
             // Check if command is "upgrade" and selecting a tower that can be upgraded
-            else if (words[0] == "upgrade" && BuildManager.instance.FindTowerViaName(words[1]) && BuildManager.instance.FindTowerViaName(words[1]).GetComponent<ATowers>().TowerType != Enum_TowerTypes.Campfire) {
-                forecast = "upgrade " + BuildManager.instance.FindTowerViaName(words[1]).GetComponent<ATowers>().TowerName;
+            else if (words[0] == CommandTyperScript.upgradeStringRef && BuildManager.instance.FindTowerViaName(words[1]) && BuildManager.instance.FindTowerViaName(words[1]).GetComponent<ATowers>().TowerType != Enum_TowerTypes.Campfire) {
+                forecast = $"{CommandTyperScript.upgradeStringRef} " + BuildManager.instance.FindTowerViaName(words[1]).GetComponent<ATowers>().TowerName;
             }
             // Check if command is "evolve" and selecting a campfire
-            else if (words[0] == "evolve" && PlayerTowerSelectionHandler.instance.SelectedTower.GetComponent<CampfireScript>() != null) {
+            else if (words[0] == CommandTyperScript.evolveStringRef && PlayerTowerSelectionHandler.instance.SelectedTower.GetComponent<CampfireScript>() != null) {
                 // Check for tower type to be evolved
-                if ("attacker".StartsWith(words[1])) {
-                    forecast = "evolve attacker";
+                if (BuildManager.attackerStringRef.StartsWith(words[1])) {
+                    forecast = $"{CommandTyperScript.evolveStringRef} {BuildManager.attackerStringRef}";
                 }
-                else if ("ranged".StartsWith(words[1])) {
-                    forecast = "evolve ranged";
+                else if (BuildManager.rangedStringRef.StartsWith(words[1])) {
+                    forecast = $"{CommandTyperScript.evolveStringRef} {BuildManager.rangedStringRef}";
                 }
-                else if ("mage".StartsWith(words[1])) {
-                    forecast = "evolve mage";
-                }
-                else if ("supply".StartsWith(words[1])) {
-                    forecast = "evolve supply";
+                else if (BuildManager.mageStringRef.StartsWith(words[1])) {
+                    forecast = $"{CommandTyperScript.evolveStringRef}  {BuildManager.mageStringRef}";
                 }
                 else {
                     forecast = "";
                 }
             }
-            else if (BuildManager.instance.FindTowerViaName(words[0]) && "evolve".StartsWith(words[1])) {
-                forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + " evolve";
+            else if (BuildManager.instance.FindTowerViaName(words[0]) && CommandTyperScript.evolveStringRef.StartsWith(words[1])) {
+                forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + $" {CommandTyperScript.evolveStringRef}";
             }
             else {
                 forecast = "";
@@ -96,15 +93,15 @@ public class ForecastCommandScript : MonoBehaviour {
         }
         else if (words.Length == 3) {
             // Check if command is "evolve" and selecting a tower that can be evolved
-            if (words[1] == "evolve") {
-                if ("attacker".StartsWith(words[2])) {
-                    forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + " evolve attacker";
+            if (words[1] == CommandTyperScript.evolveStringRef) {
+                if (BuildManager.attackerStringRef.StartsWith(words[2])) {
+                    forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + $" {CommandTyperScript.evolveStringRef} {BuildManager.attackerStringRef}";
                 }
-                else if ("ranged".StartsWith(words[2])) {
-                    forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + " evolve ranged";
+                else if (BuildManager.rangedStringRef.StartsWith(words[2])) {
+                    forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + $" {CommandTyperScript.evolveStringRef} {BuildManager.rangedStringRef}";
                 }
-                else if ("mage".StartsWith(words[2])) {
-                    forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + " evolve mage";
+                else if (BuildManager.mageStringRef.StartsWith(words[2])) {
+                    forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + $"  {CommandTyperScript.evolveStringRef}  {BuildManager.mageStringRef}";
                 }
                 else {
                     forecast = "";
