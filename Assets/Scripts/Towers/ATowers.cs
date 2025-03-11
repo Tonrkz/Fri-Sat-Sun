@@ -49,23 +49,22 @@ public class ATowers : MonoBehaviour, ITowers {
             IActivatables activatableTower = GetComponent<IActivatables>();
             if ((Enum_CampfireState)state == Enum_CampfireState.Active || (Enum_AttackerTowerState)state == Enum_AttackerTowerState.Active || (Enum_RangedTowerState)state == Enum_RangedTowerState.Active || (Enum_MageTowerState)state == Enum_MageTowerState.Active) {
                 // Display assigned word if it has one
-                towerNameText.text = activatableTower.AssignedWord;
-                towerNameText.fontStyle = FontStyles.Bold;
+                towerNameText.SetText("<b>" + activatableTower.AssignedWord + "</b>");
                 if (activatableTower.AssignedWord == "" || activatableTower.AssignedWord == null) {
                     towerNamePanel.SetActive(false);
                 }
                 else {
                     switch (TowerType) {
-                        case Enum_TowerTypes.Campfire:
+                        case Enum_TowerTypes.Campfire: // Send unit
                             towerNamePanel.GetComponent<SpriteRenderer>().color = new Color32(249, 255, 90, 255);
                             break;
-                        case Enum_TowerTypes.Attacker:
+                        case Enum_TowerTypes.Attacker: // Send unit
                             towerNamePanel.GetComponent<SpriteRenderer>().color = new Color32(249, 255, 90, 255);
                             break;
-                        case Enum_TowerTypes.Ranged:
+                        case Enum_TowerTypes.Ranged: // Send object
                             towerNamePanel.GetComponent<SpriteRenderer>().color = new Color32(157, 245, 243, 255);
                             break;
-                        case Enum_TowerTypes.Mage:
+                        case Enum_TowerTypes.Mage: // Buff
                             towerNamePanel.GetComponent<SpriteRenderer>().color = new Color32(151, 121, 255, 255);
                             break;
                     }
@@ -77,7 +76,7 @@ public class ATowers : MonoBehaviour, ITowers {
         Debug.Log($"{towerNameText.text} displayed");
 
         void DisplayTowerName() {
-            towerNameText.text = TowerName;
+            towerNameText.SetText("<b>" + TowerName + "</b>");
             towerNameText.fontStyle = FontStyles.UpperCase;
             towerNamePanel.SetActive(true);
             towerNamePanel.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
