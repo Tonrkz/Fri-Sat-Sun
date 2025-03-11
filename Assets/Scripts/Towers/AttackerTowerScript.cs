@@ -157,7 +157,7 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
 
     public override void DestroyTower() {
         base.DestroyTower();
-        ChangeTowerState(Enum_CampfireState.Dead);
+        ChangeTowerState(Enum_AttackerTowerState.Dead);
     }
 
     public void Activate() {

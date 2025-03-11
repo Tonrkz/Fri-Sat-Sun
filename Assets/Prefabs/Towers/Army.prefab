@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 695562685379062782}
   - component: {fileID: 5852964591741663799}
   m_Layer: 8
-  m_Name: Attacker
+  m_Name: Army
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

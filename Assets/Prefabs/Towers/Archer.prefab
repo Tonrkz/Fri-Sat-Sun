@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: -1527144294245224348}
   - component: {fileID: 842488624390130929}
   m_Layer: 8
-  m_Name: Ranged
+  m_Name: Archer
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

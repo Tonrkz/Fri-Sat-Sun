@@ -83,7 +83,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
             case Enum_NormalSoldierState.Attack:
                 if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
                     attackTarget = null;
-                    state = Enum_NormalSoldierState.Idle;
+                    state = Enum_NormalSoldierState.Initiate;
                 }
                 break;
             case Enum_NormalSoldierState.Die:
@@ -107,7 +107,13 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
             case Enum_NormalSoldierState.Idle:
                 return;
             case Enum_NormalSoldierState.Engage:
-                Move(attackTarget.transform.position);
+                try {
+                    Move(attackTarget.transform.position);
+                }
+                catch {
+                    attackTarget = null;
+                    state = Enum_NormalSoldierState.Initiate;
+                }
                 break;
             case Enum_NormalSoldierState.Attack:
                 //Play Attack Animation
