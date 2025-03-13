@@ -17,7 +17,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     [SerializeField] GameObject phantomDemonPrefab;
     [SerializeField] GameObject demonKingPrefab;
 
-    [SerializeField] Slider progressBarKnob;
+    [SerializeField] RectTransform progressBarHandle;
 
     [Header("Attributes")]
     [SerializeField] Byte waveCooldown = 30; // Time between each wave
@@ -28,7 +28,8 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
     [Header("Spawn Limit")]
     [HideInInspector] public int DemonLimit { get; private set; } = int.MaxValue; // Maximum number of demons that can be spawned
-    [HideInInspector] public int DemonCount { get; private set; } = 0; // Number of demons that have been spawned
+    [HideInInspector] public int DemonAlive { get; private set; } = 0; // Number of demons that is alive
+    [HideInInspector] public int DemonCount { get; private set; } = 0; // Number of demons that has been spawned
     Byte goblinDemonLeftToSpawn; // Number of goblin demons left to spawn
     Byte werewolfDemonLeftToSpawn; // Number of werewolf demons left to spawn
     Byte yetiDemonLeftToSpawn; // Number of yeti demons left to spawn
@@ -70,7 +71,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
             Instantiate(demonKingPrefab, transform.position, Quaternion.identity);
         }
 
-        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonCount == 0) {
+        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0) {
             isSpawning = false;
             StartCoroutine(EndWave());
         }
@@ -105,8 +106,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
             case Enum_DemonTypes.Goblin:
                 if (goblinDemonLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(goblinDemonPrefab, transform.position, Quaternion.identity);
-                    DemonCount++;
+                    DemonAlive++;
                     if (subtractLeftToSpawn) {
+                        DemonCount++;
                         goblinDemonLeftToSpawn--;
                     }
                     return spawnedDemon;
@@ -115,8 +117,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
             case Enum_DemonTypes.Werewolf:
                 if (werewolfDemonLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(werewolfDemonPrefab, transform.position, Quaternion.identity);
-                    DemonCount++;
+                    DemonAlive++;
                     if (subtractLeftToSpawn) {
+                        DemonCount++;
                         werewolfDemonLeftToSpawn--;
                     }
                     return spawnedDemon;
@@ -125,8 +128,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
             case Enum_DemonTypes.Yeti:
                 if (yetiDemonLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(yetiDemonPrefab, transform.position, Quaternion.identity);
-                    DemonCount++;
+                    DemonAlive++;
                     if (subtractLeftToSpawn) {
+                        DemonCount++;
                         yetiDemonLeftToSpawn--;
                     }
                     return spawnedDemon;
@@ -135,8 +139,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
             case Enum_DemonTypes.Phantom:
                 if (phantomDemonLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(phantomDemonPrefab, transform.position, Quaternion.identity);
-                    DemonCount++;
+                    DemonAlive++;
                     if (subtractLeftToSpawn) {
+                        DemonCount++;
                         phantomDemonLeftToSpawn--;
                     }
                     return spawnedDemon;
@@ -145,6 +150,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
             case Enum_DemonTypes.DemonKing:
                 if (demonKingLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(demonKingPrefab, transform.position, Quaternion.identity);
+                    DemonAlive++;
                     DemonCount++;
                     demonKingLeftToSpawn--;
                     return spawnedDemon;
@@ -165,11 +171,15 @@ public class DemonsSpawnerManager : MonoBehaviour {
             lastSpawnTime = Time.time;
 
             for (int i = 0 ; Time.time < lastSpawnTime + 1 ; i++) {
-
-                lastDemon = SpawnDemon(DecideDemonToBeSpawned(lastDemon)).GetComponent<IDemons>().DemonType;
+                try {
+                    lastDemon = SpawnDemon(DecideDemonToBeSpawned(lastDemon)).GetComponent<IDemons>().DemonType;
+                }
+                catch {
+                    lastDemon = Enum_DemonTypes.Goblin;
+                }
 
                 // Set progress bar value base on how many demons left to spawn
-                progressBarKnob.value = 1f - (float)(goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn) / (float)(DemonLimit * 2);
+                progressBarHandle.DORotate(new Vector3(0, 0, ((float)(DemonCount) / (float)DemonLimit) * -90), 1 / spawnRate);
 
                 yield return new WaitForSeconds(1 / spawnRate);
             }
@@ -254,6 +264,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     IEnumerator EndWave() {
         isSpawning = false;
         wave++;
+        progressBarHandle.DORotate(new Vector3(0, 0, 90), 0.2f);
         CalculateNextWaveDemonLimit();
 
         if (wave > 1) {
@@ -263,7 +274,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
         Single elapsedTime = 0;
         while (elapsedTime < waveCooldown) {
             elapsedTime += Time.deltaTime;
-            progressBarKnob.value = elapsedTime / (waveCooldown + waveCooldown);
+            progressBarHandle.rotation = Quaternion.Euler(0, 0, 90 - 90 * elapsedTime / waveCooldown);
             yield return null;
         }
         StartCoroutine(StartWave(wave));
@@ -272,6 +283,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
     /// Calculate the maximum number of demons that can be spawned in the next wave.
     /// </summary>
     void CalculateNextWaveDemonLimit() {
+        DemonLimit = 0;
+        DemonCount = 0;
+        DemonAlive = 0;
         switch (wave) {
             case 1:
                 SetAllDemonsLimit(10, 0, 0, 0, 0);
@@ -296,7 +310,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     /// </summary>
     /// <param name="demons"></param>
     public void OnDemonDead(IDemons demons) {
-        DemonCount--;
+        DemonAlive--;
         MoneyManager.instance.AddMoney(demons.MoneyOnDead);
     }
 

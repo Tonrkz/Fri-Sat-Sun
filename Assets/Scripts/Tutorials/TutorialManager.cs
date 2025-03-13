@@ -369,7 +369,7 @@ public class TutorialManager : MonoBehaviour {
                         StartCoroutine(DemonsSpawnerManager.instance.TutorialPlayerTest1());
                     }
                 }
-                if (DemonsSpawnerManager.instance.DemonCount == 0 && DemonsSpawnerManager.instance.DemonLimit == 0) {
+                if (DemonsSpawnerManager.instance.DemonAlive == 0 && DemonsSpawnerManager.instance.DemonLimit == 0) {
                     if (!IsConditionMeet) {
                         OnTutorialConditionMeet();
                     }
