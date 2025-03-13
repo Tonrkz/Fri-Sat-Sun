@@ -10999,7 +10999,7 @@ GameObject:
   m_Component:
   - component: {fileID: 202705088}
   m_Layer: 0
-  m_Name: Walk Point 02
+  m_Name: Walk Point 01
   m_TagString: WalkPoint
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -13038,7 +13038,7 @@ GameObject:
   m_Component:
   - component: {fileID: 254811420}
   m_Layer: 0
-  m_Name: Walk Point 04
+  m_Name: Walk Point 03
   m_TagString: WalkPoint
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -13784,8 +13784,8 @@ RectTransform:
   m_Children:
   - {fileID: 1209221769}
   - {fileID: 517538743}
-  - {fileID: 746193378}
   - {fileID: 440120755}
+  - {fileID: 746193378}
   - {fileID: 949563360}
   - {fileID: 171605461}
   - {fileID: 583090132}
@@ -15575,7 +15575,7 @@ GameObject:
   m_Component:
   - component: {fileID: 322282997}
   m_Layer: 0
-  m_Name: Walk Point 03
+  m_Name: Walk Point 02
   m_TagString: WalkPoint
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -16323,13 +16323,14 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 942574023}
   m_Father: {fileID: 440120755}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 605, y: 0}
-  m_SizeDelta: {x: 1210, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 232.5, y: 117.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &334720627
 MonoBehaviour:
@@ -16351,7 +16352,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 93e3a8a5810aa1344b0cfeb7d999ddfe, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b0774a7dc97e63d449270d85b3f64016, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -22548,7 +22549,6 @@ GameObject:
   - component: {fileID: 440120755}
   - component: {fileID: 440120758}
   - component: {fileID: 440120757}
-  - component: {fileID: 440120756}
   m_Layer: 5
   m_Name: Progress Bar Panel
   m_TagString: Untagged
@@ -22569,65 +22569,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 334720626}
-  - {fileID: 942574023}
   m_Father: {fileID: 267096146}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -20}
-  m_SizeDelta: {x: 1210, y: 20}
-  m_Pivot: {x: 0.5, y: 1}
---- !u!114 &440120756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 440120754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 0
-  m_TargetGraphic: {fileID: 440120757}
-  m_FillRect: {fileID: 0}
-  m_HandleRect: {fileID: 942574023}
-  m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 0
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 145}
+  m_SizeDelta: {x: 232.5, y: 117.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &440120757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22641,7 +22589,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -47675,18 +47623,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942574022}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 440120755}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_Father: {fileID: 334720626}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 51, y: 33}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_SizeDelta: {x: 28, y: 88}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &942574024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47707,7 +47655,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 552c86cd8a98b234d847b764ed559fd4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bf14e424854b90d40af012478bcb4dad, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -48368,7 +48316,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1259265041}
-  - {fileID: 1464682356}
   - {fileID: 202705088}
   - {fileID: 322282997}
   - {fileID: 254811420}
@@ -54505,11 +54452,11 @@ MonoBehaviour:
   yetiDemonPrefab: {fileID: 2838582429635018128, guid: fb0bb3bae7a7e1043a4cf06df17add72, type: 3}
   phantomDemonPrefab: {fileID: 2838582429635018128, guid: 0ebb9bc87bc663b4195a4cdca4e842d8, type: 3}
   demonKingPrefab: {fileID: 0}
-  progressBarKnob: {fileID: 440120756}
+  progressBarHandle: {fileID: 942574023}
   waveCooldown: 1
   isSpawning: 0
-  spawnRate: 1
-  spawnCooldown: 1.5
+  spawnRate: 0.7
+  spawnCooldown: 2
 --- !u!1 &1080053444
 GameObject:
   m_ObjectHideFlags: 0
@@ -64034,7 +63981,7 @@ Transform:
   m_GameObject: {fileID: 1259265040}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 0, z: 3}
+  m_LocalPosition: {x: -10, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -66215,7 +66162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1291483326}
   m_Layer: 0
-  m_Name: Walk Point 06
+  m_Name: Walk Point 05
   m_TagString: WalkPoint
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -76316,37 +76263,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1461050480}
   m_Mesh: {fileID: -4512829853959523715, guid: cc536ad12c56bee4e961b1b02e08dab8, type: 3}
---- !u!1 &1464682355
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1464682356}
-  m_Layer: 0
-  m_Name: Walk Point 01
-  m_TagString: WalkPoint
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1464682356
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1464682355}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 957450161}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1465088528
 GameObject:
   m_ObjectHideFlags: 0
@@ -80599,7 +80515,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1559567898}
   m_Layer: 0
-  m_Name: Walk Point 05
+  m_Name: Walk Point 04
   m_TagString: WalkPoint
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
