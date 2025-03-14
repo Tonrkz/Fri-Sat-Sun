@@ -16,6 +16,7 @@ public class GlobalAttributeMultipliers : MonoBehaviour {
 
     [Header("Money Attributes")]
     public static Single MoneyPerSecondMultiplier { get; set; } = 1f;
+    public static Single MoneyPerKillMultiplier { get; set; } = 1f;
     public static Single PercentRefundMultiplier { get; set; } = 1f;
 
     [Header("Hit Point Attributes")]
