@@ -6,6 +6,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class DemonsSpawnerManager : MonoBehaviour {
     public static DemonsSpawnerManager instance;
@@ -51,7 +52,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
     void Start() {
         // Start the first wave
-        StartCoroutine(EndWave());
+        if (TutorialManager.instance.GetComponent<TutorialManager>()) {
+            StartCoroutine(EndWave());
+        }
     }
 
     void Update() {
