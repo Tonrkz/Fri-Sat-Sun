@@ -314,7 +314,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     /// <param name="demons"></param>
     public void OnDemonDead(IDemons demons) {
         DemonAlive--;
-        MoneyManager.instance.AddMoney(demons.MoneyOnDead);
+        MoneyManager.instance.AddMoney(demons.MoneyOnDead * GlobalAttributeMultipliers.MoneyPerKillMultiplier);
     }
 
     /// <summary>
