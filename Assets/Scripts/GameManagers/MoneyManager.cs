@@ -25,6 +25,9 @@ public class MoneyManager : MonoBehaviour {
     [Header("Upgrade Attributes")]
     public static readonly float upgradePriceExponent = 0.75f; // Exponent for the upgrade price
 
+    [Header("Audio")]
+    [SerializeField] AudioClip moneySound; // Sound when money is added
+
     [Header("Debug")]
     [SerializeField] float calcTimeDelay = 1f; // Time delay to calculate money
     float lastCalculatedTime = 0; // Time when the money was last calculated
@@ -86,5 +89,8 @@ public class MoneyManager : MonoBehaviour {
     /// <param name="amount">Number of money to be added</param>
     public void AddMoney(Single amount) {
         money += amount;
+
+        // Play money sound
+        SFXManager.instance.PlaySFXClip(moneySound, transform, 1f);
     }
 }

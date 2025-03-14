@@ -71,6 +71,10 @@ public class UserInterfaceManager : MonoBehaviour {
         SceneManager.LoadScene(sceneName);
     }
 
+    public void PlaySFXOnUI(AudioClip audioClip) {
+        SFXManager.instance.PlaySFXClip(audioClip, transform, 1f);
+    }
+
     public void PauseGame() {
         Time.timeScale = 0;
     }

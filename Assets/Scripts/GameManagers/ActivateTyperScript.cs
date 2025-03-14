@@ -5,6 +5,10 @@ using UnityEngine;
 public class ActivateTyperScript : MonoBehaviour {
     public static ActivateTyperScript instance;
 
+    [Header("Audio")]
+    [SerializeField] internal AudioClip writingSound;
+    [SerializeField] internal AudioClip activateSound;
+
     GameObject selectedTower;
     string towerAssignedWord;
 
@@ -35,6 +39,7 @@ public class ActivateTyperScript : MonoBehaviour {
                 else {
                     if (selectedTower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
                         RemoveInputLetter();
+                        SFXManager.instance.PlaySFXClip(writingSound, transform, 1f);
                     }
                 }
             }
@@ -91,6 +96,8 @@ public class ActivateTyperScript : MonoBehaviour {
             selectedTower.GetComponent<ATowers>().IsSelected = false;
             PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
             selectedTower = null;
+
+            SFXManager.instance.PlaySFXClip(activateSound, transform, 1f);
         }
         yield return null;
     }

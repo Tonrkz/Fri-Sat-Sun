@@ -16,11 +16,15 @@ public class CommandTyperScript : MonoBehaviour {
     string commandString = "";
     List<string> splitedCommand = new List<string>();
 
+    [Header("Command References")]
     public static readonly string buildStringRef = "build";
     public static readonly string upgradeStringRef = "upgrade";
     public static readonly string destroyStringRef = "destroy";
     public static readonly string evolveStringRef = "evolve";
     public static readonly string taxStringRef = "tax";
+
+    [Header("Audio")]
+    [SerializeField] AudioClip writingSound;
 
     void Awake() {
         if (instance == null) {
@@ -88,6 +92,9 @@ public class CommandTyperScript : MonoBehaviour {
     IEnumerator AddChar(char c) {
         yield return new WaitForEndOfFrame();
         inputString += c;
+
+        // Play writing sound
+        SFXManager.instance.PlaySFXClip(writingSound, transform, 1f);
     }
 
     /// <summary>

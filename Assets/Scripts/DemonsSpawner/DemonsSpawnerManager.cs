@@ -269,6 +269,11 @@ public class DemonsSpawnerManager : MonoBehaviour {
     IEnumerator EndWave() {
         isSpawning = false;
         wave++;
+
+        if (wave == 4) {
+            UserInterfaceManager.instance.LoadSceneViaName("Scene_End");
+        }
+
         progressBarHandle.DORotate(new Vector3(0, 0, 90), 0.2f);
         CalculateNextWaveDemonLimit();
 
