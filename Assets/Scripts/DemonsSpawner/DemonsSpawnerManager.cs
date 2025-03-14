@@ -51,7 +51,6 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
     void Start() {
         // Start the first wave
-        Debug.Log(FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled);
         if (!FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled) {
             StartCoroutine(EndWave());
         }
@@ -74,7 +73,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
             Instantiate(demonKingPrefab, transform.position, Quaternion.identity);
         }
 
-        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0 && DemonCount == DemonLimit) {
+        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0 && DemonCount == DemonLimit && !FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled) {
             isSpawning = false;
             StartCoroutine(EndWave());
         }
@@ -342,5 +341,10 @@ public class DemonsSpawnerManager : MonoBehaviour {
             }
             yield return new WaitForSeconds(spawnCooldown);
         }
+    }
+
+    public IEnumerator TutorialPlayerTest3() {
+        StartCoroutine(EndWave());
+        yield return null;
     }
 }

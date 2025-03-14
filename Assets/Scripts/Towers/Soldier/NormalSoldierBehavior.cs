@@ -56,7 +56,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         }
         lastCalculateTime = Time.time;
         if (baseTower.gameObject.IsDestroyed()) {
-            state = Enum_NormalSoldierState.Die;
+            ChangeState(Enum_NormalSoldierState.Die);
         }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
@@ -93,7 +93,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     void FixedUpdate() {
         if (HitPoint <= 0) {
-            state = Enum_NormalSoldierState.Die;
+            ChangeState(Enum_NormalSoldierState.Die);
         }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
@@ -185,7 +185,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
             foreach (Collider collider in colliders) {
                 if (collider.CompareTag("Phantom")) {
                     attackTarget = collider.gameObject;
-                    state = Enum_NormalSoldierState.Engage;
+                    ChangeState(Enum_NormalSoldierState.Engage);
                     break;
                 }
             }
@@ -194,7 +194,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         if (attackTarget == null && colliders.Length > 0) {
             if (colliders[0].CompareTag("Demon")) {
                 attackTarget = colliders[0].gameObject;
-                state = Enum_NormalSoldierState.Engage;
+                ChangeState(Enum_NormalSoldierState.Engage);
             }
         }
         yield return null;

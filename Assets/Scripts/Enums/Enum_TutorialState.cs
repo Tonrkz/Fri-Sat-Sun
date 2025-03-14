@@ -9,8 +9,6 @@ public enum Enum_TutorialState {
     PlayerTest1,
     EvolveCommand,
     UpgradeCommand,
-    PlayerTest2,
-    TaxCommand,
     GodOffering,
     PlayerTest3,
     End

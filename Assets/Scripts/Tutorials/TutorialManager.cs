@@ -28,11 +28,10 @@ public class TutorialManager : MonoBehaviour {
         $"Let me acquaint you with your surroundings, Your Majesty.",
         $"This vast expanse before you is our battlefield.",
         $"Each square upon the land denotes a space you may select.",
-        $"Above, you will see a bar indicating the passage of day and night.",
-        $"To its left, the count of days. Our scouts foretell the Demon King's onslaught will endure for five days.",
+        $"Our scouts foretell the Demon King's onslaught will endure for five days.",
         $"Thus, we must withstand the onslaught for five days to claim victory in this war.",
-        $"To the right, you see the parchment where you shall issue commands to repel the demonic horde.",
-        $"And above, your treasury, for even war demands coin.",
+        $"On the bottom, you see the parchment where you shall issue commands to repel the demonic horde.",
+        $"And at left side, your treasury, for even war demands coin.",
         $"That is all you require for now. Let us begin!"
     };
 
@@ -62,7 +61,7 @@ public class TutorialManager : MonoBehaviour {
     };
 
     List<string> towerActivationTutorialMessages = new List<string> {
-        $"Observe! The campfire's designation has shifted.", // 0
+        $"Look! The campfire's name has changed.", // 0
         $"This signifies your entry into 'Activation Mode'.", // 1
         $"In this mode, you may activate your towers by inputting the word displayed above them.", // 2
         $"Each tower boasts a unique ability upon activation.", // 3
@@ -93,9 +92,9 @@ public class TutorialManager : MonoBehaviour {
         $"You have proven yourself a capable commander, Your Majesty.", // 0
         $"Now, let us delve into the intricacies of tower evolution.", // 1
         $"Each tower may be upgraded to enhance its abilities.", // 2
-        $"To evolve a tower, type '[Tower name] evolve [Tower Type]' ", // 3
+        $"To evolve a tower, type '(Tower name) evolve (Tower Type)' ", // 3
         $"The cost of evolution is dependent upon the tower's type.", // 4
-        $"Let's evolve the campfire into an attacker tower.", // 5
+        $"Let's evolve the campfire into an {BuildManager.attackerStringRef} tower.", // 5
         // Player evolve the campfire into an attacker tower
         $"A new tower has been born! It shall serve us well in the battles to come.", // 6
         $"Here is the cost to evolve each tower type and it's power: {BuildManager.attackerStringRef} = {MoneyManager.attackerTowerBuildCost} (Sends a stronger soldier)", // 
@@ -104,12 +103,30 @@ public class TutorialManager : MonoBehaviour {
     };
 
     List<string> upgradeCommandTutorialMessages = new List<string> {
-        $"You have proven yourself a capable commander, Your Majesty.", // 0
-        $"Now, let us delve into the intricacies of tower evolution.", // 1
-        $"Each tower may be upgraded to enhance its abilities.", // 2
-        $"To evolve a tower, type '[Tower name] evolve [Tower Type]' ", // 3
-        $"The cost of evolution is dependent upon the tower's type.", // 4
-        $"Let's evolve the campfire" // 5
+        $"So, Now you need to upgrade your towers.",
+        $"To upgrade a tower, type '{CommandTyperScript.upgradeStringRef}' followed by the tower's name.",
+        // Player upgrade the attacker tower
+        $"Well done! Your tower has been upgraded! It shall now serve you better in the battles to come."
+    };
+
+    List<string> godOfferingTutorialMessages = new List<string> {
+        $"The gods have taken notice of your valiant efforts, Your Majesty.",
+        $"They offer you a boon to aid you in your quest.",
+        $"To worship our gods, must wait until the dawn comes.",
+        $"The gods will offer you a choice of two boons, each with a unique power.",
+        $"You can only hold two boons at a time, so choose carefully.",
+        // Player choose a buff
+        $"The gods have blessed you with their power! Your Majesty."
+    };
+
+    List<string> playerTest3Messages = new List<string> {
+        $"The Demon King's forces grow stronger, Your Majesty.",
+        $"You must now face a greater challenge.",
+        $"Prepare yourself for the coming onslaught!",
+        $"Remember, Your Majesty, the fate of our kingdom rests upon your shoulders.",
+        $"If you have any questions, I have make you a ''Kingdom Guide'', showing how to commands your army.",
+        "You can access it anytime by clicking top left 'help' button.",
+        $"Good luck, Your Majesty!"
     };
 
     [Header("Debug")]
@@ -172,10 +189,6 @@ public class TutorialManager : MonoBehaviour {
                 break;
             case Enum_TutorialState.UpgradeCommand:
                 UserInterfaceManager.instance.ChangeTextMessage(tutorialText, upgradeCommandTutorialMessages[tutorialTextIndex]);
-                break;
-            case Enum_TutorialState.PlayerTest2:
-                break;
-            case Enum_TutorialState.TaxCommand:
                 break;
             case Enum_TutorialState.GodOffering:
                 break;
@@ -262,7 +275,7 @@ public class TutorialManager : MonoBehaviour {
                     UserInterfaceManager.instance.ChangeTextMessage(tutorialText, buildCommandTutorialMessages[buildCommandTutorialMessages.Count - 2]);
                 }
                 if (!"build".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
-                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'.");
 
                 }
                 if (Input.GetKeyDown(KeyCode.Return)) {
@@ -337,13 +350,13 @@ public class TutorialManager : MonoBehaviour {
                     return;
                 }
                 if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode) {
-                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"Don't forget to return back to command mode, in order to write a command! (Pressing 'Space Bar')");
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"Don't forget to return back to command mode, in order to write a command! (Pressing 'Space Bar').");
 
                 }
                 else if (InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
-                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, try '{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ATowers>().TowerName}'!");
+                    UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, try '{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ATowers>().TowerName}'! Or moved yourself into it to select a tower and type 'destroy'.");
                     if (!$"{"destroy"} {BuildManager.instance.builtTowerList[0].GetComponent<ATowers>().TowerName}".StartsWith(CommandTyperScript.instance.inputString) && CommandTyperScript.instance.inputString != "" && CommandTyperScript.instance.inputString != null) {
-                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'");
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, "Looks like you have write a wrong command, you can delete it by pressing 'Backspace'.");
                     }
                 }
 
@@ -352,7 +365,7 @@ public class TutorialManager : MonoBehaviour {
                         tutorialTextIndex++;
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, destroyCommandTutorialMessages[tutorialTextIndex]);
                     }
-                    if (tutorialTextIndex == destroyCommandTutorialMessages.Count - 2) {
+                    else if (tutorialTextIndex == destroyCommandTutorialMessages.Count - 2) {
                         tutorialTextIndex++;
                         pressEnterToContinueText.SetActive(false);
                         InputStateManager.instance.GameInputState = previousInputState;
@@ -372,55 +385,109 @@ public class TutorialManager : MonoBehaviour {
                         InputStateManager.instance.GameInputState = previousInputState;
                         pressEnterToContinueText.SetActive(false);
                         StartCoroutine(DemonsSpawnerManager.instance.TutorialPlayerTest1());
+                        StartCoroutine(HideTalkingBubble(3));
                     }
                 }
-                if (DemonsSpawnerManager.instance.DemonAlive == 0 && DemonsSpawnerManager.instance.DemonCount == 0) {
+                if (DemonsSpawnerManager.instance.DemonAlive == 0 && DemonsSpawnerManager.instance.DemonCount == DemonsSpawnerManager.instance.DemonLimit) {
                     if (!IsConditionMeet) {
                         OnTutorialConditionMeet();
                     }
                 }
                 break;
             case Enum_TutorialState.EvolveCommand:
+                builtTower = BuildManager.instance.builtTowerList[0];
                 if (Input.GetKeyDown(KeyCode.Return)) {
                     if (tutorialTextIndex < 5) {
                         tutorialTextIndex++;
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
                     }
                     else if (tutorialTextIndex == 5) {
-                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, type {builtTower.GetComponent<ATowers>().TowerName} evolve attacker");
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, type '{builtTower.GetComponent<ATowers>().TowerName} {CommandTyperScript.evolveStringRef} {BuildManager.attackerStringRef}'! Or moved yourself into it to select a tower and type '{CommandTyperScript.evolveStringRef} {BuildManager.attackerStringRef}'.");
                         pressEnterToContinueText.SetActive(false);
                         InputStateManager.instance.GameInputState = previousInputState;
                     }
-                    else if (tutorialTextIndex <= evolveCommandTutorialMessages.Count - 1) {
+                    else if (tutorialTextIndex < evolveCommandTutorialMessages.Count - 1) {
                         tutorialTextIndex++;
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
                         pressEnterToContinueText.SetActive(true);
-                        if (tutorialTextIndex == evolveCommandTutorialMessages.Count - 1) {
-                            OnTutorialConditionMeet();
-                        }
+                    }
+                    else if (tutorialTextIndex == evolveCommandTutorialMessages.Count - 1) {
+                        OnTutorialConditionMeet();
                     }
                 }
-                builtTower = BuildManager.instance.builtTowerList[0];
                 if (builtTower.GetComponent<ATowers>().TowerType != Enum_TowerTypes.Campfire) {
                     if (!IsConditionMeet) {
                         IsConditionMeet = true;
                         tutorialTextIndex++;
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
                         previousInputState = InputStateManager.instance.GameInputState;
-                        InputStateManager.instance.GameInputState = Enum_GameInputState.Tutorial;
+                        InputStateManager.instance.GameInputState = previousInputState;
                         pressEnterToContinueText.SetActive(true);
                     }
                 }
                 break;
             case Enum_TutorialState.UpgradeCommand:
-                break;
-            case Enum_TutorialState.PlayerTest2:
-                break;
-            case Enum_TutorialState.TaxCommand:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < 1) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, upgradeCommandTutorialMessages[tutorialTextIndex]);
+                    }
+                    else if (tutorialTextIndex == 1) {
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, type '{CommandTyperScript.upgradeStringRef} {BuildManager.instance.builtTowerList[0].GetComponent<ATowers>().TowerName}'! Or moved yourself into it to select a tower and type '{CommandTyperScript.upgradeStringRef}'.");
+                        pressEnterToContinueText.SetActive(false);
+                        MoneyManager.instance.money = builtTower.GetComponent<IUpgradables>().UpgradeCost;
+                        InputStateManager.instance.GameInputState = previousInputState;
+                    }
+                    if (IsConditionMeet) {
+                        OnTutorialConditionMeet();
+                        return;
+                    }
+                }
+                if (BuildManager.instance.builtTowerList[0].GetComponent<ATowers>().Level > 1) {
+                    if (!IsConditionMeet) {
+                        IsConditionMeet = true;
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, upgradeCommandTutorialMessages[tutorialTextIndex]);
+                        previousInputState = InputStateManager.instance.GameInputState;
+                        InputStateManager.instance.GameInputState = Enum_GameInputState.Tutorial;
+                        pressEnterToContinueText.SetActive(true);
+                    }
+                }
                 break;
             case Enum_TutorialState.GodOffering:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex < godOfferingTutorialMessages.Count - 2) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, godOfferingTutorialMessages[tutorialTextIndex]);
+                    }
+                    else {
+                        MoneyManager.instance.money = 200;
+                        GodsOfferingManager.instance.InitiateGodOfferingsUI();
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, godOfferingTutorialMessages[godOfferingTutorialMessages.Count - 1]);
+                        pressEnterToContinueText.SetActive(true);
+                        InputStateManager.instance.GameInputState = previousInputState;
+                        IsConditionMeet = true;
+                    }
+                    if (IsConditionMeet) {
+                        OnTutorialConditionMeet();
+                        return;
+                    }
+                }
                 break;
             case Enum_TutorialState.PlayerTest3:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (tutorialTextIndex <= playerTest3Messages.Count - 1) {
+                        tutorialTextIndex++;
+                        UserInterfaceManager.instance.ChangeTextMessage(tutorialText, playerTest3Messages[tutorialTextIndex]);
+                    }
+                    else {
+                        InputStateManager.instance.GameInputState = Enum_GameInputState.CommandMode;
+                        if (!IsConditionMeet) {
+                            OnTutorialConditionMeet();
+                            return;
+                        }
+                    }
+                }
                 break;
             case Enum_TutorialState.End:
                 break;
@@ -476,14 +543,15 @@ public class TutorialManager : MonoBehaviour {
                 UpdateStep();
                 break;
             case Enum_TutorialState.UpgradeCommand:
-                break;
-            case Enum_TutorialState.PlayerTest2:
-                break;
-            case Enum_TutorialState.TaxCommand:
+                UpdateStep();
                 break;
             case Enum_TutorialState.GodOffering:
+                UpdateStep();
                 break;
             case Enum_TutorialState.PlayerTest3:
+                DemonsSpawnerManager.instance.StartCoroutine(DemonsSpawnerManager.instance.TutorialPlayerTest3());
+                StartCoroutine(HideTalkingBubble(0));
+                enabled = false;
                 break;
             case Enum_TutorialState.End:
                 break;
