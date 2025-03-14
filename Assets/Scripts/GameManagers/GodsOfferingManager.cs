@@ -113,10 +113,11 @@ public class GodsOfferingManager : MonoBehaviour {
             Button_BuyableGodOffering1.onClick.AddListener(() => OnBuyableGodOfferingButtonClick(buyableOfferings[0]));
 
             // Set the buyable offering 1 to active
-            Image_BuyableOffering1.gameObject.SetActive(true);
+            Button_BuyableGodOffering1.gameObject.SetActive(true);
+            Button_BuyableGodOffering1.Select();
         }
         else {
-            Image_BuyableOffering1.gameObject.SetActive(false);
+            Button_BuyableGodOffering1.gameObject.SetActive(false);
         }
 
         if (buyableOfferings.Count > 1) {
@@ -132,10 +133,10 @@ public class GodsOfferingManager : MonoBehaviour {
             Button_BuyableGodOffering2.onClick.AddListener(() => OnBuyableGodOfferingButtonClick(buyableOfferings[1]));
 
             // Set the buyable offering 2 to active
-            Image_BuyableOffering2.gameObject.SetActive(true);
+            Button_BuyableGodOffering2.gameObject.SetActive(true);
         }
         else {
-            Image_BuyableOffering2.gameObject.SetActive(false);
+            Button_BuyableGodOffering2.gameObject.SetActive(false);
         }
 
         if (playerGodOfferingHandler.godOffering_1 != null) {
