@@ -1,7 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class UserInterfaceManager : MonoBehaviour {
     public static UserInterfaceManager instance;
@@ -42,8 +44,23 @@ public class UserInterfaceManager : MonoBehaviour {
         uiObject.transform.DOScale(1f, 0.2f).SetUpdate(true);
     }
 
-    public void SelectUI(UnityEngine.UI.Button uiButton) {
+    public void SelectUI(Button uiButton) {
         uiButton.Select();
+    }
+
+    public void OnHelpButtonClicked(RectTransform helpButton) {
+        helpButton.DOAnchorPosX(-(helpButton.rect.width + 8), 0.2f).SetUpdate(true);
+        helpButton.GetChild(0).GetComponent<RectTransform>().DOAnchorPosX(helpButton.GetChild(0).GetComponent<RectTransform>().rect.width + helpButton.rect.width + 28, 0.2f).SetUpdate(true);
+        helpButton.GetComponent<Button>().interactable = false;
+        // Delay 2 seconds before moving back
+        StartCoroutine(MoveBackHelpButton(helpButton));
+
+        IEnumerator MoveBackHelpButton(RectTransform helpButton) {
+            yield return new WaitForSeconds(2);
+            helpButton.DOAnchorPosX(0, 0.2f).SetUpdate(true);
+            helpButton.GetChild(0).GetComponent<RectTransform>().DOAnchorPosX(0, 0.2f).SetUpdate(true);
+            helpButton.GetComponent<Button>().interactable = true;
+        }
     }
 
     /// <summary>
