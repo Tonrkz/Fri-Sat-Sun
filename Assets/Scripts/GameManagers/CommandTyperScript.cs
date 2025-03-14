@@ -36,7 +36,7 @@ public class CommandTyperScript : MonoBehaviour {
     }
 
     void Update() {
-        if (InputStateManager.instance.GameInputState != Enum_GameInputState.CommandMode) {
+        if (InputStateManager.instance.GameInputState != Enum_GameInputState.CommandMode || Time.timeScale == 0) {
             return;
         }
         if (Input.GetKeyDown(KeyCode.Backspace)) {

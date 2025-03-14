@@ -18,7 +18,7 @@ public class ActivateTyperScript : MonoBehaviour {
     }
 
     private void Update() {
-        if (InputStateManager.instance.GameInputState != Enum_GameInputState.ActivateMode) {
+        if (InputStateManager.instance.GameInputState != Enum_GameInputState.ActivateMode || Time.timeScale == 0) {
             return;
         }
         if (Input.GetKeyDown(KeyCode.Space) && selectedTower != null) {

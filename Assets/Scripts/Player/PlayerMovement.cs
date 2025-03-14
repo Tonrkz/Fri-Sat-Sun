@@ -21,6 +21,10 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void Update() {
+        if (Time.timeScale == 0) {
+            return;
+        }
+
         if (Input.GetKey(KeyCode.UpArrow)) {
             calcHoldCooldown -= Time.deltaTime;
             if (calcHoldCooldown <= 0) {

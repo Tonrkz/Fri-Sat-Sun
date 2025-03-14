@@ -22,7 +22,7 @@ public class InputStateManager : MonoBehaviour {
     }
 
     void Update() {
-        if (GameInputState == Enum_GameInputState.Tutorial) {
+        if (GameInputState == Enum_GameInputState.Tutorial || Time.timeScale == 0) {
             return;
         }
         if (Input.GetKeyDown(KeyCode.Space) && CommandTyperScript.instance.inputString == "") {
