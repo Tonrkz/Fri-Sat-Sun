@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GO_IncreasePlayerMovementSpeed
   m_EditorClassIdentifier: 
   godOfferingID: GO05
-  offeringSprite: {fileID: 0}
-  offeringName: God of Communication
+  offeringSprite: {fileID: 21300000, guid: 78972f3c9247e434da766e4149be0097, type: 3}
+  offeringName: Boots of Promptitude
   offeringDescription: Increase player's movement speed by 33 percent
-  offeringCost: 240
+  offeringCost: 80
   newMoveCooldown: 0.1

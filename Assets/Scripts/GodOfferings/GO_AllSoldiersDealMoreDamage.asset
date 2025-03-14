@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GO_AllSoldiersDealMoreDamage
   m_EditorClassIdentifier: 
   godOfferingID: GO04
-  offeringSprite: {fileID: 0}
-  offeringName: God of War
+  offeringSprite: {fileID: 21300000, guid: 01ca4decba495de4391e6ba7cee5500e, type: 3}
+  offeringName: God's Wrath
   offeringDescription: All soldiers deal 20 percent more damage.
-  offeringCost: 100
+  offeringCost: 120
   damageMultiplier: 1.2

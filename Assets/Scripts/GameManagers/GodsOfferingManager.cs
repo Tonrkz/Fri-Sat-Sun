@@ -65,7 +65,7 @@ public class GodsOfferingManager : MonoBehaviour {
         RandomBuyableOfferings();
         UpdateOfferingsUI();
     }
-
+    [ContextMenu("Initiate God Offerings UI")]
     /// <summary>
     /// This method will be called when end of the wave
     /// </summary>
@@ -102,7 +102,8 @@ public class GodsOfferingManager : MonoBehaviour {
 
         if (buyableOfferings.Count > 0) {
             // Update the buyable offering 1 UI
-            //Image_BuyableOffering1.sprite = buyableOfferings[0].offeringSprite;
+            Image_BuyableOffering1.sprite = buyableOfferings[0].offeringSprite;
+            Image_BuyableOffering1.SetNativeSize();
             Text_BuyableOffering1Name.SetText(buyableOfferings[0].offeringName);
             Text_BuyableOffering1Description.SetText(buyableOfferings[0].offeringDescription);
             Text_CostOffering1.SetText(buyableOfferings[0].offeringCost.ToString());
@@ -120,7 +121,8 @@ public class GodsOfferingManager : MonoBehaviour {
 
         if (buyableOfferings.Count > 1) {
             // Update the buyable offering 2 UI
-            //Image_BuyableOffering2.sprite = buyableOfferings[1].offeringSprite;
+            Image_BuyableOffering2.sprite = buyableOfferings[1].offeringSprite;
+            Image_BuyableOffering2.SetNativeSize();
             Text_BuyableOffering2Name.SetText(buyableOfferings[1].offeringName);
             Text_BuyableOffering2Description.SetText(buyableOfferings[1].offeringDescription);
             Text_CostOffering2.SetText(buyableOfferings[1].offeringCost.ToString());
@@ -138,7 +140,8 @@ public class GodsOfferingManager : MonoBehaviour {
 
         if (playerGodOfferingHandler.godOffering_1 != null) {
             OwnedOffering1.SetActive(true);
-            //Image_OwnedOffering1.sprite = playerGodOfferingHandler.godOffering_1.offeringSprite;
+            Image_OwnedOffering1.sprite = playerGodOfferingHandler.godOffering_1.offeringSprite;
+            Image_OwnedOffering1.SetNativeSize();
             Text_OwnedOffering1Name.SetText(playerGodOfferingHandler.godOffering_1.offeringName);
             Text_OwnedOffering1Description.SetText(playerGodOfferingHandler.godOffering_1.offeringDescription);
 
@@ -152,7 +155,8 @@ public class GodsOfferingManager : MonoBehaviour {
 
         if (playerGodOfferingHandler.godOffering_2 != null) {
             OwnedOffering2.SetActive(true);
-            //Image_OwnedOffering2.sprite = playerGodOfferingHandler.godOffering_2.offeringSprite;
+            Image_OwnedOffering2.sprite = playerGodOfferingHandler.godOffering_2.offeringSprite;
+            Image_OwnedOffering2.SetNativeSize();
             Text_OwnedOffering2Name.SetText(playerGodOfferingHandler.godOffering_2.offeringName);
             Text_OwnedOffering2Description.SetText(playerGodOfferingHandler.godOffering_2.offeringDescription);
 
@@ -166,6 +170,12 @@ public class GodsOfferingManager : MonoBehaviour {
     }
 
     void OnBuyableGodOfferingButtonClick(SO_GodOffering godOffering) {
+        // Check if player has empty offering slot
+        if (playerGodOfferingHandler.godOffering_1 != null && playerGodOfferingHandler.godOffering_2 != null) {
+            Debug.Log("No empty offering slot");
+            return;
+        }
+
         if (MoneyManager.instance.CanAfford(godOffering.offeringCost)) {
             MoneyManager.instance.AddMoney(-godOffering.offeringCost);
             playerGodOfferingHandler.AssignGodOffering(godOffering);
