@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1541739477384394527}
   - component: {fileID: 3832061312113440336}
+  - component: {fileID: 5844541566045583166}
+  - component: {fileID: 6484154098858669051}
   m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
@@ -76,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e4f2a6a2548ca4b49b919a3a422e780f, type: 3}
+  m_Sprite: {fileID: 1866050079, guid: fefe7216e71c13b4cad5724acdfbe3f1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -87,6 +89,41 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5844541566045583166
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5301911523658575639}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 242c42798a339cf489f62e854d90b5ca, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6484154098858669051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5301911523658575639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c41d45bc098e01044ba51468e6abad4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 5844541566045583166}
 --- !u!1 &7726950801907583317
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,12 +224,11 @@ MonoBehaviour:
   rb: {fileID: 540427046439860620}
   towerNamePanel: {fileID: 7794826963352448128}
   towerNameText: {fileID: 1447108557167711258}
-  render: {fileID: 0}
+  render: {fileID: 6484154098858669051}
   health: {fileID: 5852964591741663799}
   occupiedGround: {fileID: 0}
   attackerSoldierPrefab: {fileID: 2225985748608282072, guid: b5774b0d464940143acbfec0be978239, type: 3}
   level: 1
-  startCanSeePhantom: 0
   attackUnit: 1
   startFireRate: 1
   towerRange: 3

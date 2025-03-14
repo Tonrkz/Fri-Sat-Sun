@@ -83,6 +83,7 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
         // Display tower name
         StartCoroutine(DisplayTowerNameOrAssignedWord());
 
+        // Get OccupiedGround
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Ground"))) {
             OccupiedGround = hit.collider.gameObject;
@@ -111,6 +112,8 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
         base.ChangeTowerState((Enum_AttackerTowerState)newState);
         switch ((Enum_AttackerTowerState)state) {
             case Enum_AttackerTowerState.Idle:
+                // Play Idle Animation
+                render.PlayAnimation("Idle");
                 break;
             case Enum_AttackerTowerState.Active:
                 if (AssignedWord == null || AssignedWord == "") {

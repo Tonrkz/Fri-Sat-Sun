@@ -89,13 +89,16 @@ public class ATowers : MonoBehaviour, ITowers {
         OccupiedGround.GetComponent<GroundScript>().hasTower = false;
         TowerNameManager.instance.usedTowerNames.Remove(TowerName);
         BuildManager.instance.builtTowerList.Remove(gameObject);
+
+        // Play dead animation
+        render.PlayAnimation("Dead");
     }
 
     public virtual void ChangeTowerState(Enum newState) {
         state = newState;
     }
 
-    protected virtual void Dead() {
+    public virtual void Dead() {
         // Unsuscribe from events
         if (IsSelected) {
             PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();

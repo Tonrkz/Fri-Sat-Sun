@@ -24,4 +24,9 @@ public class AnimatorRenderer : MonoBehaviour {
             animator.CrossFade(animationName, crossfadeDuration);
         }
     }
+
+    public void AnimNotifyOnDestroyTower() {
+        // Notify the tower that the animation is done
+        GetComponentInParent<ATowers>().Dead();
+    }
 }

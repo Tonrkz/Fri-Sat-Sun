@@ -110,6 +110,8 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
         base.ChangeTowerState((Enum_RangedTowerState)newState);
         switch ((Enum_RangedTowerState)state) {
             case Enum_RangedTowerState.Idle:
+                // Play Idle Animation
+                render.PlayAnimation("Idle");
                 break;
             case Enum_RangedTowerState.Active:
                 if (AssignedWord == null || AssignedWord == "") {

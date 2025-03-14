@@ -60,8 +60,8 @@ public class CampfireScript : ATowers, IActivatables {
         // IActivatables attributes
         if (GlobalAttributeMultipliers.GlobalCanSeePhantom) {
             StartCanSeePhantom = GlobalAttributeMultipliers.GlobalCanSeePhantom;
-
         }
+
         CanSeePhantom = StartCanSeePhantom;
         soldierCanSeePhantom = CanSeePhantom;
         FireRate = StartFireRate;
@@ -154,12 +154,6 @@ public class CampfireScript : ATowers, IActivatables {
 
         Dead();
     }
-
-    public override void DestroyTower() {
-        base.DestroyTower();
-        ChangeTowerState(Enum_CampfireState.Dead);
-    }
-
 
     public void Activate() {
         GameObject aSoldier = Instantiate(normalSoldierPrefab, transform.position, Quaternion.identity);
