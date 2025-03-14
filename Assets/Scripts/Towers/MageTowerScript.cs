@@ -128,6 +128,7 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
     public void UpgradeTower() {
         // Upgrade Every Level
         TowerRange += upgradeTowerRange;
+
         if (FireRate > upgradeFireRate) {
             FireRate -= upgradeFireRate;
         }

@@ -138,12 +138,13 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
         soldierWalkSpeed += upgradeSoldierWalkSpeed;
         soldierDamage += upgradeSoldierDamage;
 
+        StartCanSeePhantom = true;
+        CanSeePhantom = StartCanSeePhantom;
+        soldierCanSeePhantom = CanSeePhantom;
+
         // Upgrade Every 2 Levels
         if (Level % 2 == 0) {
             soldierAttackSpeed += upgradeSoldierAttackSpeed;
-            StartCanSeePhantom = true;
-            CanSeePhantom = StartCanSeePhantom;
-            soldierCanSeePhantom = CanSeePhantom;
         }
 
         // Upgrade Every 4 Levels

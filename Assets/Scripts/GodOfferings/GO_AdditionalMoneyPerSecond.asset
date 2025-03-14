@@ -15,6 +15,6 @@ MonoBehaviour:
   godOfferingID: GO03
   offeringSprite: {fileID: 0}
   offeringName: God of Wealth
-  offeringDescription: Earn 100% more money per second.
+  offeringDescription: Earn 30 percent more money when killing a demon
   offeringCost: 200
-  moneyPerSecondMultiplier: 2
+  moneyPerKillMultiplier: 1.3

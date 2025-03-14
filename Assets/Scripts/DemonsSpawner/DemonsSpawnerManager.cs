@@ -6,6 +6,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class DemonsSpawnerManager : MonoBehaviour {
     public static DemonsSpawnerManager instance;
@@ -51,7 +52,10 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
     void Start() {
         // Start the first wave
-        StartCoroutine(EndWave());
+        Debug.Log(FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled);
+        if (!FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled) {
+            StartCoroutine(EndWave());
+        }
     }
 
     void Update() {
@@ -71,7 +75,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
             Instantiate(demonKingPrefab, transform.position, Quaternion.identity);
         }
 
-        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0) {
+        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0 && DemonCount == DemonLimit) {
             isSpawning = false;
             StartCoroutine(EndWave());
         }
@@ -311,7 +315,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     /// <param name="demons"></param>
     public void OnDemonDead(IDemons demons) {
         DemonAlive--;
-        MoneyManager.instance.AddMoney(demons.MoneyOnDead);
+        MoneyManager.instance.AddMoney(demons.MoneyOnDead * GlobalAttributeMultipliers.MoneyPerKillMultiplier);
     }
 
     /// <summary>

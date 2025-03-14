@@ -128,6 +128,10 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
     public void UpgradeTower() {
         // Upgrade Every Level
         TowerRange += upgradeTowerRange;
+
+        StartCanSeePhantom = true;
+        CanSeePhantom = StartCanSeePhantom;
+
         if (FireRate > upgradeFireRate) {
             FireRate -= upgradeFireRate;
         }
@@ -137,8 +141,6 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
         // Upgrade Every 2 Levels
         if (Level % 2 == 0 && attackUnit < 5) {
             attackUnit += 1;
-            StartCanSeePhantom = true;
-            CanSeePhantom = StartCanSeePhantom;
         }
         UpgradeCost = (int)(MoneyManager.rangedTowerBuildCost * Mathf.Pow(level, MoneyManager.upgradePriceExponent));
         level++;

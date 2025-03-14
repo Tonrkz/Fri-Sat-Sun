@@ -15,6 +15,6 @@ MonoBehaviour:
   godOfferingID: GO04
   offeringSprite: {fileID: 0}
   offeringName: God of War
-  offeringDescription: All soldiers deal 20% more damage.
+  offeringDescription: All soldiers deal 20 percent more damage.
   offeringCost: 100
   damageMultiplier: 1.2
