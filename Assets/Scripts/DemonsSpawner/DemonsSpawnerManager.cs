@@ -52,7 +52,8 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
     void Start() {
         // Start the first wave
-        if (TutorialManager.instance.GetComponent<TutorialManager>()) {
+        Debug.Log(FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled);
+        if (!FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled) {
             StartCoroutine(EndWave());
         }
     }
@@ -74,7 +75,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
             Instantiate(demonKingPrefab, transform.position, Quaternion.identity);
         }
 
-        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0) {
+        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0 && DemonCount == DemonLimit) {
             isSpawning = false;
             StartCoroutine(EndWave());
         }

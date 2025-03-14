@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treeBase: {fileID: 919132149155446097, guid: 0b3e77e536014e8448a9ed8658047c19, type: 3}
   unitSize: 0.75
-  treeSpawnChance: 50
+  treeSpawnChance: 40
   scaleMin: 0.75
   scaleMax: 1.25
   rotationMin: {x: 0, y: -180, z: 0}

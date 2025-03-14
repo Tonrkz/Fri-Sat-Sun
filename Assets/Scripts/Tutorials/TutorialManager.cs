@@ -1,11 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 
 public class TutorialManager : MonoBehaviour {
-    public static TutorialManager instance;
 
     [Header("References")]
     [SerializeField] GameObject tutorialPanel;
@@ -98,10 +98,18 @@ public class TutorialManager : MonoBehaviour {
         $"Let's evolve the campfire into an attacker tower.", // 5
         // Player evolve the campfire into an attacker tower
         $"A new tower has been born! It shall serve us well in the battles to come.", // 6
-        $"Here is the cost to evolve each tower type and it's power: {Enum_TowerTypes.Attacker} = {MoneyManager.attackerTowerBuildCost} (Sends a stronger soldier)", // 
-        $"{Enum_TowerTypes.Ranged} = {MoneyManager.rangedTowerBuildCost} (Shoots enemies from afar)", // 7
-        $"{Enum_TowerTypes.Supply} = {MoneyManager.supplyTowerBuildCost} (More money from TAXing)", // 8
-        $"{Enum_TowerTypes.Mage} = {MoneyManager.mageTowerBuildCost} (Slows down demons)" // 9
+        $"Here is the cost to evolve each tower type and it's power: {BuildManager.attackerStringRef} = {MoneyManager.attackerTowerBuildCost} (Sends a stronger soldier)", // 
+        $"{BuildManager.rangedStringRef} = {MoneyManager.rangedTowerBuildCost} (Shoots enemies from afar)", // 7
+        $"{BuildManager.mageStringRef} = {MoneyManager.mageTowerBuildCost} (Slows down demons)" // 9
+    };
+
+    List<string> upgradeCommandTutorialMessages = new List<string> {
+        $"You have proven yourself a capable commander, Your Majesty.", // 0
+        $"Now, let us delve into the intricacies of tower evolution.", // 1
+        $"Each tower may be upgraded to enhance its abilities.", // 2
+        $"To evolve a tower, type '[Tower name] evolve [Tower Type]' ", // 3
+        $"The cost of evolution is dependent upon the tower's type.", // 4
+        $"Let's evolve the campfire" // 5
     };
 
     [Header("Debug")]
@@ -109,25 +117,16 @@ public class TutorialManager : MonoBehaviour {
     Byte tutorialTextIndex = 0;
     Enum_GameInputState previousInputState;
 
-    private void Awake() {
-        if (instance == null) {
-            instance = this;
-        }
-        else {
-            Destroy(gameObject);
-        }
-    }
-
     void Start() {
         tutorialPanel.SetActive(true);
         InputStateManager.instance.GameInputState = Enum_GameInputState.Tutorial;
-        OnInitiateTutorial();
+        StartCoroutine(OnInitiateTutorial());
     }
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.F12)) {
             state++;
-            OnInitiateTutorial();
+            StartCoroutine(OnInitiateTutorial());
         }
         OnTutorialConditionCheck();
     }
@@ -136,7 +135,9 @@ public class TutorialManager : MonoBehaviour {
     /// <summary>
     /// Initiate tutorial based on the current state
     /// </summary>
-    void OnInitiateTutorial() {
+    IEnumerator OnInitiateTutorial() {
+        yield return new WaitForEndOfFrame();
+        tutorialPanel.SetActive(true);
         pressEnterToContinueText.SetActive(true);
         IsConditionMeet = false;
         previousInputState = InputStateManager.instance.GameInputState;
@@ -170,6 +171,7 @@ public class TutorialManager : MonoBehaviour {
                 UserInterfaceManager.instance.ChangeTextMessage(tutorialText, evolveCommandTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.UpgradeCommand:
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, upgradeCommandTutorialMessages[tutorialTextIndex]);
                 break;
             case Enum_TutorialState.PlayerTest2:
                 break;
@@ -184,6 +186,7 @@ public class TutorialManager : MonoBehaviour {
             default:
                 break;
         }
+        yield return null;
     }
 
     /// <summary>
@@ -233,12 +236,14 @@ public class TutorialManager : MonoBehaviour {
                     else {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, playerMovementTutorialMessages[playerMovementTutorialMessages.Count - 2]);
                         pressEnterToContinueText.SetActive(false);
-                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", Color.yellow);
+                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.color = Color.red;
+                        //playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", Color.yellow);
                         InputStateManager.instance.GameInputState = Enum_GameInputState.CommandMode;
                     }
                     if (IsConditionMeet) {
                         UpdateStep();
-                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color32(0, 115, 6, 255));
+                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.color = Color.white;
+                        //playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color32(0, 115, 6, 255));
                         return;
                     }
                 }
@@ -278,11 +283,6 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case Enum_TutorialState.ModeSwitching:
-                if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode) {
-                    if (!IsConditionMeet) {
-                        OnTutorialConditionMeet();
-                    }
-                }
                 if (Input.GetKeyDown(KeyCode.Return)) {
                     if (tutorialTextIndex < modeSwitchingTutorialMessages.Count - 2) {
                         tutorialTextIndex++;
@@ -296,6 +296,11 @@ public class TutorialManager : MonoBehaviour {
                     if (IsConditionMeet) {
                         UpdateStep();
                         return;
+                    }
+                }
+                if (InputStateManager.instance.GameInputState == Enum_GameInputState.ActivateMode) {
+                    if (!IsConditionMeet) {
+                        OnTutorialConditionMeet();
                     }
                 }
                 break;
@@ -369,7 +374,7 @@ public class TutorialManager : MonoBehaviour {
                         StartCoroutine(DemonsSpawnerManager.instance.TutorialPlayerTest1());
                     }
                 }
-                if (DemonsSpawnerManager.instance.DemonAlive == 0 && DemonsSpawnerManager.instance.DemonLimit == 0) {
+                if (DemonsSpawnerManager.instance.DemonAlive == 0 && DemonsSpawnerManager.instance.DemonCount == 0) {
                     if (!IsConditionMeet) {
                         OnTutorialConditionMeet();
                     }
@@ -487,12 +492,17 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
+    IEnumerator HideTalkingBubble(Single shownDuration) {
+        yield return new WaitForSeconds(shownDuration);
+        tutorialPanel.SetActive(false);
+    }
+
     /// <summary>
     /// Update the tutorial state
     /// </summary>
     void UpdateStep() {
         state++;
         tutorialTextIndex = 0;
-        OnInitiateTutorial();
+        StartCoroutine(OnInitiateTutorial());
     }
 }

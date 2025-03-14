@@ -62,9 +62,8 @@ public class GodsOfferingManager : MonoBehaviour {
     }
 
     void Start() {
-        InitiateGodOfferingsUI();
-        //RandomBuyableOfferings();
-        //UpdateOfferingsUI();
+        RandomBuyableOfferings();
+        UpdateOfferingsUI();
     }
 
     /// <summary>
