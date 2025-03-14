@@ -11,7 +11,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
 
     [Header("Attributes")]
-    [SerializeField] Enum_NormalSoldierState state = Enum_NormalSoldierState.Initiate;
+    [SerializeField] Enum_NormalSoldierState state;
     public float HitPoint { get; set; } = 100;
     public Single WalkSpeed { get; set; }
     public Single AcceptableRadius { get; set; }
@@ -46,6 +46,8 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         DemonLayer = LayerMask.GetMask("Demon");
         PathLayer = LayerMask.GetMask("Ground");
         lastCalculateTime = Time.time;
+
+        ChangeState(Enum_NormalSoldierState.Initiate);
     }
 
     void Update() {

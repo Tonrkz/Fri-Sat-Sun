@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5301911523658575639}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: -0.353, z: -0.6}
+  m_LocalPosition: {x: 0, y: -0.5, z: -0.6}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -229,7 +229,6 @@ MonoBehaviour:
   occupiedGround: {fileID: 0}
   normalSoldierPrefab: {fileID: 2225985748608282072, guid: 9e7ebc637e9b00b48b9a3d16b6fc7608, type: 3}
   level: 1
-  startCanSeePhantom: 0
   buildTime: 3
   startFireRate: 1
   towerRange: 3

@@ -9,5 +9,5 @@ AnimatorOverrideController:
   m_Name: AnimCon_Ranged
   m_Controller: {fileID: 9100000, guid: e5eebe75e446ae040b131ebef52ea3dc, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 036aab0785be2ba4b80b761c652d779a, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 18f4f2f15b6cf0e48b4cbced91b09917, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 579c84452a4eea94b9ddf3407026845c, type: 2}
