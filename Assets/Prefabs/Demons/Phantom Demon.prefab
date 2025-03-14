@@ -103,7 +103,7 @@ MonoBehaviour:
   movement: {fileID: -2204621155732318736}
   state: 0
   hitPoint: 50
-  moneyOnDead: 100
+  moneyOnDead: 70
   startWalkSpeed: 1.25
   acceptableRadius: 0.33
   delayCalculateTime: 1

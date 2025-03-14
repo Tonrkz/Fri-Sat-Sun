@@ -102,11 +102,11 @@ MonoBehaviour:
   anim: {fileID: 0}
   movement: {fileID: -8789767392944389815}
   state: 1
-  hitPoint: 50
+  hitPoint: 60
   moneyOnDead: 20
   startWalkSpeed: 1
   acceptableRadius: 0.33
-  startDamage: 10
+  startDamage: 12
   sightRange: 1.5
   attackSpeed: 1
   attackCooldown: 1

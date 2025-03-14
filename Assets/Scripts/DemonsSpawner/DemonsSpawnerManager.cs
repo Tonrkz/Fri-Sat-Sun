@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.UI;
-using UnityEngine.Rendering;
-using Unity.VisualScripting;
 
 public class DemonsSpawnerManager : MonoBehaviour {
     public static DemonsSpawnerManager instance;
@@ -17,6 +14,8 @@ public class DemonsSpawnerManager : MonoBehaviour {
     [SerializeField] GameObject yetiDemonPrefab;
     [SerializeField] GameObject phantomDemonPrefab;
     [SerializeField] GameObject demonKingPrefab;
+
+    [SerializeField] Transform directionalLight;
 
     [SerializeField] RectTransform progressBarHandle;
 
@@ -170,6 +169,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
     IEnumerator StartWave(Byte wave) {
         Enum_DemonTypes lastDemon = Enum_DemonTypes.Goblin;
         isSpawning = true;
+        directionalLight.GetComponent<Light>().DOColor(new Color32(117, 147, 255, 255), 0);
+        directionalLight.GetComponent<Light>().DOIntensity(0.33f, 0);
+        directionalLight.DORotate(new Vector3(30, -65, 0), 10f);
         while (isSpawning) {
             yield return new WaitForSeconds(spawnCooldown);
             lastSpawnTime = Time.time;
@@ -271,6 +273,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
         progressBarHandle.DORotate(new Vector3(0, 0, 90), 0.2f);
         CalculateNextWaveDemonLimit();
 
+        directionalLight.GetComponent<Light>().DOColor(Color.white, 0);
+        directionalLight.GetComponent<Light>().DOIntensity(1, 0);
+
         if (wave > 1) {
             GodsOfferingManager.instance.InitiateGodOfferingsUI();
         }
@@ -279,6 +284,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
         while (elapsedTime < waveCooldown) {
             elapsedTime += Time.deltaTime;
             progressBarHandle.rotation = Quaternion.Euler(0, 0, 90 - 90 * elapsedTime / waveCooldown);
+            directionalLight.rotation = Quaternion.Euler(180 * elapsedTime / waveCooldown, -65, 0);
             yield return null;
         }
         StartCoroutine(StartWave(wave));

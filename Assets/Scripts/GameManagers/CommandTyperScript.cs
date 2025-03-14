@@ -135,6 +135,9 @@ public class CommandTyperScript : MonoBehaviour {
                     if (tower.GetComponent<IUpgradables>() != null) {
                         IUpgradables upgradableTower = tower.GetComponent<IUpgradables>();
                         if (MoneyManager.instance.CanAfford(upgradableTower.UpgradeCost * GlobalAttributeMultipliers.UpgradeCostMultiplier)) {
+                            // Subtract Money
+                            MoneyManager.instance.AddMoney(-upgradableTower.UpgradeCost * GlobalAttributeMultipliers.UpgradeCostMultiplier);
+                            // Upgrade the tower
                             upgradableTower.UpgradeTower();
                         }
                     }
@@ -184,6 +187,9 @@ public class CommandTyperScript : MonoBehaviour {
                     if (tower.GetComponent<IUpgradables>() != null) {
                         IUpgradables upgradableTower = tower.GetComponent<IUpgradables>();
                         if (MoneyManager.instance.CanAfford(upgradableTower.UpgradeCost * GlobalAttributeMultipliers.UpgradeCostMultiplier)) {
+                            // Subtract Money
+                            MoneyManager.instance.AddMoney(-upgradableTower.UpgradeCost * GlobalAttributeMultipliers.UpgradeCostMultiplier);
+                            // Upgrade the tower
                             upgradableTower.UpgradeTower();
                         }
                     }

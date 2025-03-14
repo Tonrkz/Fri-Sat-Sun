@@ -151,7 +151,7 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
         }
 
         // Upgrade Every 4 Levels
-        if (level % 4 == 0 && attackUnit < 3) {
+        if (Level % 4 == 0 && attackUnit < 3) {
             attackUnit++;
         }
         Level++;
