@@ -14,6 +14,7 @@ public interface ISoldiers {
     public bool StartCanSeePhantom { get; set; }
     public bool CanSeePhantom { get; set; }
     public GameObject BaseTower { get; set; }
+    public void ChangeState(Enum_NormalSoldierState newState);
     public void Attack(GameObject target);
     public IEnumerator Die();
     public void Move(Vector3 position);

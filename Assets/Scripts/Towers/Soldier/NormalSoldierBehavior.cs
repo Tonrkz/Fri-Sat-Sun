@@ -59,12 +59,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
                 if (Vector3.Distance(transform.position, walkPosition) <= AcceptableRadius) {
-                    state = Enum_NormalSoldierState.Idle;
-                }
-                if (baseTower != null && walkPosition == new Vector3()) {
-                    if (!FindWalkPosition()) {
-                        state = Enum_NormalSoldierState.Die;
-                    }
+                    ChangeState(Enum_NormalSoldierState.Idle);
                 }
                 StartCoroutine(CheckForTarget());
                 break;
@@ -72,18 +67,19 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 StartCoroutine(CheckForTarget());
                 if (Vector3.Distance(transform.position, walkPosition) > 2f) {
                     // Don't forget to fix this
-                    state = Enum_NormalSoldierState.Initiate;
+                    ChangeState(Enum_NormalSoldierState.Initiate);
                 }
                 break;
             case Enum_NormalSoldierState.Engage:
                 if (Vector3.Distance(transform.position, attackTarget.transform.position) <= AttackRange) {
-                    state = Enum_NormalSoldierState.Attack;
+                    ChangeState(Enum_NormalSoldierState.Attack);
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
+                Attack(attackTarget);
                 if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
                     attackTarget = null;
-                    state = Enum_NormalSoldierState.Initiate;
+                    ChangeState(Enum_NormalSoldierState.Initiate);
                 }
                 break;
             case Enum_NormalSoldierState.Die:
@@ -112,7 +108,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 catch {
                     attackTarget = null;
-                    state = Enum_NormalSoldierState.Initiate;
+                    ChangeState(Enum_NormalSoldierState.Initiate);
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
@@ -123,13 +119,43 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 catch {
                     attackTarget = null;
-                    state = Enum_NormalSoldierState.Initiate;
+                    ChangeState(Enum_NormalSoldierState.Initiate);
                 }
                 break;
             case Enum_NormalSoldierState.Die:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void ChangeState(Enum_NormalSoldierState newState) {
+        state = newState;
+        switch (state) {
+            case Enum_NormalSoldierState.Initiate:
+                // Find Walk Position
+                if (baseTower != null && walkPosition == new Vector3()) {
+                    if (!FindWalkPosition()) {
+                        Destroy(gameObject);
+                    }
+                }
+                // Play Walk Animation
+                break;
+            case Enum_NormalSoldierState.Idle:
+                // Play Idle Animation
+                break;
+            case Enum_NormalSoldierState.Engage:
+                // Play Walk Animation
+                break;
+            case Enum_NormalSoldierState.Attack:
+                // Play Idle Animation
+                break;
+            case Enum_NormalSoldierState.Die:
+                // Play Die Animation
                 StartCoroutine(Die());
                 break;
             default:
+                ChangeState(Enum_NormalSoldierState.Initiate);
                 break;
         }
     }
