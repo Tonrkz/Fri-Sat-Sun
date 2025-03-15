@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using DG.Tweening;
 
 public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
     [SerializeField] Rigidbody rb;
-    [SerializeField] Animator anim;
+    [SerializeField] AnimatorRenderer render;
     [SerializeField] DemonsMovement movement;
 
 
@@ -50,11 +51,13 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
         lastCalculateTime = Time.time;
         switch (state) {
             case Enum_WerewolfDemonState.Walk:
+                render.PlayAnimation("Walk");
                 if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
                     movement.walkTarget = movement.GetNextWalkTarget();
                 }
                 break;
             case Enum_WerewolfDemonState.Dead:
+                render.PlayAnimation("Dead");
                 break;
             default:
                 break;
@@ -78,8 +81,13 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void Dead() {
-        DemonsSpawnerManager.instance.OnDemonDead(this);
-        Destroy(gameObject);
+        DOVirtual.Float(0, 1, 1f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetFloat("_Dissolve", x));
+
+        if (transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetFloat("_Dissolve") == 1) {
+            DemonsSpawnerManager.instance.OnDemonDead(this);
+            //Play Dead Animation
+            Destroy(gameObject);
+        }
     }
 
     public void Move(Vector3 position) {
@@ -87,6 +95,7 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void TakeDamage(Single damage) {
+        render.PlayAnimation("Hurt");
         HitPoint -= damage;
     }
 }

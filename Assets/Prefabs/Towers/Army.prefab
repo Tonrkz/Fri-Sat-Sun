@@ -245,7 +245,7 @@ MonoBehaviour:
   soldierDamage: 15
   soldierSightRange: 2
   soldierAttackSpeed: 1
-  soldierAttackCooldown: 1
+  soldierAttackCooldown: 2
   soldierAttackRange: 1
   soldierCanSeePhantom: 0
 --- !u!114 &5852964591741663799

@@ -48,6 +48,9 @@ public class BGMManager : MonoBehaviour {
             case "Scene_Tutorial":
                 PlayBGMClip(inGameMorningBGM);
                 break;
+            case "Scene_MainGame":
+                PlayBGMClip(inGameMorningBGM);
+                break;
             case "Scene_End":
                 PlayBGMClip(mainMenuBGM);
                 break;

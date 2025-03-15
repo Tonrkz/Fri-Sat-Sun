@@ -57,7 +57,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c994b6425cf5c0a4889e7801e44f6238, type: 2}
+  - {fileID: -876546973899608171, guid: 685e50370accc914ebe7b7d8940ca6e8, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -238,7 +238,7 @@ MonoBehaviour:
   soldierDamage: 10
   soldierSightRange: 1.5
   soldierAttackSpeed: 1
-  soldierAttackCooldown: 1
+  soldierAttackCooldown: 3
   soldierAttackRange: 1
   soldierCanSeePhantom: 0
 --- !u!114 &4842633970787108065

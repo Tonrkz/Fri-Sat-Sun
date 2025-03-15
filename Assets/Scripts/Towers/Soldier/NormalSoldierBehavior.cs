@@ -6,7 +6,7 @@ using UnityEngine;
 public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [Header("References")]
     [SerializeField] Rigidbody rb;
-    [SerializeField] Animator anim;
+    [SerializeField] AnimatorRenderer render;
 
 
 
@@ -33,7 +33,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     Single towerRange;
     float lastCalculateTime;
     float lastAttackTime;
-    GameObject attackTarget;
+    internal GameObject attackTarget;
     Vector3 walkPosition;
     LayerMask DemonLayer;
     LayerMask PathLayer;
@@ -59,6 +59,10 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         if (baseTower.gameObject.IsDestroyed()) {
             ChangeState(Enum_NormalSoldierState.Die);
         }
+        if (HitPoint <= 0) {
+            ChangeState(Enum_NormalSoldierState.Die);
+            return;
+        }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
                 if (Vector3.Distance(transform.position, walkPosition) <= AcceptableRadius) {
@@ -80,7 +84,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 break;
             case Enum_NormalSoldierState.Attack:
                 if (Time.time > lastAttackTime + AttackCooldown) {
-                    Attack(attackTarget);
+                    render.PlayAnimation("Attack");
                 }
 
                 if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
@@ -96,9 +100,6 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     void FixedUpdate() {
-        if (HitPoint <= 0) {
-            ChangeState(Enum_NormalSoldierState.Die);
-        }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
                 if (walkPosition != new Vector3()) {
@@ -118,15 +119,6 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
-                //Play Attack Animation
-                //Deal Damage
-                try {
-                    Attack(attackTarget);
-                }
-                catch {
-                    attackTarget = null;
-                    ChangeState(Enum_NormalSoldierState.Initiate);
-                }
                 break;
             case Enum_NormalSoldierState.Die:
                 break;
@@ -146,19 +138,23 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                     }
                 }
                 // Play Walk Animation
+                render.PlayAnimation("Walk");
                 break;
             case Enum_NormalSoldierState.Idle:
                 // Play Idle Animation
+                render.PlayAnimation("Idle");
                 break;
             case Enum_NormalSoldierState.Engage:
                 // Play Walk Animation
+                render.PlayAnimation("Walk");
                 break;
             case Enum_NormalSoldierState.Attack:
                 // Play Idle Animation
+                render.PlayAnimation("Idle");
                 break;
             case Enum_NormalSoldierState.Die:
                 // Play Die Animation
-                StartCoroutine(Die());
+                render.PlayAnimation("Dead");
                 break;
             default:
                 ChangeState(Enum_NormalSoldierState.Initiate);
@@ -224,8 +220,9 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     public void Attack(GameObject target) {
-        target.GetComponent<IDemons>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier);  // Don't forget to fix this
         lastAttackTime = Time.time;
+        target.GetComponent<IDemons>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier);  // Don't forget to fix this
+        Debug.Log($"{gameObject} Attack");
     }
 
     public IEnumerator Die() {
@@ -242,6 +239,6 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+        render.PlayAnimation("Hurt");
     }
-
 }
