@@ -13,6 +13,10 @@ public class BuildManager : MonoBehaviour {
     [SerializeField] internal GameObject rangedTowerPrefab;
     [SerializeField] internal GameObject mageTowerPrefab;
 
+    public static readonly string attackerStringRef = "army";
+    public static readonly string rangedStringRef = "archer";
+    public static readonly string mageStringRef = "mage";
+
     [Header("Debug")]
     internal List<GameObject> builtTowerList = new List<GameObject>();
 
@@ -35,7 +39,10 @@ public class BuildManager : MonoBehaviour {
     public GameObject FindTowerViaName(string towerName) {
         towerName = towerName.ToLower();
         foreach (var tower in builtTowerList) {
-            if (tower.GetComponent<ITowers>().TowerName == towerName) {
+            if (tower.GetComponent<ATowers>().TowerName == towerName) {
+                return tower;
+            }
+            else if (tower.GetComponent<ATowers>().TowerName.StartsWith(towerName)) {
                 return tower;
             }
         }
@@ -65,7 +72,7 @@ public class BuildManager : MonoBehaviour {
     public bool BuildTower() {
         string buildTowerName = TowerNameManager.instance.GetRandomTowerName();
         GameObject builtTower = Instantiate(campfirePrefab, PlayerMovement.instance.GetCurrentPosition() + new Vector3(0, 0.35f, 0), Quaternion.identity);
-        builtTower.GetComponent<CampfireScript>().SetTowerName(buildTowerName);
+        builtTower.GetComponent<ATowers>().SetTowerName(buildTowerName);
         Debug.Log($"{buildTowerName}: Built");
         builtTowerList.Add(builtTower);
         return true;

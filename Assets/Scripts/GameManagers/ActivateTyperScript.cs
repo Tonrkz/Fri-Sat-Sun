@@ -5,6 +5,10 @@ using UnityEngine;
 public class ActivateTyperScript : MonoBehaviour {
     public static ActivateTyperScript instance;
 
+    [Header("Audio")]
+    [SerializeField] internal AudioClip writingSound;
+    [SerializeField] internal AudioClip activateSound;
+
     GameObject selectedTower;
     string towerAssignedWord;
 
@@ -18,24 +22,27 @@ public class ActivateTyperScript : MonoBehaviour {
     }
 
     private void Update() {
-        if (InputStateManager.instance.GameInputState != Enum_GameInputState.ActivateMode) {
+        if (InputStateManager.instance.GameInputState != Enum_GameInputState.ActivateMode || Time.timeScale == 0) {
             return;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && selectedTower != null) {
+            PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
+            selectedTower.GetComponent<ATowers>().IsSelected = false;
+            WordManager.instance.AssignWord(selectedTower.GetComponent<IActivatables>());
+            selectedTower = null;
         }
         if (Input.anyKeyDown) {
             foreach (var c in Input.inputString) {
                 if (selectedTower == null) {
-                    StartCoroutine(FindTowerFromFirstLetter(c));
+                    StartCoroutine(FindTowerFromFirstLetter(char.ToLower(c)));
                 }
                 else {
                     if (selectedTower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
                         RemoveInputLetter();
+                        SFXManager.instance.PlaySFXClip(writingSound, transform, 1f);
                     }
                 }
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && selectedTower != null) {
-            WordManager.instance.AssignWord(selectedTower.GetComponent<IActivatables>());
-            selectedTower = null;
         }
     }
 
@@ -47,11 +54,15 @@ public class ActivateTyperScript : MonoBehaviour {
     IEnumerator FindTowerFromFirstLetter(char c) {
         foreach (var tower in BuildManager.instance.builtTowerList) {
             if (tower.GetComponent<IActivatables>().AssignedWord == "" || tower.GetComponent<IActivatables>().AssignedWord == null) {
+                tower.GetComponent<ATowers>().IsSelected = false;
                 continue;
             }
             if (tower.GetComponent<IActivatables>().AssignedWord.ToLower().StartsWith(c)) {
                 Debug.Log($"Word found {tower.GetComponent<IActivatables>().AssignedWord}");
                 selectedTower = tower;
+                tower.GetComponent<ATowers>().IsSelected = true;
+                PlayerTowerSelectionHandler.instance.SelectedTower = tower.GetComponent<ATowers>();
+                PlayerTowerSelectionHandler.instance.OnTowerSelected.Invoke();
                 towerAssignedWord = tower.GetComponent<IActivatables>().AssignedWord;
                 RemoveInputLetter();
                 break;
@@ -66,7 +77,7 @@ public class ActivateTyperScript : MonoBehaviour {
     void RemoveInputLetter() {
         if (selectedTower != null) {
             selectedTower.GetComponent<IActivatables>().AssignedWord = selectedTower.GetComponent<IActivatables>().AssignedWord.Substring(1);
-            StartCoroutine(selectedTower.GetComponent<ITowers>().DisplayTowerNameOrAssignedWord());
+            StartCoroutine(selectedTower.GetComponent<ATowers>().DisplayTowerNameOrAssignedWord());
             if (selectedTower.GetComponent<IActivatables>().AssignedWord.Length == 0) {
             StartCoroutine(ActivateSelectedTower());
             }
@@ -82,7 +93,11 @@ public class ActivateTyperScript : MonoBehaviour {
             selectedTower.GetComponent<IActivatables>().Activate();
             WordManager.instance.usedWords.Remove(towerAssignedWord);
             towerAssignedWord = "";
+            selectedTower.GetComponent<ATowers>().IsSelected = false;
+            PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
             selectedTower = null;
+
+            SFXManager.instance.PlaySFXClip(activateSound, transform, 1f);
         }
         yield return null;
     }

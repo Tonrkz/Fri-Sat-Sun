@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using DG.Tweening;
 
 public class DemonsSpawnerManager : MonoBehaviour {
     public static DemonsSpawnerManager instance;
@@ -13,15 +15,21 @@ public class DemonsSpawnerManager : MonoBehaviour {
     [SerializeField] GameObject phantomDemonPrefab;
     [SerializeField] GameObject demonKingPrefab;
 
+    [SerializeField] Transform directionalLight;
+
+    [SerializeField] RectTransform progressBarHandle;
+
     [Header("Attributes")]
-    Byte wave = 1; // Current wave
-    bool isSpawning = false; // Is the spawner currently spawning demons?
-    Single spawnRate = 1; // How many demons to spawn per second
-    Single spawnCooldown = 2; // How long to wait before spawning the next demon
+    [SerializeField] Byte waveCooldown = 30; // Time between each wave
+    [SerializeField] bool isSpawning = false; // Is the spawner currently spawning demons?
+    Byte wave = 0; // Current wave
+    [SerializeField] Single spawnRate = 0.7f; // How many demons to spawn per second
+    [SerializeField] Single spawnCooldown = 2; // How long to wait before spawning the next demon
 
     [Header("Spawn Limit")]
     [HideInInspector] public int DemonLimit { get; private set; } = int.MaxValue; // Maximum number of demons that can be spawned
-    [HideInInspector] public int DemonCount { get; private set; } = 0; // Number of demons that have been spawned
+    [HideInInspector] public int DemonAlive { get; private set; } = 0; // Number of demons that is alive
+    [HideInInspector] public int DemonCount { get; private set; } = 0; // Number of demons that has been spawned
     Byte goblinDemonLeftToSpawn; // Number of goblin demons left to spawn
     Byte werewolfDemonLeftToSpawn; // Number of werewolf demons left to spawn
     Byte yetiDemonLeftToSpawn; // Number of yeti demons left to spawn
@@ -42,7 +50,10 @@ public class DemonsSpawnerManager : MonoBehaviour {
     }
 
     void Start() {
-        lastSpawnTime = Time.time;
+        // Start the first wave
+        if (!FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled) {
+            StartCoroutine(EndWave());
+        }
     }
 
     void Update() {
@@ -60,6 +71,11 @@ public class DemonsSpawnerManager : MonoBehaviour {
         }
         else if (Input.GetKeyDown(KeyCode.F5)) {
             Instantiate(demonKingPrefab, transform.position, Quaternion.identity);
+        }
+
+        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0 && DemonCount == DemonLimit && !FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled) {
+            isSpawning = false;
+            StartCoroutine(EndWave());
         }
     }
 
@@ -85,48 +101,59 @@ public class DemonsSpawnerManager : MonoBehaviour {
     /// Spawns a demon of the specified type.
     /// </summary>
     /// <param name="demonTypeToSpawn">Choose a demon type to be spawned</param>
-    public GameObject SpawnDemon(Enum_DemonTypes demonTypeToSpawn) {
+    /// <param name="subtractLeftToSpawn">Should the number of demons left to spawn be subtracted?</param>
+    public GameObject SpawnDemon(Enum_DemonTypes demonTypeToSpawn, bool subtractLeftToSpawn = true) {
         GameObject spawnedDemon = null;
         switch (demonTypeToSpawn) {
             case Enum_DemonTypes.Goblin:
                 if (goblinDemonLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(goblinDemonPrefab, transform.position, Quaternion.identity);
-                    goblinDemonLeftToSpawn--;
-                    DemonLimit--;
-                    DemonCount++;
+                    DemonAlive++;
+                    if (subtractLeftToSpawn) {
+                        DemonCount++;
+                        goblinDemonLeftToSpawn--;
+                    }
                     return spawnedDemon;
                 }
                 break;
             case Enum_DemonTypes.Werewolf:
                 if (werewolfDemonLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(werewolfDemonPrefab, transform.position, Quaternion.identity);
-                    werewolfDemonLeftToSpawn--;
-                    DemonLimit--;
-                    DemonCount++;
+                    DemonAlive++;
+                    if (subtractLeftToSpawn) {
+                        DemonCount++;
+                        werewolfDemonLeftToSpawn--;
+                    }
                     return spawnedDemon;
                 }
                 break;
             case Enum_DemonTypes.Yeti:
                 if (yetiDemonLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(yetiDemonPrefab, transform.position, Quaternion.identity);
-                    yetiDemonLeftToSpawn--;
-                    DemonLimit--;
-                    DemonCount++;
+                    DemonAlive++;
+                    if (subtractLeftToSpawn) {
+                        DemonCount++;
+                        yetiDemonLeftToSpawn--;
+                    }
                     return spawnedDemon;
                 }
                 break;
             case Enum_DemonTypes.Phantom:
                 if (phantomDemonLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(phantomDemonPrefab, transform.position, Quaternion.identity);
-                    phantomDemonLeftToSpawn--;
-                    DemonLimit--;
-                    DemonCount++;
+                    DemonAlive++;
+                    if (subtractLeftToSpawn) {
+                        DemonCount++;
+                        phantomDemonLeftToSpawn--;
+                    }
                     return spawnedDemon;
                 }
                 break;
             case Enum_DemonTypes.DemonKing:
                 if (demonKingLeftToSpawn > 0) {
                     spawnedDemon = Instantiate(demonKingPrefab, transform.position, Quaternion.identity);
+                    DemonAlive++;
+                    DemonCount++;
                     demonKingLeftToSpawn--;
                     return spawnedDemon;
                 }
@@ -137,9 +164,172 @@ public class DemonsSpawnerManager : MonoBehaviour {
         return spawnedDemon;
     }
 
+    [ContextMenu("Start Next Wave")]
+    IEnumerator StartWave(Byte wave) {
+        BGMManager.instance.PlayBGMClip(BGMManager.instance.inGameNightBGM);
+
+        Enum_DemonTypes lastDemon = Enum_DemonTypes.Goblin;
+        isSpawning = true;
+        directionalLight.GetComponent<Light>().DOColor(new Color32(117, 147, 255, 255), 0);
+        directionalLight.GetComponent<Light>().DOIntensity(0.33f, 0);
+        directionalLight.DORotate(new Vector3(30, -65, 0), 10f);
+        while (isSpawning) {
+            yield return new WaitForSeconds(spawnCooldown);
+            lastSpawnTime = Time.time;
+
+            for (int i = 0 ; Time.time < lastSpawnTime + 1 ; i++) {
+                try {
+                    lastDemon = SpawnDemon(DecideDemonToBeSpawned(lastDemon)).GetComponent<IDemons>().DemonType;
+                }
+                catch {
+                    lastDemon = Enum_DemonTypes.Goblin;
+                }
+
+                // Set progress bar value base on how many demons left to spawn
+                progressBarHandle.DORotate(new Vector3(0, 0, ((float)(DemonCount) / (float)DemonLimit) * -90), 1 / spawnRate);
+
+                yield return new WaitForSeconds(1 / spawnRate);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Decide which demon to be spawned.
+    /// </summary>
+    /// <param name="lastDemon"></param>
+    /// <returns></returns>
+    Enum_DemonTypes DecideDemonToBeSpawned(Enum_DemonTypes lastDemon) {
+        // 30% chance to spawn a same demon with last one
+        if (UnityEngine.Random.Range(0, 100) < 30) {
+            switch (lastDemon) {
+                case Enum_DemonTypes.Goblin:
+                    if (goblinDemonLeftToSpawn > 0) {
+                        return Enum_DemonTypes.Goblin;
+                    }
+                    break;
+                case Enum_DemonTypes.Werewolf:
+                    if (werewolfDemonLeftToSpawn > 0) {
+                        return Enum_DemonTypes.Werewolf;
+                    }
+                    break;
+                case Enum_DemonTypes.Yeti:
+                    if (yetiDemonLeftToSpawn > 0) {
+                        return Enum_DemonTypes.Yeti;
+                    }
+                    break;
+                case Enum_DemonTypes.Phantom:
+                    if (phantomDemonLeftToSpawn > 0) {
+                        return Enum_DemonTypes.Phantom;
+                    }
+                    break;
+                default:
+                    return Enum_DemonTypes.Goblin;
+            }
+        }
+
+        // 70% chance to spawn a random demon
+        if (UnityEngine.Random.Range(0, 100) < 70) {
+            // Random Demon
+            switch ((Enum_DemonTypes)UnityEngine.Random.Range(0, 4)) {
+                case Enum_DemonTypes.Goblin:
+                    if (goblinDemonLeftToSpawn > 0) {
+                        return Enum_DemonTypes.Goblin;
+                    }
+                    break;
+                case Enum_DemonTypes.Werewolf:
+                    if (werewolfDemonLeftToSpawn > 0) {
+                        return Enum_DemonTypes.Werewolf;
+                    }
+                    break;
+                case Enum_DemonTypes.Yeti:
+                    if (yetiDemonLeftToSpawn > 0) {
+                        return Enum_DemonTypes.Yeti;
+                    }
+                    break;
+                case Enum_DemonTypes.Phantom:
+                    if (phantomDemonLeftToSpawn > 0) {
+                        return Enum_DemonTypes.Phantom;
+                    }
+                    break;
+            };
+        }
+
+        // else, spawn the demon with the highest number left to spawn
+        List<Byte> demonTypes = new List<Byte> { goblinDemonLeftToSpawn, werewolfDemonLeftToSpawn, yetiDemonLeftToSpawn, phantomDemonLeftToSpawn, randomDemonsLeftToSpawn };
+        if (demonTypes.IndexOf(demonTypes.Max()) == 4) {
+            // if the highest number left to spawn is random demon
+            // Random Demon
+            return (Enum_DemonTypes)UnityEngine.Random.Range(0, 4);
+        }
+        return (Enum_DemonTypes)demonTypes.IndexOf(demonTypes.Max());
+    }
+
+    /// <summary>
+    /// End the current wave and start the next wave.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator EndWave() {
+        isSpawning = false;
+        wave++;
+
+        if (wave == 4) {
+            UserInterfaceManager.instance.LoadSceneViaName("Scene_End");
+        }
+
+        BGMManager.instance.PlayBGMClip(BGMManager.instance.inGameMorningBGM);
+
+        progressBarHandle.DORotate(new Vector3(0, 0, 90), 0.2f);
+        CalculateNextWaveDemonLimit();
+
+        directionalLight.GetComponent<Light>().DOColor(Color.white, 0);
+        directionalLight.GetComponent<Light>().DOIntensity(1, 0);
+
+        if (wave > 1) {
+            GodsOfferingManager.instance.InitiateGodOfferingsUI();
+        }
+
+        Single elapsedTime = 0;
+        while (elapsedTime < waveCooldown) {
+            elapsedTime += Time.deltaTime;
+            progressBarHandle.rotation = Quaternion.Euler(0, 0, 90 - 90 * elapsedTime / waveCooldown);
+            directionalLight.rotation = Quaternion.Euler(180 * elapsedTime / waveCooldown, -65, 0);
+            yield return null;
+        }
+        StartCoroutine(StartWave(wave));
+    }
+    /// <summary>
+    /// Calculate the maximum number of demons that can be spawned in the next wave.
+    /// </summary>
+    void CalculateNextWaveDemonLimit() {
+        DemonLimit = 0;
+        DemonCount = 0;
+        DemonAlive = 0;
+        switch (wave) {
+            case 1:
+                SetAllDemonsLimit(10, 0, 0, 0, 0);
+                break;
+            case 2:
+                SetAllDemonsLimit(15, 2, 3, 0, 0);
+                break;
+            case 3:
+                SetAllDemonsLimit(15, 2, 5, 0, 5);
+                break;
+            case 4:
+                SetAllDemonsLimit(20, 2, 5, 5, 7);
+                break;
+            case 5:
+                SetAllDemonsLimit(20, 5, 9, 7, 13);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Called when a demon dies.
+    /// </summary>
+    /// <param name="demons"></param>
     public void OnDemonDead(IDemons demons) {
-        DemonCount--;
-        MoneyManager.instance.AddMoney(demons.MoneyOnDead);
+        DemonAlive--;
+        MoneyManager.instance.AddMoney(demons.MoneyOnDead * GlobalAttributeMultipliers.MoneyPerKillMultiplier);
     }
 
     /// <summary>
@@ -160,5 +350,10 @@ public class DemonsSpawnerManager : MonoBehaviour {
             }
             yield return new WaitForSeconds(spawnCooldown);
         }
+    }
+
+    public IEnumerator TutorialPlayerTest3() {
+        StartCoroutine(EndWave());
+        yield return null;
     }
 }

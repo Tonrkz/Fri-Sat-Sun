@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using Unity.VisualScripting;
@@ -6,7 +7,7 @@ using UnityEngine;
 public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     [Header("References")]
     [SerializeField] Rigidbody rb;
-    [SerializeField] Animator anim;
+    [SerializeField] AnimatorRenderer render;
     [SerializeField] DemonsMovement movement;
 
 
@@ -51,6 +52,7 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     GameObject attackTarget;
     public GameObject AttackTarget { get => attackTarget; set => attackTarget = value; }
     float lastCalculateTime;
+    float lastAttackTime;
     [SerializeField] float delayCalculateTime = 0.2f;
     LayerMask SoldierLayer;
 
@@ -69,8 +71,10 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
         lastCalculateTime = Time.time;
         switch (state) {
             case Enum_YetiDemonState.Idle:
+                render.PlayAnimation("Idle");
                 break;
             case Enum_YetiDemonState.Walk:
+                render.PlayAnimation("Walk");
                 if (attackTarget != null) {
                     if (Vector3.Distance(transform.position, attackTarget.transform.position) <= AttackRange) {
                         state = Enum_YetiDemonState.Attack;
@@ -82,12 +86,19 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 CheckForTarget();
                 break;
             case Enum_YetiDemonState.Attack:
-                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
+                try {
+                    if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<ISoldiers>().HitPoint <= 0) {
+                        attackTarget = null;
+                        state = Enum_YetiDemonState.Walk;
+                    }
+                }
+                catch {
                     attackTarget = null;
                     state = Enum_YetiDemonState.Walk;
                 }
                 break;
             case Enum_YetiDemonState.Dead:
+                render.PlayAnimation("Dead");
                 break;
             default:
                 break;
@@ -109,7 +120,9 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 //Play Attack Animation
                 //Deal Damage
                 try {
-                    Attack(attackTarget);
+                    if (Time.time > lastAttackTime + AttackCooldown) {
+                        render.PlayAnimation("Attack");
+                    }
                 }
                 catch {
                     attackTarget = null;
@@ -128,7 +141,9 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     }
 
     public void Attack(GameObject target) {
-        target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage * Time.fixedDeltaTime * 5); // Don't forget to fix this
+        Debug.Log($"{gameObject} Attack");
+        lastAttackTime = Time.time;
+        target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage); // Don't forget to fix this
     }
 
     public IEnumerator AttackDown(Single atkDownPercent) {
@@ -142,8 +157,13 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     }
 
     public void Dead() {
-        DemonsSpawnerManager.instance.OnDemonDead(this);
-        Destroy(gameObject);
+        DOVirtual.Float(0, 1, 1f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetFloat("_Dissolve", x));
+
+        if (transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetFloat("_Dissolve") == 1) {
+            DemonsSpawnerManager.instance.OnDemonDead(this);
+            //Play Dead Animation
+            Destroy(gameObject);
+        }
     }
 
     public void Move(Vector3 position) {
@@ -152,6 +172,7 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+        render.PlayAnimation("Hurt");
     }
 
     public void CheckForTarget() {

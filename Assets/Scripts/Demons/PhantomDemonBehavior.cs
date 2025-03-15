@@ -1,10 +1,11 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
 
 public class PhantomDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
     [SerializeField] Rigidbody rb;
-    [SerializeField] Animator anim;
+    [SerializeField] AnimatorRenderer render;
     [SerializeField] DemonsMovement movement;
 
 
@@ -47,11 +48,13 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
         lastCalculateTime = Time.time;
         switch (state) {
             case Enum_PhantomDemonState.Walk:
+                render.PlayAnimation("Walk");
                 if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
                     movement.walkTarget = movement.GetNextWalkTarget();
                 }
                 break;
             case Enum_PhantomDemonState.Dead:
+                render.PlayAnimation("Dead");
                 break;
             default:
                 break;
@@ -64,7 +67,6 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
                 Move(movement.walkTarget.transform.position);
                 break;
             case Enum_PhantomDemonState.Dead:
-                Dead();
                 break;
             default:
                 break;
@@ -75,8 +77,13 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void Dead() {
-        DemonsSpawnerManager.instance.OnDemonDead(this);
-        Destroy(gameObject);
+        DOVirtual.Float(0, 1, 1f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetFloat("_Dissolve", x));
+
+        if (transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetFloat("_Dissolve") == 1) {
+            DemonsSpawnerManager.instance.OnDemonDead(this);
+            //Play Dead Animation
+            Destroy(gameObject);
+        }
     }
 
     public void Move(Vector3 position) {
@@ -85,5 +92,6 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+        render.PlayAnimation("Hurt");
     }
 }

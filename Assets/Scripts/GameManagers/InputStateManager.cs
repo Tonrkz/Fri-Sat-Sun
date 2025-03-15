@@ -7,7 +7,7 @@ public class InputStateManager : MonoBehaviour {
     public static InputStateManager instance;
 
     [Header("References")]
-    [SerializeField] TextMeshProUGUI stateText; // Text to display the current state
+    //[SerializeField] TextMeshProUGUI stateText; // Text to display the current state
 
     Enum_GameInputState gameInputState = Enum_GameInputState.CommandMode; // Current game input state
     public Enum_GameInputState GameInputState { get => gameInputState; set => gameInputState = value; }
@@ -22,7 +22,7 @@ public class InputStateManager : MonoBehaviour {
     }
 
     void Update() {
-        if (GameInputState == Enum_GameInputState.Tutorial) {
+        if (GameInputState == Enum_GameInputState.Tutorial || Time.timeScale == 0) {
             return;
         }
         if (Input.GetKeyDown(KeyCode.Space) && CommandTyperScript.instance.inputString == "") {
@@ -30,14 +30,14 @@ public class InputStateManager : MonoBehaviour {
                 StartCoroutine(ClearInputString());
                 GameInputState = Enum_GameInputState.CommandMode;
                 Debug.Log("Command Mode");
-                stateText.text = "Command";
+                //stateText.text = "Command";
                 return;
             }
             else {
                 GameInputState = Enum_GameInputState.ActivateMode;
                 Debug.Log("Activate Mode");
                 StartCoroutine(ClearInputString());
-                stateText.text = "Activation";
+                //stateText.text = "Activation";
                 return;
             }
         }

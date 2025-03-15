@@ -6,23 +6,22 @@ using UnityEngine;
 public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     [Header("References")]
     [SerializeField] Rigidbody rb;
-    [SerializeField] Animator anim;
+    [SerializeField] AnimatorRenderer render;
 
 
 
     [Header("Attributes")]
-    [SerializeField] Enum_NormalSoldierState state = Enum_NormalSoldierState.Initiate;
-    [SerializeField] float hitPoint = 100;
-    public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] internal Single walkSpeed = 1;
-    [SerializeField] internal Single acceptableRadius = 0.33f;
-    [SerializeField] internal Single damage = 10;
-    [SerializeField] internal Single sightRange = 1.5f;
-    [SerializeField] internal Single attackSpeed = 1;
-    [SerializeField] internal Single attackCooldown = 1;
-    [SerializeField] internal Single attackRange = 1f;
-    [SerializeField] internal bool startCanSeePhantom = false;
-    bool canSeePhantom;
+    [SerializeField] Enum_NormalSoldierState state;
+    public float HitPoint { get; set; } = 100;
+    public Single WalkSpeed { get; set; }
+    public Single AcceptableRadius { get; set; }
+    public Single Damage { get; set; }
+    public Single SightRange { get; set; }
+    public Single AttackSpeed { get; set; }
+    public Single AttackCooldown { get; set; }
+    public Single AttackRange { get; set; }
+    public bool StartCanSeePhantom { get; set; }
+    public bool CanSeePhantom { get; set; }
 
 
 
@@ -33,20 +32,23 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     public GameObject BaseTower { get => baseTower; set => baseTower = value; }
     Single towerRange;
     float lastCalculateTime;
-    GameObject attackTarget;
+    float lastAttackTime;
+    internal GameObject attackTarget;
     Vector3 walkPosition;
     LayerMask DemonLayer;
     LayerMask PathLayer;
 
 
     void Start() {
-        canSeePhantom = startCanSeePhantom;
+        CanSeePhantom = StartCanSeePhantom;
         if (baseTower != null) {
             towerRange = baseTower.GetComponent<IActivatables>().TowerRange;
         }
         DemonLayer = LayerMask.GetMask("Demon");
         PathLayer = LayerMask.GetMask("Ground");
         lastCalculateTime = Time.time;
+
+        ChangeState(Enum_NormalSoldierState.Initiate);
     }
 
     void Update() {
@@ -55,17 +57,16 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         }
         lastCalculateTime = Time.time;
         if (baseTower.gameObject.IsDestroyed()) {
-            state = Enum_NormalSoldierState.Die;
+            ChangeState(Enum_NormalSoldierState.Die);
+        }
+        if (HitPoint <= 0) {
+            ChangeState(Enum_NormalSoldierState.Die);
+            return;
         }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
-                if (Vector3.Distance(transform.position, walkPosition) <= acceptableRadius) {
-                    state = Enum_NormalSoldierState.Idle;
-                }
-                if (baseTower != null && walkPosition == new Vector3()) {
-                    if (!FindWalkPosition()) {
-                        state = Enum_NormalSoldierState.Die;
-                    }
+                if (Vector3.Distance(transform.position, walkPosition) <= AcceptableRadius) {
+                    ChangeState(Enum_NormalSoldierState.Idle);
                 }
                 StartCoroutine(CheckForTarget());
                 break;
@@ -73,18 +74,22 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 StartCoroutine(CheckForTarget());
                 if (Vector3.Distance(transform.position, walkPosition) > 2f) {
                     // Don't forget to fix this
-                    state = Enum_NormalSoldierState.Initiate;
+                    ChangeState(Enum_NormalSoldierState.Initiate);
                 }
                 break;
             case Enum_NormalSoldierState.Engage:
-                if (Vector3.Distance(transform.position, attackTarget.transform.position) <= attackRange) {
-                    state = Enum_NormalSoldierState.Attack;
+                if (Vector3.Distance(transform.position, attackTarget.transform.position) <= AttackRange) {
+                    ChangeState(Enum_NormalSoldierState.Attack);
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
+                if (Time.time > lastAttackTime + AttackCooldown) {
+                    render.PlayAnimation("Attack");
+                }
+
                 if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
                     attackTarget = null;
-                    state = Enum_NormalSoldierState.Idle;
+                    ChangeState(Enum_NormalSoldierState.Initiate);
                 }
                 break;
             case Enum_NormalSoldierState.Die:
@@ -95,9 +100,6 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     void FixedUpdate() {
-        if (HitPoint <= 0) {
-            state = Enum_NormalSoldierState.Die;
-        }
         switch (state) {
             case Enum_NormalSoldierState.Initiate:
                 if (walkPosition != new Vector3()) {
@@ -108,23 +110,54 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
             case Enum_NormalSoldierState.Idle:
                 return;
             case Enum_NormalSoldierState.Engage:
-                Move(attackTarget.transform.position);
-                break;
-            case Enum_NormalSoldierState.Attack:
-                //Play Attack Animation
-                //Deal Damage
                 try {
-                    Attack(attackTarget);
+                    Move(attackTarget.transform.position);
                 }
                 catch {
                     attackTarget = null;
-                    state = Enum_NormalSoldierState.Initiate;
+                    ChangeState(Enum_NormalSoldierState.Initiate);
                 }
                 break;
+            case Enum_NormalSoldierState.Attack:
+                break;
             case Enum_NormalSoldierState.Die:
-                StartCoroutine(Die());
                 break;
             default:
+                break;
+        }
+    }
+
+    public void ChangeState(Enum_NormalSoldierState newState) {
+        state = newState;
+        switch (state) {
+            case Enum_NormalSoldierState.Initiate:
+                // Find Walk Position
+                if (baseTower != null && walkPosition == new Vector3()) {
+                    if (!FindWalkPosition()) {
+                        Destroy(gameObject);
+                    }
+                }
+                // Play Walk Animation
+                render.PlayAnimation("Walk");
+                break;
+            case Enum_NormalSoldierState.Idle:
+                // Play Idle Animation
+                render.PlayAnimation("Idle");
+                break;
+            case Enum_NormalSoldierState.Engage:
+                // Play Walk Animation
+                render.PlayAnimation("Walk");
+                break;
+            case Enum_NormalSoldierState.Attack:
+                // Play Idle Animation
+                render.PlayAnimation("Idle");
+                break;
+            case Enum_NormalSoldierState.Die:
+                // Play Die Animation
+                render.PlayAnimation("Dead");
+                break;
+            default:
+                ChangeState(Enum_NormalSoldierState.Initiate);
                 break;
         }
     }
@@ -147,12 +180,12 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     IEnumerator CheckForTarget() {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, DemonLayer);
-        if (canSeePhantom) {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, SightRange, DemonLayer);
+        if (CanSeePhantom) {
             foreach (Collider collider in colliders) {
                 if (collider.CompareTag("Phantom")) {
                     attackTarget = collider.gameObject;
-                    state = Enum_NormalSoldierState.Engage;
+                    ChangeState(Enum_NormalSoldierState.Engage);
                     break;
                 }
             }
@@ -161,33 +194,35 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         if (attackTarget == null && colliders.Length > 0) {
             if (colliders[0].CompareTag("Demon")) {
                 attackTarget = colliders[0].gameObject;
-                state = Enum_NormalSoldierState.Engage;
+                ChangeState(Enum_NormalSoldierState.Engage);
             }
         }
         yield return null;
     }
 
     public IEnumerator SetCanSeePhantom(bool canSee) {
-        canSeePhantom = canSee;
+        CanSeePhantom = canSee;
         yield return null;
     }
 
     public IEnumerator ResetCanSeePhantom() {
-        canSeePhantom = startCanSeePhantom;
+        CanSeePhantom = StartCanSeePhantom;
         yield return null;
     }
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, AttackRange);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, sightRange);
+        Gizmos.DrawWireSphere(transform.position, SightRange);
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(walkPosition, acceptableRadius);
+        Gizmos.DrawWireSphere(walkPosition, AcceptableRadius);
     }
 
     public void Attack(GameObject target) {
-        target.GetComponent<IDemons>().TakeDamage(damage * Time.fixedDeltaTime * 3);  // Don't forget to fix this
+        lastAttackTime = Time.time;
+        target.GetComponent<IDemons>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier);  // Don't forget to fix this
+        Debug.Log($"{gameObject} Attack");
     }
 
     public IEnumerator Die() {
@@ -199,11 +234,11 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
         Destroy(gameObject);
     }
     public void Move(Vector3 position) {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, position, walkSpeed * Time.fixedDeltaTime));
+        rb.MovePosition(Vector3.MoveTowards(transform.position, position, WalkSpeed * Time.fixedDeltaTime));
     }
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+        render.PlayAnimation("Hurt");
     }
-
 }

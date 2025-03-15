@@ -1,7 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using Unity.VisualScripting;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class UserInterfaceManager : MonoBehaviour {
     public static UserInterfaceManager instance;
@@ -34,12 +36,51 @@ public class UserInterfaceManager : MonoBehaviour {
         Debug.Log(Equals(uiObject.activeSelf, true) ? $"{uiObject.name} is active" : $"{uiObject.name} is inactive");
     }
 
+    public void ScaleUpUI(GameObject uiObject) {
+        uiObject.transform.DOScale(1.1f, 0.2f).SetUpdate(true);
+    }
+
+    public void ScaleDownUI(GameObject uiObject) {
+        uiObject.transform.DOScale(1f, 0.2f).SetUpdate(true);
+    }
+
+    public void SelectUI(Button uiButton) {
+        uiButton.Select();
+    }
+
+    public void OnHelpButtonClicked(RectTransform helpButton) {
+        helpButton.DOAnchorPosX(-(helpButton.rect.width + 8), 0.2f).SetUpdate(true);
+        helpButton.GetChild(0).GetComponent<RectTransform>().DOAnchorPosX(helpButton.GetChild(0).GetComponent<RectTransform>().rect.width + helpButton.rect.width + 28, 0.2f).SetUpdate(true);
+        helpButton.GetComponent<Button>().interactable = false;
+        // Delay 2 seconds before moving back
+        StartCoroutine(MoveBackHelpButton(helpButton));
+
+        IEnumerator MoveBackHelpButton(RectTransform helpButton) {
+            yield return new WaitForSeconds(2);
+            helpButton.DOAnchorPosX(0, 0.2f).SetUpdate(true);
+            helpButton.GetChild(0).GetComponent<RectTransform>().DOAnchorPosX(0, 0.2f).SetUpdate(true);
+            helpButton.GetComponent<Button>().interactable = true;
+        }
+    }
+
     /// <summary>
     /// Load a scene via scene index
     /// </summary>
     /// <param name="sceneName">Name of a scene to be loaded</param>
     public void LoadSceneViaName(string sceneName) {
         SceneManager.LoadScene(sceneName);
+    }
+
+    public void PlaySFXOnUI(AudioClip audioClip) {
+        SFXManager.instance.PlaySFXClip(audioClip, transform, 1f);
+    }
+
+    public void PauseGame() {
+        Time.timeScale = 0;
+    }
+
+    public void ResumeGame() {
+        Time.timeScale = 1;
     }
 
     /// <summary>

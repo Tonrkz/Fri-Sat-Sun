@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Unity.VisualScripting;
+using DG.Tweening;
 
 public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     [Header("References")]
     [SerializeField] Rigidbody rb;
-    [SerializeField] Animator anim;
+    [SerializeField] AnimatorRenderer render;
     [SerializeField] DemonsMovement movement;
 
 
@@ -21,7 +22,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
 
 
     [Header("Movement Attributes")]
-    [SerializeField]  Single startWalkSpeed = 1.5f;
+    [SerializeField] Single startWalkSpeed = 1.5f;
     public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
     Single walkSpeed;
     public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
@@ -50,6 +51,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     GameObject attackTarget;
     public GameObject AttackTarget { get => attackTarget; set => attackTarget = value; }
     float lastCalculateTime;
+    float lastAttackTime;
     [SerializeField] float delayCalculateTime = 0.2f;
     LayerMask SoldierLayer;
 
@@ -83,7 +85,13 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 CheckForTarget();
                 break;
             case Enum_GoblinDemonState.Attack:
-                if (attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
+                try {
+                    if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<ISoldiers>().HitPoint <= 0) {
+                        attackTarget = null;
+                        state = Enum_GoblinDemonState.Walk;
+                    }
+                }
+                catch {
                     attackTarget = null;
                     state = Enum_GoblinDemonState.Walk;
                 }
@@ -98,8 +106,10 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     void FixedUpdate() {
         switch (state) {
             case Enum_GoblinDemonState.Idle:
+                render.PlayAnimation("Idle");
                 return;
             case Enum_GoblinDemonState.Walk:
+                render.PlayAnimation("Walk");
                 if (attackTarget != null) {
                     Move(attackTarget.transform.position);
                     return;
@@ -110,7 +120,10 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 //Play Attack Animation
                 //Deal Damage
                 try {
-                    Attack(attackTarget);
+                    if (Time.time > lastAttackTime + AttackCooldown) {
+                        render.PlayAnimation("Attack");
+                        lastCalculateTime = Time.time;
+                    }
                 }
                 catch {
                     attackTarget = null;
@@ -118,7 +131,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 }
                 break;
             case Enum_GoblinDemonState.Dead:
-                Dead();
+                render.PlayAnimation("Dead");
                 break;
             default:
                 break;
@@ -129,7 +142,9 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     }
 
     public void Attack(GameObject target) {
-        target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage * Time.fixedDeltaTime * 5); // Don't forget to fix this
+        lastAttackTime = Time.time;
+        target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage); // Don't forget to fix this
+        Debug.Log($"{gameObject} Attack");
     }
 
     public IEnumerator AttackDown(Single atkDownPercent) {
@@ -143,9 +158,13 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     }
 
     public void Dead() {
-        DemonsSpawnerManager.instance.OnDemonDead(this);
-        //Play Dead Animation
-        Destroy(gameObject);
+        DOVirtual.Float(0, 1, 1f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetFloat("_Dissolve", x));
+
+        if (transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetFloat("_Dissolve") == 1) {
+            DemonsSpawnerManager.instance.OnDemonDead(this);
+            //Play Dead Animation
+            Destroy(gameObject);
+        }
     }
 
     public void Move(Vector3 position) {
@@ -154,6 +173,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+        render.PlayAnimation("Hurt");
     }
 
     public void CheckForTarget() {
