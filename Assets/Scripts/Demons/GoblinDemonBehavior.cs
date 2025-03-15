@@ -21,7 +21,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
 
 
     [Header("Movement Attributes")]
-    [SerializeField]  Single startWalkSpeed = 1.5f;
+    [SerializeField] Single startWalkSpeed = 1.5f;
     public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
     Single walkSpeed;
     public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
@@ -50,6 +50,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     GameObject attackTarget;
     public GameObject AttackTarget { get => attackTarget; set => attackTarget = value; }
     float lastCalculateTime;
+    float lastAttackTime;
     [SerializeField] float delayCalculateTime = 0.2f;
     LayerMask SoldierLayer;
 
@@ -110,7 +111,10 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 //Play Attack Animation
                 //Deal Damage
                 try {
-                    Attack(attackTarget);
+                    if (Time.time > lastAttackTime + AttackCooldown) {
+                        Attack(attackTarget);
+                        lastCalculateTime = Time.time;
+                    }
                 }
                 catch {
                     attackTarget = null;
@@ -129,7 +133,8 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     }
 
     public void Attack(GameObject target) {
-        target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage * Time.fixedDeltaTime * 5); // Don't forget to fix this
+        target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage); // Don't forget to fix this
+        lastAttackTime = Time.time;
     }
 
     public IEnumerator AttackDown(Single atkDownPercent) {

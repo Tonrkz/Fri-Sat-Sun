@@ -788,6 +788,7 @@ GameObject:
   - component: {fileID: 916941754}
   - component: {fileID: 916941753}
   - component: {fileID: 916941757}
+  - component: {fileID: 916941758}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -890,6 +891,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3131284e0aa02a44492b6cdf8f597f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &916941758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916941752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05f70157f2fa593439301b81b360ed75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Panel: {fileID: 953999356}
+  EndText: {fileID: 2063869705}
+  Buttons: {fileID: 2084232151}
 --- !u!1 &945758994
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,7 +1079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 0.9137255, a: 1}
+  m_Color: {r: 1, g: 1, b: 0.9137255, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1149,7 +1165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 768291317}
+  m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1737855472
@@ -1482,8 +1498,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 0
+  m_fontColor: {r: 0, g: 0, b: 0, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1564,6 +1580,7 @@ GameObject:
   - component: {fileID: 2084232150}
   - component: {fileID: 2084232149}
   - component: {fileID: 2084232148}
+  - component: {fileID: 2084232151}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -1656,6 +1673,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084232146}
   m_CullTransparentMesh: 1
+--- !u!225 &2084232151
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084232146}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

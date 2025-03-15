@@ -114,7 +114,6 @@ public class GodsOfferingManager : MonoBehaviour {
 
             // Set the buyable offering 1 to active
             Button_BuyableGodOffering1.gameObject.SetActive(true);
-            Button_BuyableGodOffering1.Select();
         }
         else {
             Button_BuyableGodOffering1.gameObject.SetActive(false);

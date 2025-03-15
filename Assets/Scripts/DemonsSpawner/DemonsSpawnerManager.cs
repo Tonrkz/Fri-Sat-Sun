@@ -166,6 +166,8 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
     [ContextMenu("Start Next Wave")]
     IEnumerator StartWave(Byte wave) {
+        BGMManager.instance.PlayBGMClip(BGMManager.instance.inGameNightBGM);
+
         Enum_DemonTypes lastDemon = Enum_DemonTypes.Goblin;
         isSpawning = true;
         directionalLight.GetComponent<Light>().DOColor(new Color32(117, 147, 255, 255), 0);
@@ -273,6 +275,8 @@ public class DemonsSpawnerManager : MonoBehaviour {
         if (wave == 4) {
             UserInterfaceManager.instance.LoadSceneViaName("Scene_End");
         }
+
+        BGMManager.instance.PlayBGMClip(BGMManager.instance.inGameMorningBGM);
 
         progressBarHandle.DORotate(new Vector3(0, 0, 90), 0.2f);
         CalculateNextWaveDemonLimit();

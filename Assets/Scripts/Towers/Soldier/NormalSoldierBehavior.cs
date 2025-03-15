@@ -32,6 +32,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     public GameObject BaseTower { get => baseTower; set => baseTower = value; }
     Single towerRange;
     float lastCalculateTime;
+    float lastAttackTime;
     GameObject attackTarget;
     Vector3 walkPosition;
     LayerMask DemonLayer;
@@ -78,7 +79,10 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
-                Attack(attackTarget);
+                if (Time.time > lastAttackTime + AttackCooldown) {
+                    Attack(attackTarget);
+                }
+
                 if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
                     attackTarget = null;
                     ChangeState(Enum_NormalSoldierState.Initiate);
@@ -220,7 +224,8 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     public void Attack(GameObject target) {
-        target.GetComponent<IDemons>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier * Time.fixedDeltaTime * 3);  // Don't forget to fix this
+        target.GetComponent<IDemons>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier);  // Don't forget to fix this
+        lastAttackTime = Time.time;
     }
 
     public IEnumerator Die() {
