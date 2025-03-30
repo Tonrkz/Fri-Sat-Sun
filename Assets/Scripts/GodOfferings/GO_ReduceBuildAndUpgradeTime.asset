@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2cbfc6c27b22694d89642662f338ef9, type: 3}
   m_Name: GO_ReduceBuildAndUpgradeTime
   m_EditorClassIdentifier: 
-  godOfferingID: GO01
+  godOfferingID: 201
   offeringSprite: {fileID: 21300000, guid: 0e9ef058873536e4b939f305128bc1e2, type: 3}
   offeringName: God of Creation
   offeringDescription: Reduce building and evolving time for 50 percent

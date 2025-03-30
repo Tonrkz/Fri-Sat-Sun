@@ -235,10 +235,10 @@ MonoBehaviour:
   soldierHitPoint: 100
   soldierWalkSpeed: 2
   soldierAcceptableRadius: 0.33
-  soldierDamage: 10
+  soldierDamage: 20
   soldierSightRange: 1.5
   soldierAttackSpeed: 1
-  soldierAttackCooldown: 3
+  soldierAttackCooldown: 1.5
   soldierAttackRange: 1
   soldierCanSeePhantom: 0
 --- !u!114 &4842633970787108065

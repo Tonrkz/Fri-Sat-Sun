@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241d331395b57e94c85dba5777151789, type: 3}
   m_Name: GO_AllSoldiersDealMoreDamage
   m_EditorClassIdentifier: 
-  godOfferingID: GO04
+  godOfferingID: 203
   offeringSprite: {fileID: 21300000, guid: 01ca4decba495de4391e6ba7cee5500e, type: 3}
   offeringName: God's Wrath
-  offeringDescription: All soldiers deal 20 percent more damage.
+  offeringDescription: All soldiers deal 20 percent more damage
   offeringCost: 120
   damageMultiplier: 1.2

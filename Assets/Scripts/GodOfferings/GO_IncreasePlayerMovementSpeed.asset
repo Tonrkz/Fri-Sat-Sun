@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52960ee3b18f8e44bb99bfd504aa71f3, type: 3}
   m_Name: GO_IncreasePlayerMovementSpeed
   m_EditorClassIdentifier: 
-  godOfferingID: GO05
+  godOfferingID: 101
   offeringSprite: {fileID: 21300000, guid: 78972f3c9247e434da766e4149be0097, type: 3}
   offeringName: Boots of Promptitude
   offeringDescription: Increase player's movement speed by 33 percent

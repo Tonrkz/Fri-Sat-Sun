@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e041a5d1b1b6143bc574a20e987ab1, type: 3}
   m_Name: GO_AdditionalMoneyPerSecond
   m_EditorClassIdentifier: 
-  godOfferingID: GO03
+  godOfferingID: 102
   offeringSprite: {fileID: 21300000, guid: 3c9f4bd155492cd4baf125007f9a1f97, type: 3}
   offeringName: Prosperity Offers
   offeringDescription: Earn 30 percent more money when killing a demon

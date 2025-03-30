@@ -106,10 +106,10 @@ MonoBehaviour:
   moneyOnDead: 20
   startWalkSpeed: 1
   acceptableRadius: 0.33
-  startDamage: 12
+  startDamage: 20
   sightRange: 1.5
   attackSpeed: 1
-  attackCooldown: 1
+  attackCooldown: 1.25
   attackRange: 1
   delayCalculateTime: 0.2
 --- !u!114 &-8789767392944389815

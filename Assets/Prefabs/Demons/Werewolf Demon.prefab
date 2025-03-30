@@ -102,7 +102,7 @@ MonoBehaviour:
   render: {fileID: 7794050748405837792}
   movement: {fileID: -660648354733540177}
   state: 0
-  hitPoint: 50
+  hitPoint: 70
   moneyOnDead: 50
   startWalkSpeed: 1.5
   acceptableRadius: 0.33

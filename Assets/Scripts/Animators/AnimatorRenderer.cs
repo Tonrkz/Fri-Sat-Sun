@@ -48,7 +48,7 @@ public class AnimatorRenderer : MonoBehaviour {
             StartCoroutine(GetComponentInParent<ISoldiers>().Die());
         }
         else if (transform.parent.gameObject.CompareTag("Demon")) {
-            GetComponentInParent<IDemons>().Dead();
+            StartCoroutine(GetComponentInParent<IDemons>().Dead());
         }
     }
 
