@@ -78,18 +78,25 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 break;
             case Enum_NormalSoldierState.Engage:
+                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed() || Vector3.Distance(transform.position, attackTarget.transform.position) > SightRange) {
+                    attackTarget = null;
+                    ChangeState(Enum_NormalSoldierState.Initiate);
+                    return;
+                }
+
                 if (Vector3.Distance(transform.position, attackTarget.transform.position) <= AttackRange) {
                     ChangeState(Enum_NormalSoldierState.Attack);
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
-                if (Time.time > lastAttackTime + AttackCooldown) {
-                    render.PlayAnimation("Attack");
-                }
-
-                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed()) {
+                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed() || Vector3.Distance(transform.position, attackTarget.transform.position) > AttackRange) {
                     attackTarget = null;
                     ChangeState(Enum_NormalSoldierState.Initiate);
+                    return;
+                }
+
+                if (Time.time > lastAttackTime + AttackCooldown) {
+                    render.PlayAnimation("Attack");
                 }
                 break;
             case Enum_NormalSoldierState.Die:
@@ -138,7 +145,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                     }
                 }
                 // Play Walk Animation
-                render.PlayAnimation("Walk");
+                render.PlayAnimation("Walk", 0.2f, WalkSpeed);
                 break;
             case Enum_NormalSoldierState.Idle:
                 // Play Idle Animation
@@ -146,7 +153,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 break;
             case Enum_NormalSoldierState.Engage:
                 // Play Walk Animation
-                render.PlayAnimation("Walk");
+                render.PlayAnimation("Walk", 0.2f, WalkSpeed);
                 break;
             case Enum_NormalSoldierState.Attack:
                 // Play Idle Animation
@@ -221,6 +228,14 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     public void Attack(GameObject target) {
         lastAttackTime = Time.time;
+
+        Single knockbackForce = 2f;
+
+        // Calculate knockback direction
+        Vector3 knockbackDirection = attackTarget.transform.position - transform.position;
+        knockbackDirection.Normalize();
+
+        target.GetComponent<IDemons>().AddKnockback(knockbackDirection * knockbackForce);
         target.GetComponent<IDemons>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier);  // Don't forget to fix this
         Debug.Log($"{gameObject} Attack");
     }
@@ -239,6 +254,11 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
-        render.PlayAnimation("Hurt");
+    }
+
+    public void AddKnockback(Vector3 knockback) {
+        // Add a knockback
+        rb.AddForce(knockback, ForceMode.Impulse);
+        render.PlayAnimation(render.HURT, 0, 1);
     }
 }

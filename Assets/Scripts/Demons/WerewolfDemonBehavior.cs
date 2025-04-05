@@ -98,7 +98,12 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
     }
 
     public void TakeDamage(Single damage) {
-        render.PlayAnimation("Hurt");
         HitPoint -= damage;
+    }
+
+    public void AddKnockback(Vector3 knockback) {
+        // Add a knockback
+        rb.AddForce(knockback, ForceMode.Impulse);
+        render.PlayAnimation(render.HURT, 0, 1);
     }
 }

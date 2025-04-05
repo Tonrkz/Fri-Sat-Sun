@@ -12,5 +12,6 @@ public interface IDemons {
 
     public void Move(Vector3 position);
     public void TakeDamage(Single damage);
+    public void AddKnockback(Vector3 knockback);
     public IEnumerator Dead();
 }

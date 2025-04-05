@@ -32,7 +32,16 @@ public class ArrowScript : MonoBehaviour {
     private void OnTriggerStay(Collider other) {
         Debug.Log($"OnTriggerStay {other}");
         if (other.gameObject == target) {
+
+            Single knockbackForce = 2f;
+
+            // Calculate knockback direction
+            Vector3 knockbackDirection = other.transform.position - transform.position;
+            knockbackDirection.Normalize();
+            knockbackDirection *= knockbackForce;
+
             other.GetComponent<IDemons>().TakeDamage(damage);
+            other.GetComponent<IDemons>().AddKnockback(knockbackDirection * knockbackForce);
             Destroy(gameObject);
         }
     }

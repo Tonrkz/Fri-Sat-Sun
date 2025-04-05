@@ -103,7 +103,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 render.PlayAnimation("Idle");
                 return;
             case Enum_GoblinDemonState.Walk:
-                render.PlayAnimation("Walk");
+                render.PlayAnimation("Walk", 0.2f, WalkSpeed);
                 if (attackTarget != null) {
                     Move(attackTarget.transform.position);
                     return;
@@ -111,6 +111,13 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 Move(movement.walkTarget.transform.position);
                 break;
             case Enum_GoblinDemonState.Attack:
+                // Change to walking if attack target is out of reach
+                if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || Vector3.Distance(transform.position, attackTarget.transform.position) > attackRange) {
+                    attackTarget = null;
+                    state = Enum_GoblinDemonState.Walk;
+                    return;
+                }
+
                 //Play Attack Animation
                 //Deal Damage
                 try {
@@ -137,6 +144,15 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
 
     public void Attack(GameObject target) {
         lastAttackTime = Time.time;
+
+        Single knockbackForce = 2f;
+
+        // Calculate knockback direction
+        Vector3 knockbackDirection = attackTarget.transform.position - transform.position;
+        knockbackDirection.Normalize();
+        knockbackDirection *= knockbackForce;
+
+        target.gameObject.GetComponent<ISoldiers>().AddKnockback(knockbackDirection * knockbackForce);
         target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage); // Don't forget to fix this
         Debug.Log($"{gameObject} Attack");
     }
@@ -169,7 +185,12 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
-        render.PlayAnimation("Hurt");
+    }
+
+    public void AddKnockback(Vector3 knockback) {
+        // Add a knockback
+        rb.AddForce(knockback, ForceMode.Impulse);
+        render.PlayAnimation(render.HURT, 0, 1);
     }
 
     public void CheckForTarget() {

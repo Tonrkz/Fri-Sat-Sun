@@ -111,6 +111,13 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 Move(movement.walkTarget.transform.position);
                 break;
             case Enum_YetiDemonState.Attack:
+                // Change to walking if attack target is out of reach
+                if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || Vector3.Distance(transform.position, attackTarget.transform.position) > attackRange) {
+                    attackTarget = null;
+                    state = Enum_YetiDemonState.Walk;
+                    return;
+                }
+
                 //Play Attack Animation
                 //Deal Damage
                 try {
@@ -137,6 +144,15 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
     public void Attack(GameObject target) {
         Debug.Log($"{gameObject} Attack");
         lastAttackTime = Time.time;
+
+        Single knockbackForce = 2f;
+
+        // Calculate knockback direction
+        Vector3 knockbackDirection = attackTarget.transform.position - transform.position;
+        knockbackDirection.Normalize();
+        knockbackDirection *= knockbackForce;
+
+        target.gameObject.GetComponent<ISoldiers>().AddKnockback(knockbackDirection * knockbackForce);
         target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage); // Don't forget to fix this
     }
 
@@ -168,7 +184,12 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
-        render.PlayAnimation("Hurt");
+    }
+
+    public void AddKnockback(Vector3 knockback) {
+        // Add a knockback
+        rb.AddForce(knockback, ForceMode.Impulse);
+        render.PlayAnimation(render.HURT, 0, 1);
     }
 
     public void CheckForTarget() {

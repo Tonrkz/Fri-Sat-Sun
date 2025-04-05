@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
 
@@ -21,9 +22,10 @@ public class AnimatorRenderer : MonoBehaviour {
         animator = GetComponent<Animator>();
     }
 
-    public void PlayAnimation(string animationName, Single crossfadeDuration = 0.2f) {
-        if (animationName != currentAnimation) {
+    public void PlayAnimation(string animationName, Single crossfadeDuration = 0.2f, Single playingSpeed = 1f) {
+        if (animationName != currentAnimation && currentAnimation != HURT) {
             animator.CrossFade(animationName, crossfadeDuration);
+            animator.speed = playingSpeed;
         }
     }
 

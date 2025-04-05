@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class PhantomDemonBehavior : MonoBehaviour, IDemons {
     [Header("References")]
@@ -95,6 +96,11 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
-        render.PlayAnimation("Hurt");
+    }
+
+    public void AddKnockback(Vector3 knockback) {
+        // Add a knockback
+        rb.AddForce(knockback, ForceMode.Impulse);
+        render.PlayAnimation(render.HURT, 0, 1);
     }
 }
