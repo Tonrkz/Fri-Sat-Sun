@@ -38,7 +38,7 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
 
 
     [Header("Money Attributes")]
-    [SerializeField] int upgradeCost = MoneyManager.mageTowerBuildCost;
+    int upgradeCost = MoneyManager.mageTowerBuildCost;
     public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
 
 
@@ -126,6 +126,8 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
     }
 
     public void UpgradeTower() {
+        Level++;
+        BuildCost += UpgradeCost;
         // Upgrade Every Level
         TowerRange += upgradeTowerRange;
 
@@ -136,8 +138,7 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
             MageMultiplier += upgradeMageMultiplier;
         }
         duration += upgradeDuration;
-        UpgradeCost = (int)(MoneyManager.rangedTowerBuildCost * Mathf.Pow(level, MoneyManager.upgradePriceExponent));
-        level++;
+        UpgradeCost += (int)(Mathf.Pow(UpgradeCost, MoneyManager.upgradePriceExponent));
         Debug.Log($"{TowerName} upgraded");
     }
 

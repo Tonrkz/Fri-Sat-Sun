@@ -12,16 +12,16 @@ public class CameraConroller : MonoBehaviour {
     public Transform FocusingObject { get; set; }
 
     [Header("Camera Attributes")]
-    [SerializeField] float cameraSpeed = 2f;
-    [SerializeField] float resetCameraSpeedMultiplier = 1.25f;
-    [SerializeField] float cameraZoomSpeed = 1.5f;
-    [SerializeField] float resetCameraZoomSpeedMultiplier = 1.25f;
-    [SerializeField] float cameraRotationSpeed = 2f;
-    [SerializeField] float resetCameraRotationSpeedMultiplier = 1.25f;
-    [SerializeField] float cameraMinFOV = 50f;
-    [SerializeField] float cameraMaxFOV = 70f;
-    [SerializeField] float cameraMinY = 5f;
-    [SerializeField] float cameraMaxZ = -10f;
+    float cameraSpeed = 2.5f;
+    float resetCameraSpeedMultiplier = 1.25f;
+    float cameraZoomSpeed = 1.75f;
+    float resetCameraZoomSpeedMultiplier = 1.25f;
+    float cameraRotationSpeed = 2.5f;
+    float resetCameraRotationSpeedMultiplier = 1.25f;
+    float cameraMinFOV = 50f;
+    float cameraMaxFOV = 70f;
+    float cameraMinY = 7f;
+    float cameraMaxZ = -12f;
 
     void Awake() {
         if (instance == null) {

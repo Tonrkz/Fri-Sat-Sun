@@ -26,6 +26,8 @@ public class InputStateManager : MonoBehaviour {
             return;
         }
         if (Input.GetKeyDown(KeyCode.Space) && CommandTyperScript.instance.inputString == "") {
+            PlayerTowerSelectionHandler.instance.SelectedTower = null;
+            PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
             if (GameInputState == Enum_GameInputState.ActivateMode) {
                 StartCoroutine(ClearInputString());
                 GameInputState = Enum_GameInputState.CommandMode;

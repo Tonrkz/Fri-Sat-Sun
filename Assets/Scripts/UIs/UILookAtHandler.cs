@@ -4,6 +4,7 @@ using UnityEngine;
 public class UILookAtHandler : MonoBehaviour {
     [Header("References")]
     [SerializeField] internal GameObject lookedAtObj;
+    [SerializeField] bool tracking = true;
 
     void Start() {
         lookedAtObj = Camera.main.gameObject;
@@ -11,7 +12,9 @@ public class UILookAtHandler : MonoBehaviour {
     }
 
     void Update() {
-        LookAt();
+        if (tracking) {
+            LookAt();
+        }
     }
 
     public void LookAt() {

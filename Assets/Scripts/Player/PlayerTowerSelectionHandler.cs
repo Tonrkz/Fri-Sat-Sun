@@ -9,6 +9,8 @@ public class PlayerTowerSelectionHandler : MonoBehaviour {
 
     public ATowers SelectedTower { get; set; }
 
+    bool isSelecting = false;
+
     void Awake() {
         if (instance == null) {
             instance = this;
@@ -18,21 +20,25 @@ public class PlayerTowerSelectionHandler : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter(Collider other) {
-        Debug.Log("OnTriggerEnterPlayer" + other);
-        if (other.CompareTag("Tower") && InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
+    void Start() {
+        OnTowerDeselected.AddListener(() => { isSelecting = false; });
+    }
+
+    void OnTriggerStay(Collider other) {
+        if (other.CompareTag("Tower") && InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode && !isSelecting) {
             other.GetComponent<ATowers>().IsSelected = true;
             SelectedTower = other.GetComponent<ATowers>();
             OnTowerSelected.Invoke();
+            isSelecting = true;
         }
     }
 
     void OnTriggerExit(Collider other) {
-        Debug.Log("OnTriggerExitPlayer" + other);
         if (other.CompareTag("Tower") && InputStateManager.instance.GameInputState == Enum_GameInputState.CommandMode) {
             other.GetComponent<ATowers>().IsSelected = false;
             SelectedTower = null;
             OnTowerDeselected.Invoke();
+            isSelecting = false;
         }
     }
 }

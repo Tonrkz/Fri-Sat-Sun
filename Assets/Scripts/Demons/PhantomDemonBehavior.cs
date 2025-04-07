@@ -1,13 +1,16 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.XR;
 
-public class PhantomDemonBehavior : MonoBehaviour, IDemons {
+public class PhantomDemonBehavior : MonoBehaviour, IDemons, IDamagable {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] AnimatorRenderer render;
     [SerializeField] DemonsMovement movement;
+    [SerializeField] GameObject floatingTextPrefab;
 
 
 
@@ -49,14 +52,12 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
         lastCalculateTime = Time.time;
         switch (state) {
             case Enum_PhantomDemonState.Walk:
-                render.PlayAnimation("Walk");
+                render.PlayAnimation(render.WALK);
                 if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
                     movement.walkTarget = movement.GetNextWalkTarget();
                 }
                 break;
             case Enum_PhantomDemonState.Dead:
-                render.PlayAnimation("Dead");
-                break;
             default:
                 break;
         }
@@ -68,6 +69,13 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
                 Move(movement.walkTarget.transform.position);
                 break;
             case Enum_PhantomDemonState.Dead:
+                // Disabled Hitbox
+                GetComponent<Rigidbody>().Sleep();
+                GetComponent<SphereCollider>().enabled = false;
+                GetComponent<CapsuleCollider>().excludeLayers = LayerMask.GetMask("Soldier");
+
+                // Play Animation
+                render.PlayAnimation(render.DEAD, 0);
                 break;
             default:
                 break;
@@ -95,6 +103,27 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
-        render.PlayAnimation("Hurt");
+
+        ShowFloatingText();
+
+        void ShowFloatingText() {
+            if (HitPoint > 0 && floatingTextPrefab) {
+                var floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+                floatingText.GetComponent<TextMeshPro>().SetText(((int)HitPoint).ToString());
+            }
+        }
+    }
+
+    public void AddKnockback(Vector3 knockback) {
+        // Add a knockback
+        rb.AddForce(knockback, ForceMode.Impulse);
+        StartCoroutine(WaitForHurtAnimation());
+        render.PlayAnimation(render.HURT, 0);
+
+        IEnumerator WaitForHurtAnimation() {
+            state = Enum_PhantomDemonState.Hurt;
+            yield return new WaitForSeconds(render.animator.GetCurrentAnimatorStateInfo(0).length);
+            state = Enum_PhantomDemonState.Walk;
+        }
     }
 }

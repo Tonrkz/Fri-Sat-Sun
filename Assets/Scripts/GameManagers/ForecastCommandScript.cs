@@ -78,7 +78,7 @@ public class ForecastCommandScript : MonoBehaviour {
                     forecast = $"{CommandTyperScript.evolveStringRef} {BuildManager.rangedStringRef}";
                 }
                 else if (BuildManager.mageStringRef.StartsWith(words[1])) {
-                    forecast = $"{CommandTyperScript.evolveStringRef}  {BuildManager.mageStringRef}";
+                    forecast = $"{CommandTyperScript.evolveStringRef} {BuildManager.mageStringRef}";
                 }
                 else {
                     forecast = "";
@@ -101,7 +101,7 @@ public class ForecastCommandScript : MonoBehaviour {
                     forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + $" {CommandTyperScript.evolveStringRef} {BuildManager.rangedStringRef}";
                 }
                 else if (BuildManager.mageStringRef.StartsWith(words[2])) {
-                    forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + $"  {CommandTyperScript.evolveStringRef}  {BuildManager.mageStringRef}";
+                    forecast = BuildManager.instance.FindTowerViaName(words[0]).GetComponent<ATowers>().TowerName + $"  {CommandTyperScript.evolveStringRef} {BuildManager.mageStringRef}";
                 }
                 else {
                     forecast = "";

@@ -44,6 +44,8 @@ public class CampfireScript : ATowers, IActivatables {
 
 
     void Start() {
+        selfLight = GetComponentInChildren<Light>();
+
         // Subscribe to events
         PlayerTowerSelectionHandler.instance.OnTowerSelected.AddListener(this.OnSelected);
         PlayerTowerSelectionHandler.instance.OnTowerDeselected.AddListener(this.OnDeselected);
@@ -107,6 +109,7 @@ public class CampfireScript : ATowers, IActivatables {
                 }
                 break;
             case Enum_CampfireState.Evolve:
+                selfLight.gameObject.SetActive(false);
                 render.PlayAnimation(render.BUILDING);
                 break;
             case Enum_CampfireState.Dead:
@@ -119,7 +122,9 @@ public class CampfireScript : ATowers, IActivatables {
     }
 
     IEnumerator Build() {
+        selfLight.gameObject.SetActive(false);
         yield return new WaitForSeconds(buildTime * GlobalAttributeMultipliers.CampfireBuildTimeMultiplier);
+        selfLight.gameObject.SetActive(true);
         ChangeTowerState(Enum_CampfireState.Idle);
     }
 
@@ -190,7 +195,7 @@ public class CampfireScript : ATowers, IActivatables {
 
     void SetSoldierAttributes(GameObject soldier) {
         soldier.GetComponent<ISoldiers>().BaseTower = gameObject;
-        soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint * GlobalAttributeMultipliers.SoldierHitPointMultiplier;
+        soldier.GetComponent<IDamagable>().HitPoint = soldierHitPoint * GlobalAttributeMultipliers.SoldierHitPointMultiplier;
         soldier.GetComponent<NormalSoldierBehavior>().WalkSpeed = soldierWalkSpeed * GlobalAttributeMultipliers.SoldierWalkSpeedMultiplier;
         soldier.GetComponent<NormalSoldierBehavior>().AcceptableRadius = soldierAcceptableRadius;
         soldier.GetComponent<NormalSoldierBehavior>().Damage = soldierDamage * GlobalAttributeMultipliers.SoldierDamageMultiplier;

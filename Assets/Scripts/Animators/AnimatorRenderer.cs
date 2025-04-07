@@ -1,9 +1,11 @@
+using DG.Tweening;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class AnimatorRenderer : MonoBehaviour {
     [Header("References")]
-    [SerializeField] Animator animator; // Reference to the animator
+    [SerializeField] public Animator animator; // Reference to the animator
 
     [Header("Animation State Names")]
     public readonly string BUILDING = "Building"; // The building animation state name
@@ -21,10 +23,31 @@ public class AnimatorRenderer : MonoBehaviour {
         animator = GetComponent<Animator>();
     }
 
-    public void PlayAnimation(string animationName, Single crossfadeDuration = 0.2f) {
-        if (animationName != currentAnimation) {
-            animator.CrossFade(animationName, crossfadeDuration);
+    public void PlayAnimation(string animationName, Single crossfadeDuration = 0.2f, Single playingSpeed = 1f, Single delay = 0f) {
+        if (delay > 0) {
+            StartCoroutine(Wait());
+            return;
         }
+
+        Validate();
+        return;
+
+        IEnumerator Wait() {
+            yield return new WaitForSeconds(delay - crossfadeDuration);
+            Validate();
+        }
+
+        void Validate() {
+            if(animationName == "") {
+                animator.CrossFade(IDLE, 0);
+                animator.speed = playingSpeed;
+            }
+            else if (animationName != currentAnimation) {
+                animator.CrossFade(animationName, crossfadeDuration);
+                animator.speed = playingSpeed;
+            }
+        }
+
     }
 
     public void AnimNotifyOnDestroyTower() {
@@ -47,7 +70,7 @@ public class AnimatorRenderer : MonoBehaviour {
         if (transform.parent.gameObject.CompareTag("Soldier")) {
             StartCoroutine(GetComponentInParent<ISoldiers>().Die());
         }
-        else if (transform.parent.gameObject.CompareTag("Demon")) {
+        else if (transform.parent.gameObject.CompareTag("Demon") || transform.parent.gameObject.CompareTag("Phantom")) {
             StartCoroutine(GetComponentInParent<IDemons>().Dead());
         }
     }

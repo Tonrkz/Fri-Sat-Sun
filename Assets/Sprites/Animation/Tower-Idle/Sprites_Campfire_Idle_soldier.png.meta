@@ -208,8 +208,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures:
-    - texture: {fileID: 2800000, guid: 6ee40fbcfb1f4bc49b74c239c34e25fd, type: 3}
-      name: _EmissionMap
+    - texture: {fileID: 2800000, guid: a5f84a1b5fe0e58408f97a0c4015835a, type: 3}
+      name: _Emission
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:

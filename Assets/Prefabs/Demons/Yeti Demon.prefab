@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1975301545574397154}
   - component: {fileID: 4839168908847531218}
   - component: {fileID: -7488874263059044657}
+  - component: {fileID: 1401449002360872499}
   m_Layer: 7
   m_Name: Yeti Demon
   m_TagString: Demon
@@ -67,8 +68,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2838582429635018128}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 2
+  m_Drag: 0.35
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -82,7 +83,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -101,16 +102,17 @@ MonoBehaviour:
   rb: {fileID: 1975301545574397154}
   render: {fileID: 7415092612268029008}
   movement: {fileID: -7488874263059044657}
+  floatingTextPrefab: {fileID: 2596864824031655447, guid: c0bdc9dceccc6f84498b687ea8ff836d, type: 3}
   state: 1
-  hitPoint: 120
-  moneyOnDead: 100
+  hitPoint: 130
+  moneyOnDead: 50
   startWalkSpeed: 0.7
-  acceptableRadius: 0.33
-  startDamage: 35
+  acceptableRadius: 0.5
+  startDamage: 40
   sightRange: 1.5
   attackSpeed: 1
-  attackCooldown: 2
-  attackRange: 1
+  attackCooldown: 1.8
+  attackRange: 1.2
   delayCalculateTime: 0.25
 --- !u!114 &-7488874263059044657
 MonoBehaviour:
@@ -126,6 +128,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkPath: []
   walkTarget: {fileID: 0}
+--- !u!135 &1401449002360872499
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2838582429635018128}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 2147484535
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.4
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4702585756037912314
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +177,7 @@ Transform:
   m_GameObject: {fileID: 4702585756037912314}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: -1, z: -0.5}
+  m_LocalPosition: {x: 0, y: -0.695, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

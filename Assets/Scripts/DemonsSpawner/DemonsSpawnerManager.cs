@@ -25,6 +25,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     Byte wave = 0; // Current wave
     [SerializeField] Single spawnRate = 0.7f; // How many demons to spawn per second
     [SerializeField] Single spawnCooldown = 2; // How long to wait before spawning the next demon
+    float statMultiplier = 1f;
 
     [Header("Spawn Limit")]
     [HideInInspector] public int DemonLimit { get; private set; } = int.MaxValue; // Maximum number of demons that can be spawned
@@ -72,11 +73,6 @@ public class DemonsSpawnerManager : MonoBehaviour {
         else if (Input.GetKeyDown(KeyCode.F5)) {
             Instantiate(demonKingPrefab, transform.position, Quaternion.identity);
         }
-
-        if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive == 0 && DemonCount == DemonLimit && !FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled) {
-            isSpawning = false;
-            StartCoroutine(EndWave());
-        }
     }
 
     /// <summary>
@@ -113,7 +109,6 @@ public class DemonsSpawnerManager : MonoBehaviour {
                         DemonCount++;
                         goblinDemonLeftToSpawn--;
                     }
-                    return spawnedDemon;
                 }
                 break;
             case Enum_DemonTypes.Werewolf:
@@ -124,7 +119,6 @@ public class DemonsSpawnerManager : MonoBehaviour {
                         DemonCount++;
                         werewolfDemonLeftToSpawn--;
                     }
-                    return spawnedDemon;
                 }
                 break;
             case Enum_DemonTypes.Yeti:
@@ -135,7 +129,6 @@ public class DemonsSpawnerManager : MonoBehaviour {
                         DemonCount++;
                         yetiDemonLeftToSpawn--;
                     }
-                    return spawnedDemon;
                 }
                 break;
             case Enum_DemonTypes.Phantom:
@@ -146,7 +139,6 @@ public class DemonsSpawnerManager : MonoBehaviour {
                         DemonCount++;
                         phantomDemonLeftToSpawn--;
                     }
-                    return spawnedDemon;
                 }
                 break;
             case Enum_DemonTypes.DemonKing:
@@ -155,24 +147,31 @@ public class DemonsSpawnerManager : MonoBehaviour {
                     DemonAlive++;
                     DemonCount++;
                     demonKingLeftToSpawn--;
-                    return spawnedDemon;
                 }
                 break;
-            default:
-                return spawnedDemon;
         }
+        MultiplyStat(spawnedDemon);
         return spawnedDemon;
     }
 
     [ContextMenu("Start Next Wave")]
     IEnumerator StartWave(Byte wave) {
+        if (wave == 4) {
+            UserInterfaceManager.instance.LoadSceneViaName("Scene_End");
+            StopAllCoroutines();
+        }
+
         BGMManager.instance.PlayBGMClip(BGMManager.instance.inGameNightBGM);
 
         Enum_DemonTypes lastDemon = Enum_DemonTypes.Goblin;
         isSpawning = true;
-        directionalLight.GetComponent<Light>().DOColor(new Color32(117, 147, 255, 255), 0);
-        directionalLight.GetComponent<Light>().DOIntensity(0.33f, 0);
-        directionalLight.DORotate(new Vector3(30, -65, 0), 10f);
+        directionalLight.GetComponent<Light>().DOColor(new Color32(117, 147, 255, 255), 5);
+        directionalLight.GetComponent<Light>().DOIntensity(0.4f, 2);
+        directionalLight.rotation = Quaternion.Euler(0, -65, 0);
+        directionalLight.DORotate(new Vector3(30, -65, 0), 20f);
+
+        bool halfWave = false;
+
         while (isSpawning) {
             yield return new WaitForSeconds(spawnCooldown);
             lastSpawnTime = Time.time;
@@ -190,6 +189,17 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
                 yield return new WaitForSeconds(1 / spawnRate);
             }
+
+            if (DemonCount >= DemonLimit >> 1 && !halfWave) {
+                halfWave = true;
+                yield return new WaitForSeconds(15f);
+            }
+
+            if (goblinDemonLeftToSpawn + werewolfDemonLeftToSpawn + yetiDemonLeftToSpawn + phantomDemonLeftToSpawn == 0 && DemonAlive <= 0 && DemonCount == DemonLimit && !FindAnyObjectByType<TutorialManager>().GetComponent<TutorialManager>().isActiveAndEnabled) {
+                isSpawning = false;
+                StartCoroutine(EndWave());
+                break;
+            }
         }
     }
 
@@ -201,6 +211,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     Enum_DemonTypes DecideDemonToBeSpawned(Enum_DemonTypes lastDemon) {
         // 30% chance to spawn a same demon with last one
         if (UnityEngine.Random.Range(0, 100) < 30) {
+            Debug.Log("Spawn Same Demon");
             switch (lastDemon) {
                 case Enum_DemonTypes.Goblin:
                     if (goblinDemonLeftToSpawn > 0) {
@@ -229,6 +240,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
         // 70% chance to spawn a random demon
         if (UnityEngine.Random.Range(0, 100) < 70) {
+            Debug.Log("Spawn Random Demon");
             // Random Demon
             switch ((Enum_DemonTypes)UnityEngine.Random.Range(0, 4)) {
                 case Enum_DemonTypes.Goblin:
@@ -251,14 +263,17 @@ public class DemonsSpawnerManager : MonoBehaviour {
                         return Enum_DemonTypes.Phantom;
                     }
                     break;
-            };
+            }
+            ;
         }
-
+        Debug.Log("Spawn Highest Number Demon");
         // else, spawn the demon with the highest number left to spawn
         List<Byte> demonTypes = new List<Byte> { goblinDemonLeftToSpawn, werewolfDemonLeftToSpawn, yetiDemonLeftToSpawn, phantomDemonLeftToSpawn, randomDemonsLeftToSpawn };
         if (demonTypes.IndexOf(demonTypes.Max()) == 4) {
             // if the highest number left to spawn is random demon
             // Random Demon
+            randomDemonsLeftToSpawn--;
+            DemonCount++;
             return (Enum_DemonTypes)UnityEngine.Random.Range(0, 4);
         }
         return (Enum_DemonTypes)demonTypes.IndexOf(demonTypes.Max());
@@ -272,28 +287,26 @@ public class DemonsSpawnerManager : MonoBehaviour {
         isSpawning = false;
         wave++;
 
-        if (wave == 4) {
-            UserInterfaceManager.instance.LoadSceneViaName("Scene_End");
-        }
-
         BGMManager.instance.PlayBGMClip(BGMManager.instance.inGameMorningBGM);
 
         progressBarHandle.DORotate(new Vector3(0, 0, 90), 0.2f);
         CalculateNextWaveDemonLimit();
 
-        directionalLight.GetComponent<Light>().DOColor(Color.white, 0);
-        directionalLight.GetComponent<Light>().DOIntensity(1, 0);
+        directionalLight.GetComponent<Light>().DOColor(Color.white, 5);
+        directionalLight.GetComponent<Light>().DOIntensity(1f, 0);
 
         if (wave > 1) {
             GodsOfferingManager.instance.InitiateGodOfferingsUI();
+
+            statMultiplier += 0.1f;
         }
 
         Single elapsedTime = 0;
         while (elapsedTime < waveCooldown) {
             elapsedTime += Time.deltaTime;
             progressBarHandle.rotation = Quaternion.Euler(0, 0, 90 - 90 * elapsedTime / waveCooldown);
-            directionalLight.rotation = Quaternion.Euler(180 * elapsedTime / waveCooldown, -65, 0);
-            yield return null;
+            directionalLight.rotation = Quaternion.Euler(Mathf.Clamp((180 * elapsedTime / waveCooldown) + 30, 30, 190), -65, 0);
+            yield return new WaitForEndOfFrame();
         }
         StartCoroutine(StartWave(wave));
     }
@@ -306,19 +319,34 @@ public class DemonsSpawnerManager : MonoBehaviour {
         DemonAlive = 0;
         switch (wave) {
             case 1:
-                SetAllDemonsLimit(10, 0, 0, 0, 0);
+                waveCooldown = 30;
+                spawnRate = 1;
+                spawnCooldown = 3;
+                SetAllDemonsLimit(15, 0, 0, 0, 0);
                 break;
             case 2:
-                SetAllDemonsLimit(15, 2, 3, 0, 0);
+                waveCooldown = 40;
+                spawnRate = 1;
+                spawnCooldown = 2;
+                SetAllDemonsLimit(25, 0, 5, 0, 0);
                 break;
             case 3:
-                SetAllDemonsLimit(15, 2, 5, 0, 5);
+                waveCooldown = 50;
+                spawnRate = 2.25f;
+                spawnCooldown = 3;
+                SetAllDemonsLimit(30, 3, 10, 5, 8);
                 break;
             case 4:
-                SetAllDemonsLimit(20, 2, 5, 5, 7);
+                waveCooldown = 60;
+                spawnRate = 2.25f;
+                spawnCooldown = 2;
+                SetAllDemonsLimit(33, 8, 13, 6, 10);
                 break;
             case 5:
-                SetAllDemonsLimit(20, 5, 9, 7, 13);
+                waveCooldown = 60;
+                spawnRate = 3;
+                spawnCooldown = 2;
+                SetAllDemonsLimit(50, 15, 20, 15, 20);
                 break;
         }
     }
@@ -327,9 +355,11 @@ public class DemonsSpawnerManager : MonoBehaviour {
     /// Called when a demon dies.
     /// </summary>
     /// <param name="demons"></param>
-    public void OnDemonDead(IDemons demons) {
+    public void OnDemonDead(IDemons demons, bool addMoney = true) {
         DemonAlive--;
-        MoneyManager.instance.AddMoney(demons.MoneyOnDead * GlobalAttributeMultipliers.MoneyPerKillMultiplier);
+        if (addMoney) {
+            MoneyManager.instance.AddMoney(demons.MoneyOnDead * GlobalAttributeMultipliers.MoneyPerKillMultiplier);
+        }
     }
 
     /// <summary>
@@ -355,5 +385,36 @@ public class DemonsSpawnerManager : MonoBehaviour {
     public IEnumerator TutorialPlayerTest3() {
         StartCoroutine(EndWave());
         yield return null;
+    }
+
+    void MultiplyStat(GameObject demon) {
+        switch (demon.GetComponent<IDemons>().DemonType) {
+            case Enum_DemonTypes.Goblin:
+                demon.GetComponent<GoblinDemonBehavior>().HitPoint *= statMultiplier;
+                demon.GetComponent<GoblinDemonBehavior>().StartDamage *= statMultiplier;
+                demon.GetComponent<GoblinDemonBehavior>().ResetAttack();
+                demon.GetComponent<GoblinDemonBehavior>().StartWalkSpeed *= 1 + (1 - statMultiplier) / 2;
+                demon.GetComponent<DemonsMovement>().ResetWalkSpeed();
+                demon.GetComponent<GoblinDemonBehavior>().AttackCooldown /= statMultiplier;
+                break;
+            case Enum_DemonTypes.Werewolf:
+                demon.GetComponent<WerewolfDemonBehavior>().HitPoint *= statMultiplier;
+                demon.GetComponent<WerewolfDemonBehavior>().StartWalkSpeed *= 1 + (1 - statMultiplier) / 2;
+                demon.GetComponent<DemonsMovement>().ResetWalkSpeed();
+                break;
+            case Enum_DemonTypes.Yeti:
+                demon.GetComponent<YetiDemonBehavior>().HitPoint *= statMultiplier;
+                demon.GetComponent<YetiDemonBehavior>().StartDamage *= statMultiplier;
+                demon.GetComponent<YetiDemonBehavior>().ResetAttack();
+                demon.GetComponent<YetiDemonBehavior>().StartWalkSpeed *= 1 + (1 - statMultiplier) / 2;
+                demon.GetComponent<DemonsMovement>().ResetWalkSpeed();
+                demon.GetComponent<YetiDemonBehavior>().AttackCooldown /= statMultiplier;
+                break;
+            case Enum_DemonTypes.Phantom:
+                demon.GetComponent<PhantomDemonBehavior>().HitPoint *= statMultiplier;
+                demon.GetComponent<PhantomDemonBehavior>().StartWalkSpeed *= 1 + (1 - statMultiplier) / 2;
+                demon.GetComponent<DemonsMovement>().ResetWalkSpeed();
+                break;
+        }
     }
 }

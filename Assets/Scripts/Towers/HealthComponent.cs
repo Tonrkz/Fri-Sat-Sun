@@ -9,4 +9,8 @@ public class HealthComponent : MonoBehaviour, IDamagable {
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
     }
+
+    public void AddKnockback(Vector3 knockback) {
+        throw new NotImplementedException();
+    }
 }

@@ -31,7 +31,7 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
 
 
     [Header("Money Attributes")]
-    [SerializeField] int upgradeCost = MoneyManager.attackerTowerBuildCost;
+    int upgradeCost = MoneyManager.attackerTowerBuildCost;
     public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
 
 
@@ -130,6 +130,8 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
     }
 
     public void UpgradeTower() {
+        Level++;
+        BuildCost += UpgradeCost;
         // Upgrade Every Level
         if (FireRate > upgradeFireRate) {
             FireRate -= upgradeFireRate;
@@ -150,12 +152,11 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
             soldierAttackSpeed += upgradeSoldierAttackSpeed;
         }
 
-        // Upgrade Every 4 Levels
-        if (Level % 4 == 0 && attackUnit < 3) {
+        // Upgrade Every Odd Levels
+        if (Level % 2 == 1 && attackUnit < 3) {
             attackUnit++;
         }
-        Level++;
-        upgradeCost = (int)(MoneyManager.rangedTowerBuildCost * Mathf.Pow(level, MoneyManager.upgradePriceExponent));
+        UpgradeCost += (int)(Mathf.Pow(UpgradeCost, MoneyManager.upgradePriceExponent));
         Debug.Log($"{TowerName} upgraded");
     }
 
@@ -165,8 +166,11 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
     }
 
     public void Activate() {
-        GameObject aSoldier = Instantiate(attackerSoldierPrefab, transform.position, Quaternion.identity);
-        SetSoldierAttributes(aSoldier);
+        for (int i = 0 ; i < attackUnit ; i++) {
+            GameObject aSoldier = Instantiate(attackerSoldierPrefab, transform.position, Quaternion.identity);
+            SetSoldierAttributes(aSoldier);
+        }
+
         Debug.Log($"{TowerName} activated");
         AssignedWord = null;
         StartCoroutine(GetNewWord());
@@ -199,7 +203,7 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
 
     void SetSoldierAttributes(GameObject soldier) {
         soldier.GetComponent<ISoldiers>().BaseTower = gameObject;
-        soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint * GlobalAttributeMultipliers.SoldierHitPointMultiplier;
+        soldier.GetComponent<IDamagable>().HitPoint = soldierHitPoint * GlobalAttributeMultipliers.SoldierHitPointMultiplier;
         soldier.GetComponent<NormalSoldierBehavior>().WalkSpeed = soldierWalkSpeed * GlobalAttributeMultipliers.SoldierWalkSpeedMultiplier;
         soldier.GetComponent<NormalSoldierBehavior>().AcceptableRadius = soldierAcceptableRadius;
         soldier.GetComponent<NormalSoldierBehavior>().Damage = soldierDamage * GlobalAttributeMultipliers.SoldierDamageMultiplier;

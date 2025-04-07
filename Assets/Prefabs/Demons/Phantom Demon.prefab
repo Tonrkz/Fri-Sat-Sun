@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1975301545574397154}
   - component: {fileID: -4442469277996104607}
   - component: {fileID: -2204621155732318736}
+  - component: {fileID: 4849413679048553508}
   m_Layer: 7
   m_Name: Phantom Demon
   m_TagString: Phantom
@@ -68,7 +69,7 @@ Rigidbody:
   m_GameObject: {fileID: 2838582429635018128}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.175
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -82,7 +83,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -101,11 +102,12 @@ MonoBehaviour:
   rb: {fileID: 1975301545574397154}
   render: {fileID: 4324102490571063635}
   movement: {fileID: -2204621155732318736}
+  floatingTextPrefab: {fileID: 2596864824031655447, guid: c0bdc9dceccc6f84498b687ea8ff836d, type: 3}
   state: 0
-  hitPoint: 50
-  moneyOnDead: 70
+  hitPoint: 70
+  moneyOnDead: 40
   startWalkSpeed: 1.25
-  acceptableRadius: 0.33
+  acceptableRadius: 0.5
   delayCalculateTime: 1
 --- !u!114 &-2204621155732318736
 MonoBehaviour:
@@ -121,6 +123,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkPath: []
   walkTarget: {fileID: 0}
+--- !u!135 &4849413679048553508
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2838582429635018128}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 2147484535
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.25
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4702585756037912314
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,7 +172,7 @@ Transform:
   m_GameObject: {fileID: 4702585756037912314}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: -1, z: -0.5}
+  m_LocalPosition: {x: 0, y: -0.695, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []

@@ -9,7 +9,7 @@ public class MoneyManager : MonoBehaviour {
     [SerializeField] TextMeshProUGUI moneyText; // Text to display the current money
 
     [Header("Attributes")]
-    public Single startingMoney = 75; // Starting money
+    public Single startingMoney = 140; // Starting money
     public Single money = 0; // Current money
     public Single moneyPerSecond = 4f; // Money per second
     public bool IsAddingMoney { get; set; } = false; // Is the money being added?
@@ -20,7 +20,7 @@ public class MoneyManager : MonoBehaviour {
     public static readonly Byte attackerTowerBuildCost = 100; // Cost to build an attacker tower
     public static readonly Byte rangedTowerBuildCost = 150; // Cost to build a ranged tower
     public static readonly Byte supplyTowerBuildCost = 200; // Cost to build a supply tower
-    public static readonly Byte mageTowerBuildCost = 250; // Cost to build a mage tower
+    public static readonly Byte mageTowerBuildCost = 200; // Cost to build a mage tower
 
     [Header("Upgrade Attributes")]
     public static readonly float upgradePriceExponent = 0.75f; // Exponent for the upgrade price
