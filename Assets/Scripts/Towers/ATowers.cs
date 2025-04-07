@@ -12,6 +12,7 @@ public class ATowers : MonoBehaviour, ITowers {
     [SerializeField] protected AnimatorRenderer render;
     [SerializeField] protected HealthComponent health;
     [SerializeField] protected Light selfLight;
+    [SerializeField] protected GameObject towerRangeShow;
 
 
 
@@ -116,11 +117,19 @@ public class ATowers : MonoBehaviour, ITowers {
             DOVirtual.Color(transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetColor("_Tint"), new Color(1, 1, 1, 1), 0.15f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", x));
             //transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
             transform.GetChild(1).gameObject.SetActive(true);
+
+            // Show Tower Range
+            if (gameObject.GetComponent<IActivatables>() != null) {
+                towerRangeShow.transform.localScale = Vector3.one * gameObject.GetComponent<IActivatables>().TowerRange;
+
+                towerRangeShow.gameObject.SetActive(true);
+            }
         }
         else {
             DOVirtual.Color(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0.25f), 0.15f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", x));
             //transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 0.25f));
             transform.GetChild(1).gameObject.SetActive(false);
+            towerRangeShow.gameObject.SetActive(false);
         }
     }
 
@@ -128,5 +137,6 @@ public class ATowers : MonoBehaviour, ITowers {
         DOVirtual.Color(transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetColor("_Tint"), new Color(1, 1, 1, 1), 0.15f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", x));
         //transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
         transform.GetChild(1).gameObject.SetActive(true);
+        towerRangeShow.gameObject.SetActive(false);
     }
 }
