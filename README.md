@@ -9,6 +9,7 @@
 - Repository: https://github.com/Tonrkz/Fri-Sat-Sun
 
 ### Version
+- Final Game Presentation: https://www.canva.com/design/DAGj3T-8X5M/mlZUYKFRVn4yE7wTLOaKew/view?utm_content=DAGj3T-8X5M&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5bdeb2ea67
 - Game Design Presentation V1.3: https://www.canva.com/design/DAGfFtYGrek/9W_7i0KiL36UO3J7w4Z0ew/view?utm_content=DAGfFtYGrek&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hac40134e65
 - Game Design Presentation V1.2: https://www.canva.com/design/DAGdr7YFaM8/FURwNVz23dtQ4wPx_U6KMw/view?utm_content=DAGdr7YFaM8&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h06f30e1c57
 - Game Design Presentation V1.1: https://www.canva.com/design/DAGb3uRBMQs/Gw7Nq7P8TH8faJuaN-3YnQ/view?utm_content=DAGb3uRBMQs&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h8ad95b0be2
