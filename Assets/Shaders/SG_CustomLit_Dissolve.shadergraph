@@ -1270,10 +1270,10 @@
     "m_Guid": {
         "m_GuidSerialized": "1ad922f5-0b10-4847-8957-640128471b07"
     },
-    "m_Name": "TextureTint",
+    "m_Name": "Tint",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "TextureTint",
-    "m_DefaultReferenceName": "_TextureTint",
+    "m_RefNameGeneratedByDisplayName": "Tint",
+    "m_DefaultReferenceName": "_Tint",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -4620,7 +4620,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
     "m_ObjectId": "bc1d9d2fc9e141918bb2f111d6a48641",
     "m_Id": 0,
-    "m_DisplayName": "TextureTint",
+    "m_DisplayName": "Tint",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",

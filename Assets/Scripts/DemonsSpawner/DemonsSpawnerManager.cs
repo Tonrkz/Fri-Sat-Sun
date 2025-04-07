@@ -165,9 +165,10 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
         Enum_DemonTypes lastDemon = Enum_DemonTypes.Goblin;
         isSpawning = true;
-        directionalLight.GetComponent<Light>().DOColor(new Color32(117, 147, 255, 255), 0);
-        directionalLight.GetComponent<Light>().DOIntensity(0.33f, 0);
-        directionalLight.DORotate(new Vector3(30, -65, 0), 10f);
+        directionalLight.GetComponent<Light>().DOColor(new Color32(117, 147, 255, 255), 5);
+        directionalLight.GetComponent<Light>().DOIntensity(0.4f, 2);
+        directionalLight.rotation = Quaternion.Euler(0, -65, 0);
+        directionalLight.DORotate(new Vector3(30, -65, 0), 20f);
 
         bool halfWave = false;
 
@@ -291,8 +292,8 @@ public class DemonsSpawnerManager : MonoBehaviour {
         progressBarHandle.DORotate(new Vector3(0, 0, 90), 0.2f);
         CalculateNextWaveDemonLimit();
 
-        directionalLight.GetComponent<Light>().DOColor(Color.white, 0);
-        directionalLight.GetComponent<Light>().DOIntensity(1, 0);
+        directionalLight.GetComponent<Light>().DOColor(Color.white, 5);
+        directionalLight.GetComponent<Light>().DOIntensity(1f, 0);
 
         if (wave > 1) {
             GodsOfferingManager.instance.InitiateGodOfferingsUI();
@@ -304,7 +305,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
         while (elapsedTime < waveCooldown) {
             elapsedTime += Time.deltaTime;
             progressBarHandle.rotation = Quaternion.Euler(0, 0, 90 - 90 * elapsedTime / waveCooldown);
-            directionalLight.rotation = Quaternion.Euler(180 * elapsedTime / waveCooldown, -65, 0);
+            directionalLight.rotation = Quaternion.Euler(Mathf.Clamp((180 * elapsedTime / waveCooldown) + 30, 30, 190), -65, 0);
             yield return new WaitForEndOfFrame();
         }
         StartCoroutine(StartWave(wave));

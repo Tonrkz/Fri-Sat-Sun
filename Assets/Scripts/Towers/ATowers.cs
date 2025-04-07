@@ -11,6 +11,7 @@ public class ATowers : MonoBehaviour, ITowers {
     [SerializeField] protected TextMeshPro towerNameText;
     [SerializeField] protected AnimatorRenderer render;
     [SerializeField] protected HealthComponent health;
+    [SerializeField] protected Light selfLight;
 
 
 
@@ -88,7 +89,10 @@ public class ATowers : MonoBehaviour, ITowers {
         BuildManager.instance.builtTowerList.Remove(gameObject);
 
         // Play dead animation
-        render.PlayAnimation(render.HURT);
+        if (selfLight != null) {
+            selfLight.gameObject.SetActive(false);
+        }
+        render.PlayAnimation(render.DEAD, 0);
     }
 
     public virtual void ChangeTowerState(Enum newState) {
