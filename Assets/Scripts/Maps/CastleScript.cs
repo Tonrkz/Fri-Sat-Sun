@@ -14,12 +14,13 @@ public class CastleScript : MonoBehaviour {
             health--;
             Debug.Log($"Health: {health}");
 
-            fire[health - 1].gameObject.SetActive(true);
-            fire[health - 1].Play();
-
             if (health <= 0) {
                 UserInterfaceManager.instance.LoadSceneViaName("Scene_End");
             }
+
+            fire[health - 1].gameObject.SetActive(true);
+            fire[health - 1].Play();
+
         }
     }
 }
