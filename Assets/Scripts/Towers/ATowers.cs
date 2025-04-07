@@ -88,7 +88,7 @@ public class ATowers : MonoBehaviour, ITowers {
         BuildManager.instance.builtTowerList.Remove(gameObject);
 
         // Play dead animation
-        render.PlayAnimation("Dead");
+        render.PlayAnimation(render.HURT);
     }
 
     public virtual void ChangeTowerState(Enum newState) {

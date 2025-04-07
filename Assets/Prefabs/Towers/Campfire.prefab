@@ -230,15 +230,15 @@ MonoBehaviour:
   normalSoldierPrefab: {fileID: 2225985748608282072, guid: 9e7ebc637e9b00b48b9a3d16b6fc7608, type: 3}
   level: 1
   buildTime: 3
-  startFireRate: 1
+  startFireRate: 0.5
   towerRange: 3
-  soldierHitPoint: 100
+  soldierHitPoint: 40
   soldierWalkSpeed: 2
-  soldierAcceptableRadius: 0.33
+  soldierAcceptableRadius: 0.5
   soldierDamage: 20
   soldierSightRange: 1.5
   soldierAttackSpeed: 1
-  soldierAttackCooldown: 1.5
+  soldierAttackCooldown: 1.2
   soldierAttackRange: 1
   soldierCanSeePhantom: 0
 --- !u!114 &4842633970787108065

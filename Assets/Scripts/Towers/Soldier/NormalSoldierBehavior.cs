@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
+public class NormalSoldierBehavior : MonoBehaviour, ISoldiers, IDamagable {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] AnimatorRenderer render;
+    [SerializeField] GameObject floatingTextPrefab;
 
 
 
@@ -72,13 +74,13 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 break;
             case Enum_NormalSoldierState.Idle:
                 StartCoroutine(CheckForTarget());
-                if (Vector3.Distance(transform.position, walkPosition) > 2f) {
+                if (Vector3.Distance(transform.position, walkPosition) > 1.25f) {
                     // Don't forget to fix this
                     ChangeState(Enum_NormalSoldierState.Initiate);
                 }
                 break;
             case Enum_NormalSoldierState.Engage:
-                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed() || Vector3.Distance(transform.position, attackTarget.transform.position) > SightRange) {
+                if (attackTarget.GetComponent<IDamagable>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed() || Vector3.Distance(transform.position, attackTarget.transform.position) > SightRange) {
                     attackTarget = null;
                     ChangeState(Enum_NormalSoldierState.Initiate);
                     return;
@@ -89,14 +91,14 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 }
                 break;
             case Enum_NormalSoldierState.Attack:
-                if (attackTarget.GetComponent<IDemons>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed() || Vector3.Distance(transform.position, attackTarget.transform.position) > AttackRange) {
+                if (attackTarget.GetComponent<IDamagable>().HitPoint <= 0 || attackTarget.gameObject.IsDestroyed() || Vector3.Distance(transform.position, attackTarget.transform.position) > AttackRange) {
                     attackTarget = null;
                     ChangeState(Enum_NormalSoldierState.Initiate);
                     return;
                 }
 
                 if (Time.time > lastAttackTime + AttackCooldown) {
-                    render.PlayAnimation("Attack");
+                    render.PlayAnimation(render.ATTACK, 0);
                 }
                 break;
             case Enum_NormalSoldierState.Die:
@@ -160,8 +162,13 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
                 render.PlayAnimation("Idle");
                 break;
             case Enum_NormalSoldierState.Die:
-                // Play Die Animation
-                render.PlayAnimation("Dead");
+                // Disabled Hitbox
+                GetComponent<Rigidbody>().Sleep();
+                GetComponent<SphereCollider>().enabled = false;
+                GetComponent<CapsuleCollider>().excludeLayers = LayerMask.GetMask("Demon");
+
+                // Play Animation
+                render.PlayAnimation(render.DEAD);
                 break;
             default:
                 ChangeState(Enum_NormalSoldierState.Initiate);
@@ -187,6 +194,10 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     }
 
     IEnumerator CheckForTarget() {
+        if (attackTarget != null) {
+            ChangeState(Enum_NormalSoldierState.Engage);
+        }
+
         Collider[] colliders = Physics.OverlapSphere(transform.position, SightRange, DemonLayer);
         if (CanSeePhantom) {
             foreach (Collider collider in colliders) {
@@ -229,14 +240,14 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
     public void Attack(GameObject target) {
         lastAttackTime = Time.time;
 
-        Single knockbackForce = 2f;
+        Single knockbackForce = 3f;
 
         // Calculate knockback direction
         Vector3 knockbackDirection = attackTarget.transform.position - transform.position;
         knockbackDirection.Normalize();
 
-        target.GetComponent<IDemons>().AddKnockback(knockbackDirection * knockbackForce);
-        target.GetComponent<IDemons>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier);  // Don't forget to fix this
+        target.GetComponent<IDamagable>().AddKnockback(knockbackDirection * knockbackForce);
+        target.GetComponent<IDamagable>().TakeDamage(Damage * GlobalAttributeMultipliers.SoldierDamageMultiplier);  // Don't forget to fix this
         Debug.Log($"{gameObject} Attack");
     }
 
@@ -254,11 +265,26 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+        ShowFloatingText();
+
+        void ShowFloatingText() {
+            if (HitPoint > 0 && floatingTextPrefab) {
+                var floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+                floatingText.GetComponent<TextMeshPro>().SetText(((int)HitPoint).ToString());
+            }
+        }
     }
 
     public void AddKnockback(Vector3 knockback) {
         // Add a knockback
         rb.AddForce(knockback, ForceMode.Impulse);
+        StartCoroutine(WaitForHurtAnimation());
         render.PlayAnimation(render.HURT, 0, 1);
+
+        IEnumerator WaitForHurtAnimation() {
+            ChangeState(Enum_NormalSoldierState.Hurt);
+            yield return new WaitForSeconds(render.animator.GetCurrentAnimatorStateInfo(0).length);
+            ChangeState(Enum_NormalSoldierState.Initiate);
+        }
     }
 }

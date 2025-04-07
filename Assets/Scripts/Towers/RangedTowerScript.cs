@@ -38,7 +38,7 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
 
 
     [Header("Money Attributes")]
-    [SerializeField] int upgradeCost = MoneyManager.rangedTowerBuildCost;
+    int upgradeCost = MoneyManager.rangedTowerBuildCost;
     public int UpgradeCost { get => upgradeCost; set => upgradeCost = value; }
 
 
@@ -128,6 +128,8 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
     }
 
     public void UpgradeTower() {
+        Level++;
+        BuildCost += UpgradeCost;
         // Upgrade Every Level
         TowerRange += upgradeTowerRange;
 
@@ -140,12 +142,11 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
         ArrowSpeed += upgradeArrowSpeed;
         ArrowDamage += upgradeArrowDamage;
 
-        // Upgrade Every 2 Levels
-        if (Level % 2 == 0 && attackUnit < 5) {
+        // Upgrade Every Odd Levels
+        if (Level % 2 == 1 && attackUnit < 5) {
             attackUnit += 1;
         }
-        UpgradeCost = (int)(MoneyManager.rangedTowerBuildCost * Mathf.Pow(level, MoneyManager.upgradePriceExponent));
-        level++;
+        UpgradeCost += (int)(Mathf.Pow(UpgradeCost, MoneyManager.upgradePriceExponent));
         Debug.Log($"{TowerName} upgraded");
     }
 

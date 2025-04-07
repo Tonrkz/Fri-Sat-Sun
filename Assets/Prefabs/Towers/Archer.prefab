@@ -232,13 +232,12 @@ MonoBehaviour:
   arrowSpawnPoint: {fileID: 8473894353468488687}
   level: 1
   attackUnit: 1
-  startFireRate: 1
+  startFireRate: 1.5
   towerRange: 5
   arrowSpeed: 10
-  arrowDamage: 50
-  upgradeCost: 150
-  upgradeTowerRange: 0.2
-  upgradeFireRate: 0.1
+  arrowDamage: 30
+  upgradeTowerRange: 0.5
+  upgradeFireRate: 0.2
   upgradeArrowSpeed: 0.2
   upgradeArrowDamage: 5
   DemonLayer:

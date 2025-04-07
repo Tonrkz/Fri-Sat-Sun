@@ -358,13 +358,13 @@ MonoBehaviour:
   activeRadius: {fileID: 5959679933665240961}
   level: 1
   startFireRate: 1
-  towerRange: 7.5
+  towerRange: 10
   mageMultiplier: 1
   duration: 5
   slowDownPercent: 0.25
   ATKDownPercent: 0.25
   ATKSpeedUpPercent: 0.25
-  upgradeCost: 250
+  upgradeCost: 200
   upgradeTowerRange: 0.2
   upgradeFireRate: 0.1
   upgradeMageMultiplier: 0.1

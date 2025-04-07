@@ -230,22 +230,21 @@ MonoBehaviour:
   attackerSoldierPrefab: {fileID: 2225985748608282072, guid: b5774b0d464940143acbfec0be978239, type: 3}
   level: 1
   attackUnit: 1
-  startFireRate: 1
+  startFireRate: 1.5
   towerRange: 3
-  upgradeCost: 100
-  upgradeFireRate: 0.1
+  upgradeFireRate: 0.2
   upgradeSoldierHitPoint: 10
   upgradeSoldierWalkSpeed: 0.2
-  upgradeSoldierDamage: 5
+  upgradeSoldierDamage: 10
   upgradeSoldierAttackSpeed: 0.1
-  upgradeSoldierAttackCooldown: 0.1
-  soldierHitPoint: 150
+  upgradeSoldierAttackCooldown: 0.15
+  soldierHitPoint: 50
   soldierWalkSpeed: 2
-  soldierAcceptableRadius: 0.33
+  soldierAcceptableRadius: 0.5
   soldierDamage: 30
   soldierSightRange: 2
   soldierAttackSpeed: 1
-  soldierAttackCooldown: 1
+  soldierAttackCooldown: 1.2
   soldierAttackRange: 1
   soldierCanSeePhantom: 0
 --- !u!114 &5852964591741663799

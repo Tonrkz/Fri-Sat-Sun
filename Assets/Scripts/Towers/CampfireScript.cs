@@ -190,7 +190,7 @@ public class CampfireScript : ATowers, IActivatables {
 
     void SetSoldierAttributes(GameObject soldier) {
         soldier.GetComponent<ISoldiers>().BaseTower = gameObject;
-        soldier.GetComponent<ISoldiers>().HitPoint = soldierHitPoint * GlobalAttributeMultipliers.SoldierHitPointMultiplier;
+        soldier.GetComponent<IDamagable>().HitPoint = soldierHitPoint * GlobalAttributeMultipliers.SoldierHitPointMultiplier;
         soldier.GetComponent<NormalSoldierBehavior>().WalkSpeed = soldierWalkSpeed * GlobalAttributeMultipliers.SoldierWalkSpeedMultiplier;
         soldier.GetComponent<NormalSoldierBehavior>().AcceptableRadius = soldierAcceptableRadius;
         soldier.GetComponent<NormalSoldierBehavior>().Damage = soldierDamage * GlobalAttributeMultipliers.SoldierDamageMultiplier;

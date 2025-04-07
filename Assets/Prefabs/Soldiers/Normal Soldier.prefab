@@ -192,7 +192,7 @@ Rigidbody:
   m_GameObject: {fileID: 2225985748608282072}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.175
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -202,7 +202,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
@@ -224,6 +224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 4737402720248959742}
   render: {fileID: 67882232344231926}
+  floatingTextPrefab: {fileID: 2596864824031655447, guid: c0bdc9dceccc6f84498b687ea8ff836d, type: 3}
   state: 0
   delayCalculateTime: 0.25
   occupiedPath: {fileID: 0}

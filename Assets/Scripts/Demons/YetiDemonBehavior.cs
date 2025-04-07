@@ -1,14 +1,16 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
+public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamagable {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] AnimatorRenderer render;
     [SerializeField] DemonsMovement movement;
+    [SerializeField] GameObject floatingTextPrefab;
 
 
 
@@ -74,7 +76,7 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 render.PlayAnimation("Idle");
                 break;
             case Enum_YetiDemonState.Walk:
-                render.PlayAnimation("Walk");
+                render.PlayAnimation(render.WALK);
                 if (attackTarget != null) {
                     if (Vector3.Distance(transform.position, attackTarget.transform.position) <= AttackRange) {
                         state = Enum_YetiDemonState.Attack;
@@ -86,13 +88,12 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 CheckForTarget();
                 break;
             case Enum_YetiDemonState.Attack:
-                if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<ISoldiers>().HitPoint <= 0) {
+                if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<IDamagable>().HitPoint <= 0) {
                     attackTarget = null;
                     state = Enum_YetiDemonState.Walk;
                 }
                 break;
             case Enum_YetiDemonState.Dead:
-                render.PlayAnimation("Dead");
                 break;
             default:
                 break;
@@ -112,7 +113,7 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 break;
             case Enum_YetiDemonState.Attack:
                 // Change to walking if attack target is out of reach
-                if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<ISoldiers>().HitPoint <= 0 || Vector3.Distance(transform.position, attackTarget.transform.position) > attackRange) {
+                if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<IDamagable>().HitPoint <= 0 || Vector3.Distance(transform.position, attackTarget.transform.position) > attackRange) {
                     attackTarget = null;
                     state = Enum_YetiDemonState.Walk;
                     return;
@@ -122,7 +123,7 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 //Deal Damage
                 try {
                     if (Time.time > lastAttackTime + AttackCooldown) {
-                        render.PlayAnimation("Attack");
+                        render.PlayAnimation(render.ATTACK);
                     }
                 }
                 catch {
@@ -131,7 +132,13 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
                 }
                 break;
             case Enum_YetiDemonState.Dead:
-                Dead();
+                // Disabled Hitbox
+                GetComponent<Rigidbody>().Sleep();
+                GetComponent<SphereCollider>().enabled = false;
+                GetComponent<CapsuleCollider>().excludeLayers = LayerMask.GetMask("Soldier");
+
+                // Play Animation
+                render.PlayAnimation(render.DEAD, 0);
                 break;
             default:
                 break;
@@ -152,8 +159,8 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
         knockbackDirection.Normalize();
         knockbackDirection *= knockbackForce;
 
-        target.gameObject.GetComponent<ISoldiers>().AddKnockback(knockbackDirection * knockbackForce);
-        target.gameObject.GetComponent<ISoldiers>().TakeDamage(Damage); // Don't forget to fix this
+        target.gameObject.GetComponent<IDamagable>().AddKnockback(knockbackDirection * knockbackForce);
+        target.gameObject.GetComponent<IDamagable>().TakeDamage(Damage); // Don't forget to fix this
     }
 
     public IEnumerator AttackDown(Single atkDownPercent) {
@@ -184,12 +191,28 @@ public class YetiDemonBehavior : MonoBehaviour, IDemons, IAttackables {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+
+        ShowFloatingText();
+
+        void ShowFloatingText() {
+            if (HitPoint > 0 && floatingTextPrefab) {
+                var floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+                floatingText.GetComponent<TextMeshPro>().SetText(((int)HitPoint).ToString());
+            }
+        }
     }
 
     public void AddKnockback(Vector3 knockback) {
         // Add a knockback
         rb.AddForce(knockback, ForceMode.Impulse);
-        render.PlayAnimation(render.HURT, 0, 1);
+        StartCoroutine(WaitForHurtAnimation());
+        render.PlayAnimation(render.HURT, 0);
+
+        IEnumerator WaitForHurtAnimation() {
+            state = Enum_YetiDemonState.Hurt;
+            yield return new WaitForSeconds(render.animator.GetCurrentAnimatorStateInfo(0).length);
+            state = Enum_YetiDemonState.Walk;
+        }
     }
 
     public void CheckForTarget() {

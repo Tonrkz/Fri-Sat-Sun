@@ -26,8 +26,6 @@ public class ActivateTyperScript : MonoBehaviour {
             return;
         }
         if (Input.GetKeyDown(KeyCode.Space) && selectedTower != null) {
-            PlayerTowerSelectionHandler.instance.OnTowerDeselected.Invoke();
-            selectedTower.GetComponent<ATowers>().IsSelected = false;
             WordManager.instance.AssignWord(selectedTower.GetComponent<IActivatables>());
             selectedTower = null;
         }

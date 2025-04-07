@@ -4,12 +4,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 using DG.Tweening;
 using System.Collections;
+using TMPro;
 
-public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
+public class WerewolfDemonBehavior : MonoBehaviour, IDemons, IDamagable {
     [Header("References")]
     [SerializeField] Rigidbody rb;
     [SerializeField] AnimatorRenderer render;
     [SerializeField] DemonsMovement movement;
+    [SerializeField] GameObject floatingTextPrefab;
 
 
 
@@ -52,13 +54,12 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
         lastCalculateTime = Time.time;
         switch (state) {
             case Enum_WerewolfDemonState.Walk:
-                render.PlayAnimation("Walk");
+                render.PlayAnimation(render.WALK);
                 if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
                     movement.walkTarget = movement.GetNextWalkTarget();
                 }
                 break;
             case Enum_WerewolfDemonState.Dead:
-                render.PlayAnimation("Dead");
                 break;
             default:
                 break;
@@ -71,7 +72,13 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
                 Move(movement.walkTarget.transform.position);
                 break;
             case Enum_WerewolfDemonState.Dead:
-                Dead();
+                // Disabled Hitbox
+                GetComponent<Rigidbody>().Sleep();
+                GetComponent<SphereCollider>().enabled = false;
+                GetComponent<CapsuleCollider>().excludeLayers = LayerMask.GetMask("Soldier");
+
+                // Play Animation
+                render.PlayAnimation(render.DEAD);
                 break;
             default:
                 break;
@@ -99,11 +106,27 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons {
 
     public void TakeDamage(Single damage) {
         HitPoint -= damage;
+
+        ShowFloatingText();
+
+        void ShowFloatingText() {
+            if (HitPoint > 0 && floatingTextPrefab) {
+                var floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+                floatingText.GetComponent<TextMeshPro>().SetText(((int)HitPoint).ToString());
+            }
+        }
     }
 
     public void AddKnockback(Vector3 knockback) {
         // Add a knockback
         rb.AddForce(knockback, ForceMode.Impulse);
-        render.PlayAnimation(render.HURT, 0, 1);
+        StartCoroutine(WaitForHurtAnimation());
+        render.PlayAnimation(render.HURT, 0);
+
+        IEnumerator WaitForHurtAnimation() {
+            state = Enum_WerewolfDemonState.Hurt;
+            yield return new WaitForSeconds(render.animator.GetCurrentAnimatorStateInfo(0).length);
+            state = Enum_WerewolfDemonState.Walk;
+        }
     }
 }

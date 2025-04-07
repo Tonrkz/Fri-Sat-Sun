@@ -33,15 +33,15 @@ public class ArrowScript : MonoBehaviour {
         Debug.Log($"OnTriggerStay {other}");
         if (other.gameObject == target) {
 
-            Single knockbackForce = 2f;
+            Single knockbackForce = 1.5f;
 
             // Calculate knockback direction
             Vector3 knockbackDirection = other.transform.position - transform.position;
             knockbackDirection.Normalize();
             knockbackDirection *= knockbackForce;
 
-            other.GetComponent<IDemons>().TakeDamage(damage);
-            other.GetComponent<IDemons>().AddKnockback(knockbackDirection * knockbackForce);
+            other.GetComponent<IDamagable>().TakeDamage(damage);
+            other.GetComponent<IDamagable>().AddKnockback(knockbackDirection * knockbackForce);
             Destroy(gameObject);
         }
     }
