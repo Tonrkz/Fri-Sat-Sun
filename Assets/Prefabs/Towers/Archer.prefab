@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2860960400459824051}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -0.7}
+  m_LocalPosition: {x: 0, y: 1.25, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -208,7 +208,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!95 &3219152788688805998
 Animator:
@@ -352,6 +352,7 @@ MonoBehaviour:
   health: {fileID: 842488624390130929}
   selfLight: {fileID: 1675655121468358220}
   towerRangeShow: {fileID: 9059437316904219142}
+  floatingTextPrefab: {fileID: 2596864824031655447, guid: c0bdc9dceccc6f84498b687ea8ff836d, type: 3}
   occupiedGround: {fileID: 0}
   arrowPrefab: {fileID: 4342468968940038269, guid: dd308c9c45a031d4d945cf11d3e1f034, type: 3}
   arrowSpawnPoint: {fileID: 8473894353468488687}
@@ -360,11 +361,11 @@ MonoBehaviour:
   startFireRate: 1.5
   towerRange: 5
   arrowSpeed: 10
-  arrowDamage: 30
+  arrowDamage: 60
   upgradeTowerRange: 0.5
   upgradeFireRate: 0.2
   upgradeArrowSpeed: 0.2
-  upgradeArrowDamage: 5
+  upgradeArrowDamage: 10
   DemonLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -422,6 +423,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4697274530888026758}
   - component: {fileID: 4840088148989204134}
+  - component: {fileID: 6101792624928419932}
   m_Layer: 8
   m_Name: Tower Range
   m_TagString: Untagged
@@ -499,6 +501,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!210 &6101792624928419932
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9059437316904219142}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -1
+  m_SortAtRoot: 0
 --- !u!1001 &1086573273006278124
 PrefabInstance:
   m_ObjectHideFlags: 0

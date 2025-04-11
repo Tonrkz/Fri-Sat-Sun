@@ -9,6 +9,7 @@ public interface IDemons {
     public Single WalkSpeed { get; set; }
     public Single MoneyOnDead { get; set; }
 
+    public void ChangeDemonState(Enum newState);
     public void Move(Vector3 position);
     public IEnumerator Dead();
 }

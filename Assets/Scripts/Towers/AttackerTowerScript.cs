@@ -131,21 +131,28 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
 
     public void UpgradeTower() {
         Level++;
+        render.PlayAnimation(render.UPGRADE, 0);
         BuildCost += UpgradeCost;
         // Upgrade Every Level
         if (FireRate > upgradeFireRate) {
             FireRate -= upgradeFireRate;
         }
-        if (soldierAttackCooldown > upgradeSoldierAttackCooldown) {
-            soldierAttackCooldown += upgradeSoldierAttackCooldown;
-        }
+
+        //if (soldierAttackCooldown > upgradeSoldierAttackCooldown) {
+        //    soldierAttackCooldown += upgradeSoldierAttackCooldown;
+        //    // Show upgrade text
+        //    ShowFloatingText("Soldier Attack Speed Upgraded");
+        //}
+
         soldierHitPoint += upgradeSoldierHitPoint;
         soldierWalkSpeed += upgradeSoldierWalkSpeed;
         soldierDamage += upgradeSoldierDamage;
 
-        StartCanSeePhantom = true;
-        CanSeePhantom = StartCanSeePhantom;
-        soldierCanSeePhantom = CanSeePhantom;
+        if (!StartCanSeePhantom) {
+            StartCanSeePhantom = true;
+            CanSeePhantom = StartCanSeePhantom;
+            soldierCanSeePhantom = CanSeePhantom;
+        }
 
         // Upgrade Every 2 Levels
         if (Level % 2 == 0) {
@@ -157,7 +164,38 @@ public class AttackerTowerScript : ATowers, IActivatables, IUpgradables {
             attackUnit++;
         }
         UpgradeCost += (int)(Mathf.Pow(UpgradeCost, MoneyManager.upgradePriceExponent));
+        StartCoroutine(ShowUpgradeText());
         Debug.Log($"{TowerName} upgraded");
+
+        IEnumerator ShowUpgradeText() {
+            float delay = 0.33f;
+            float speed = 0.25f;
+
+            if (FireRate > upgradeFireRate) {
+                ShowFloatingText("Fire Rate Upgraded", speed);
+                yield return new WaitForSeconds(delay);
+            }
+            ShowFloatingText("Soldier HP Upgraded", speed);
+            yield return new WaitForSeconds(delay);
+            ShowFloatingText("Soldier Walk Speed Upgraded", speed);
+            yield return new WaitForSeconds(delay);
+            ShowFloatingText("Soldier Damage Upgraded", speed);
+
+            if (!StartCanSeePhantom) {
+                yield return new WaitForSeconds(delay);
+                ShowFloatingText("Soldier Can Now See Phantom", speed);
+            }
+
+            if (Level % 2 == 0) {
+                yield return new WaitForSeconds(delay);
+                ShowFloatingText("Soldier Attack Speed Upgraded", speed);
+            }
+
+            if (Level % 2 == 1 && attackUnit < 3) {
+                yield return new WaitForSeconds(delay);
+                ShowFloatingText("Deploy Count Upgraded", speed);
+            }
+        }
     }
 
     public override void DestroyTower() {

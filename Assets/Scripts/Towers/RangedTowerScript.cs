@@ -129,12 +129,15 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
 
     public void UpgradeTower() {
         Level++;
+        render.PlayAnimation(render.UPGRADE, 0);
         BuildCost += UpgradeCost;
         // Upgrade Every Level
         TowerRange += upgradeTowerRange;
 
-        StartCanSeePhantom = true;
-        CanSeePhantom = StartCanSeePhantom;
+        if (!StartCanSeePhantom) {
+            StartCanSeePhantom = true;
+            CanSeePhantom = StartCanSeePhantom;
+        }
 
         if (FireRate > upgradeFireRate) {
             FireRate -= upgradeFireRate;
@@ -144,10 +147,38 @@ public class RangedTowerScript : ATowers, IActivatables, IUpgradables {
 
         // Upgrade Every Odd Levels
         if (Level % 2 == 1 && attackUnit < 5) {
-            attackUnit += 1;
+            //attackUnit += 1;
         }
         UpgradeCost += (int)(Mathf.Pow(UpgradeCost, MoneyManager.upgradePriceExponent));
+        StartCoroutine(ShowUpgradeText());
         Debug.Log($"{TowerName} upgraded");
+
+        IEnumerator ShowUpgradeText() {
+            float delay = 0.33f;
+            float speed = 0.25f;
+
+            ShowFloatingText($"Range Upgraded", speed);
+
+            if (!StartCanSeePhantom) {
+                yield return new WaitForSeconds(delay);
+                ShowFloatingText($"Archer Can Now See Phantom", speed);
+            }
+
+            if (FireRate > upgradeFireRate) {
+                yield return new WaitForSeconds(delay);
+                ShowFloatingText($"Fire Rate Upgraded", speed);
+            }
+
+            yield return new WaitForSeconds(delay);
+            ShowFloatingText($"Arrow Speed Upgraded", speed);
+            yield return new WaitForSeconds(delay);
+            ShowFloatingText($"Arrow Damage Upgraded", speed);
+
+            if (Level % 2 == 1 && attackUnit < 5) {
+                yield return new WaitForSeconds(delay);
+                //ShowFloatingText($"Arrow Count Upgraded", speed);
+            }
+        }
     }
 
     public override void DestroyTower() {

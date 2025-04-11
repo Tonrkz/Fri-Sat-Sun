@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4691612752087317860}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -0.7}
+  m_LocalPosition: {x: 0, y: 1.25, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -178,7 +178,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 685e50370accc914ebe7b7d8940ca6e8, type: 3}
+  - {fileID: 2100000, guid: c994b6425cf5c0a4889e7801e44f6238, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -208,7 +208,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!95 &1734909986489507015
 Animator:
@@ -349,7 +349,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 2147483767
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -384,6 +384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2830865018745309474}
   - component: {fileID: 1526097207552498166}
+  - component: {fileID: 487211585413989250}
   m_Layer: 8
   m_Name: Tower Range
   m_TagString: Untagged
@@ -461,6 +462,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!210 &487211585413989250
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7022988915144079104}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -1
+  m_SortAtRoot: 0
 --- !u!1 &7726950801907583317
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,11 +581,12 @@ MonoBehaviour:
   health: {fileID: 3954411295423745799}
   selfLight: {fileID: 8540345114260215112}
   towerRangeShow: {fileID: 7022988915144079104}
+  floatingTextPrefab: {fileID: 2596864824031655447, guid: c0bdc9dceccc6f84498b687ea8ff836d, type: 3}
   occupiedGround: {fileID: 0}
   activeRadius: {fileID: 5959679933665240961}
   level: 1
   startFireRate: 1
-  towerRange: 10
+  towerRange: 5
   mageMultiplier: 1
   duration: 5
   slowDownPercent: 0.25

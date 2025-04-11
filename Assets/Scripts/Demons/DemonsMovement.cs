@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(IDemons), typeof(Rigidbody))]
+[RequireComponent(typeof(ADemons), typeof(Rigidbody))]
 public class DemonsMovement : MonoBehaviour {
     [Header("References")]
-    IDemons demons;
+    ADemons demons;
 
     [Header("Attributes")]
     [SerializeField] List<GameObject> walkPath = new List<GameObject>();
@@ -15,7 +15,7 @@ public class DemonsMovement : MonoBehaviour {
 
     void Start() {
         currentPathIndex = 0;
-        demons = GetComponent<IDemons>();
+        demons = GetComponent<ADemons>();
         switch (demons.DemonType) {
             case Enum_DemonTypes.Werewolf:
                 walkPath = DemonsNavigationManager.instance.ShortcutWalkPath;

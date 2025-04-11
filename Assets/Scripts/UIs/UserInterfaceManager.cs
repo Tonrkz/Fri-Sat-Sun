@@ -83,6 +83,15 @@ public class UserInterfaceManager : MonoBehaviour {
         Time.timeScale = 1;
     }
 
+    public void PlayButtonTutorialCheck() {
+        if (PlayerPrefs.GetInt("PassedTutorial") == 1) {
+            LoadSceneViaName("Scene_MainGame");
+        }
+        else {
+            LoadSceneViaName("Scene_Tutorial");
+        }
+    }
+
     /// <summary>
     /// Quit the game
     /// </summary>
