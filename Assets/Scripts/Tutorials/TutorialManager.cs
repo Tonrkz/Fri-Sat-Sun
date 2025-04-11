@@ -61,7 +61,7 @@ public class TutorialManager : MonoBehaviour {
     };
 
     List<string> towerActivationTutorialMessages = new List<string> {
-        $"Look! The campfire's name has changed.", // 0
+        $"Look! The word above campfire has been changed.", // 0
         $"This signifies your entry into 'Activation Mode'.", // 1
         $"In this mode, you may activate your towers by inputting the word displayed above them.", // 2
         $"Each tower boasts a unique ability upon activation.", // 3

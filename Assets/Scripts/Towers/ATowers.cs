@@ -13,6 +13,7 @@ public class ATowers : MonoBehaviour, ITowers {
     [SerializeField] protected HealthComponent health;
     [SerializeField] protected Light selfLight;
     [SerializeField] protected GameObject towerRangeShow;
+    [SerializeField] protected GameObject floatingTextPrefab;
 
 
 
@@ -139,5 +140,13 @@ public class ATowers : MonoBehaviour, ITowers {
         transform.GetChild(1).gameObject.SetActive(true);
         towerRangeShow.gameObject.SetActive(false);
         IsSelected = false;
+    }
+
+    protected void ShowFloatingText(string message, float speed = 1) {
+        if (floatingTextPrefab) {
+            var floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+            floatingText.GetComponent<TextMeshPro>().SetText(message);
+            floatingText.GetComponent<Animator>().speed = speed;
+        }
     }
 }

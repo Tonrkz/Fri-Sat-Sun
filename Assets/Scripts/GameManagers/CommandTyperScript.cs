@@ -82,6 +82,7 @@ public class CommandTyperScript : MonoBehaviour {
 
         // Forcast Command
         ForecastCommandScript.instance.ForecastCommand(inputString);
+        ForecastCommandScript.instance.ForecastMoney(inputString);
     }
 
     /// <summary>

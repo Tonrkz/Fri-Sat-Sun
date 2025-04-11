@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5853999724208082527}
   - component: {fileID: 3355399701226532912}
+  - component: {fileID: -6155719270493977507}
   m_Layer: 0
   m_Name: Grass_Test
   m_TagString: Untagged
@@ -52,3 +53,15 @@ MonoBehaviour:
   scaleMax: 1.25
   rotationMin: {x: 0, y: -180, z: 0}
   rotationMax: {x: 0, y: 180, z: 0}
+--- !u!210 &-6155719270493977507
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3226773881670360519}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -10
+  m_SortAtRoot: 0

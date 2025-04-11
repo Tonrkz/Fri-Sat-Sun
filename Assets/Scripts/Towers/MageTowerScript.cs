@@ -127,6 +127,7 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
 
     public void UpgradeTower() {
         Level++;
+        render.PlayAnimation(render.UPGRADE, 0);
         BuildCost += UpgradeCost;
         // Upgrade Every Level
         TowerRange += upgradeTowerRange;
@@ -139,7 +140,22 @@ public class MageTowerScript : ATowers, IActivatables, IUpgradables {
         }
         duration += upgradeDuration;
         UpgradeCost += (int)(Mathf.Pow(UpgradeCost, MoneyManager.upgradePriceExponent));
+        StartCoroutine(ShowUpgradeText());
         Debug.Log($"{TowerName} upgraded");
+
+        IEnumerator ShowUpgradeText() {
+            float delay = 0.33f;
+            float speed = 0.25f;
+
+            // Show floating text
+            ShowFloatingText($"Duration Upgraded", speed);
+            yield return new WaitForSeconds(delay);
+            ShowFloatingText($"Range Upgraded", speed);
+            if (FireRate > upgradeFireRate) {
+                yield return new WaitForSeconds(delay);
+                ShowFloatingText($"Fire Rate Upgraded", speed);
+            }
+        }
     }
 
     public override void DestroyTower() {

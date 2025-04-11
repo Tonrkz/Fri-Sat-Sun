@@ -178,7 +178,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
 
             for (int i = 0 ; Time.time < lastSpawnTime + 1 ; i++) {
                 try {
-                    lastDemon = SpawnDemon(DecideDemonToBeSpawned(lastDemon)).GetComponent<IDemons>().DemonType;
+                    lastDemon = SpawnDemon(DecideDemonToBeSpawned(lastDemon)).GetComponent<ADemons>().DemonType;
                 }
                 catch {
                     lastDemon = Enum_DemonTypes.Goblin;
@@ -355,7 +355,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     /// Called when a demon dies.
     /// </summary>
     /// <param name="demons"></param>
-    public void OnDemonDead(IDemons demons, bool addMoney = true) {
+    public void OnDemonDead(ADemons demons, bool addMoney = true) {
         DemonAlive--;
         if (addMoney) {
             MoneyManager.instance.AddMoney(demons.MoneyOnDead * GlobalAttributeMultipliers.MoneyPerKillMultiplier);
@@ -374,7 +374,9 @@ public class DemonsSpawnerManager : MonoBehaviour {
         SetAllDemonsLimit(goblinCount);
         while (goblinCount > 0) {
             for (Byte i = 0 ; i < goblinCount ; i++) {
-                SpawnDemon(Enum_DemonTypes.Goblin).GetComponent<IDemons>().MoneyOnDead = 125;
+                var aGoblin = SpawnDemon(Enum_DemonTypes.Goblin);
+                yield return new WaitForEndOfFrame();
+                aGoblin.GetComponent<ADemons>().MoneyOnDead = 125;
                 goblinCount--;
                 yield return new WaitForSeconds(1 / spawnRate);
             }
@@ -388,7 +390,7 @@ public class DemonsSpawnerManager : MonoBehaviour {
     }
 
     void MultiplyStat(GameObject demon) {
-        switch (demon.GetComponent<IDemons>().DemonType) {
+        switch (demon.GetComponent<ADemons>().DemonType) {
             case Enum_DemonTypes.Goblin:
                 demon.GetComponent<GoblinDemonBehavior>().HitPoint *= statMultiplier;
                 demon.GetComponent<GoblinDemonBehavior>().StartDamage *= statMultiplier;

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6474628699774703708}
   - component: {fileID: 5469331612035602142}
   - component: {fileID: -4495542584643000661}
+  - component: {fileID: 6190140755017016789}
   m_Layer: 6
   m_Name: Path
   m_TagString: Path
@@ -149,3 +150,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e6e9fade7104a45907d7d56271218f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!210 &6190140755017016789
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3703905451937393717}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -10
+  m_SortAtRoot: 0

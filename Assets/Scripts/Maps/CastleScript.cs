@@ -9,7 +9,7 @@ public class CastleScript : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Demon") || other.CompareTag("Phantom")) {
-            DemonsSpawnerManager.instance.OnDemonDead(other.GetComponent<IDemons>(), false);
+            DemonsSpawnerManager.instance.OnDemonDead(other.GetComponent<ADemons>(), false);
             Destroy(other);
             health--;
             Debug.Log($"Health: {health}");

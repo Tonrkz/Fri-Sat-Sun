@@ -11,6 +11,7 @@ public class AnimatorRenderer : MonoBehaviour {
     public readonly string BUILDING = "Building"; // The building animation state name
     public readonly string IDLE = "Idle"; // The idle animation state name
     public readonly string WALK = "Walk"; // The walk animation state name
+    public readonly string UPGRADE = "Upgrade"; // The upgrade animation state name
     public readonly string ACTIVATE = "Activate"; // The run animation state name
     public readonly string ATTACK = "Attack"; // The attack animation state name
     public readonly string HURT = "Hurt"; // The attack animation state name
@@ -76,7 +77,7 @@ public class AnimatorRenderer : MonoBehaviour {
             StartCoroutine(GetComponentInParent<ISoldiers>().Die());
         }
         else if (transform.parent.gameObject.CompareTag("Demon") || transform.parent.gameObject.CompareTag("Phantom")) {
-            StartCoroutine(GetComponentInParent<IDemons>().Dead());
+            StartCoroutine(GetComponentInParent<ADemons>().Dead());
         }
     }
 
