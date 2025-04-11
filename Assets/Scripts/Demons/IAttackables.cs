@@ -10,6 +10,7 @@ public interface IAttackables {
     public Single AttackRange { get; set; }
     public GameObject AttackTarget { get; set; }
 
+    public void CheckForTarget();
     public void Attack(GameObject target);
     public IEnumerator AttackDown(Single atkDownPercent);
     public IEnumerator ResetAttack();

@@ -5,7 +5,7 @@ public class CastleScript : MonoBehaviour {
 
     [SerializeField] List<ParticleSystem> fire = new List<ParticleSystem>();
 
-    byte health = 5;
+    public byte health = 5;
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Demon") || other.CompareTag("Phantom")) {

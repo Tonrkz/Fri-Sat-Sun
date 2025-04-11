@@ -138,5 +138,6 @@ public class ATowers : MonoBehaviour, ITowers {
         //transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetColor("_Tint", new Color(1, 1, 1, 1));
         transform.GetChild(1).gameObject.SetActive(true);
         towerRangeShow.gameObject.SetActive(false);
+        IsSelected = false;
     }
 }

@@ -6,45 +6,39 @@ using DG.Tweening;
 using System.Collections;
 using TMPro;
 
-public class WerewolfDemonBehavior : MonoBehaviour, IDemons, IDamagable {
-    [Header("References")]
-    [SerializeField] Rigidbody rb;
-    [SerializeField] AnimatorRenderer render;
-    [SerializeField] DemonsMovement movement;
-    [SerializeField] GameObject floatingTextPrefab;
-
-
-
+public class WerewolfDemonBehavior : ADemons {
     [Header("Attributes")]
     [SerializeField] Enum_WerewolfDemonState state = Enum_WerewolfDemonState.Walk;
     [SerializeField] float hitPoint = 100;
-    public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] Single moneyOnDead = 70;
-    public Single MoneyOnDead { get { return moneyOnDead; } set { moneyOnDead = value; } }
 
 
 
     [Header("Movement Attributes")]
     [SerializeField] Single startWalkSpeed = 1.5f;
-    public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
-    Single walkSpeed = 1.5f;
-    public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
-    [SerializeField] internal Single acceptableRadius = 0.33f;
 
 
 
     [Header("Debug")]
     Enum_DemonTypes demonType = Enum_DemonTypes.Werewolf;
-    public Enum_DemonTypes DemonType { get => demonType; set => demonType = value; }
-    float lastCalculateTime;
-    [SerializeField] float delayCalculateTime = 0.2f;
 
 
 
     void Start() {
+        // Get the references
         rb = GetComponent<Rigidbody>();
         movement = GetComponent<DemonsMovement>();
-        walkSpeed = startWalkSpeed;
+
+        // Set ADemons properties
+        StartWalkSpeed = startWalkSpeed;
+        WalkSpeed = StartWalkSpeed;
+        HitPoint = hitPoint;
+        MoneyOnDead = moneyOnDead;
+        DemonType = demonType;
+
+        // Set the initial state
+        ChangeDemonState(Enum_WerewolfDemonState.Walk);
+        render.PlayAnimation(render.WALK, 0, WalkSpeed);
     }
 
     void Update() {
@@ -54,7 +48,6 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons, IDamagable {
         lastCalculateTime = Time.time;
         switch (state) {
             case Enum_WerewolfDemonState.Walk:
-                render.PlayAnimation(render.WALK);
                 if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
                     movement.walkTarget = movement.GetNextWalkTarget();
                 }
@@ -88,45 +81,40 @@ public class WerewolfDemonBehavior : MonoBehaviour, IDemons, IDamagable {
         }
     }
 
-    public IEnumerator Dead() {
-        DOVirtual.Float(0, 1, 1f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetFloat("_Dissolve", x));
+    public override void ChangeDemonState(Enum newState) {
+        // Check if the new state is the same as the current state or dead
+        if (state == (Enum_WerewolfDemonState)newState || state == Enum_WerewolfDemonState.Dead) {
+            return;
+        }
 
-        yield return new WaitForSeconds(1.2f);
+        // Change the state
+        state = (Enum_WerewolfDemonState)newState;
 
-        if (transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetFloat("_Dissolve") >= 1) {
-            DemonsSpawnerManager.instance.OnDemonDead(this);
-            //Play Dead Animation
-            Destroy(gameObject);
+
+        switch (state) {
+            case Enum_WerewolfDemonState.Walk:
+                render.PlayAnimation(render.WALK, 0, WalkSpeed);
+                break;
+            case Enum_WerewolfDemonState.Hurt:
+                render.PlayAnimation(render.HURT, 0);
+                break;
+            case Enum_WerewolfDemonState.Dead:
+                render.PlayAnimation(render.DEAD, 0);
+                break;
+            default:
+                break;
         }
     }
 
-    public void Move(Vector3 position) {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, position, walkSpeed * Time.fixedDeltaTime));
-    }
-
-    public void TakeDamage(Single damage) {
-        HitPoint -= damage;
-
-        ShowFloatingText();
-
-        void ShowFloatingText() {
-            if (HitPoint > 0 && floatingTextPrefab) {
-                var floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
-                floatingText.GetComponent<TextMeshPro>().SetText(((int)HitPoint).ToString());
-            }
-        }
-    }
-
-    public void AddKnockback(Vector3 knockback) {
+    public override void AddKnockback(Vector3 knockback) {
         // Add a knockback
         rb.AddForce(knockback, ForceMode.Impulse);
         StartCoroutine(WaitForHurtAnimation());
-        render.PlayAnimation(render.HURT, 0);
 
         IEnumerator WaitForHurtAnimation() {
-            state = Enum_WerewolfDemonState.Hurt;
+            ChangeDemonState(Enum_WerewolfDemonState.Hurt);
             yield return new WaitForSeconds(render.animator.GetCurrentAnimatorStateInfo(0).length);
-            state = Enum_WerewolfDemonState.Walk;
+            ChangeDemonState(Enum_WerewolfDemonState.Walk);
         }
     }
 }

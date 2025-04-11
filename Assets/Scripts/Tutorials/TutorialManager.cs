@@ -189,8 +189,11 @@ public class TutorialManager : MonoBehaviour {
                 break;
             case Enum_TutorialState.UpgradeCommand:
                 UserInterfaceManager.instance.ChangeTextMessage(tutorialText, upgradeCommandTutorialMessages[tutorialTextIndex]);
+                MoneyManager.instance.AddMoney(BuildManager.instance.builtTowerList[0].GetComponent<IUpgradables>().UpgradeCost * 1.5f);
                 break;
             case Enum_TutorialState.GodOffering:
+                UserInterfaceManager.instance.ChangeTextMessage(tutorialText, godOfferingTutorialMessages[tutorialTextIndex]);
+                MoneyManager.instance.AddMoney(150);
                 break;
             case Enum_TutorialState.PlayerTest3:
                 break;
@@ -249,13 +252,13 @@ public class TutorialManager : MonoBehaviour {
                     else {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, playerMovementTutorialMessages[playerMovementTutorialMessages.Count - 2]);
                         pressEnterToContinueText.SetActive(false);
-                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.color = Color.red;
+                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", Color.red);
                         //playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", Color.yellow);
                         InputStateManager.instance.GameInputState = Enum_GameInputState.CommandMode;
                     }
                     if (IsConditionMeet) {
                         UpdateStep();
-                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.color = Color.white;
+                        playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", Color.white);
                         //playerMovementTutorialTargetLocation.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color32(0, 115, 6, 255));
                         return;
                     }
@@ -388,6 +391,9 @@ public class TutorialManager : MonoBehaviour {
                         StartCoroutine(HideTalkingBubble(3));
                     }
                 }
+                if (DemonsSpawnerManager.instance.DemonAlive == 0 && DemonsSpawnerManager.instance.DemonCount == DemonsSpawnerManager.instance.DemonLimit && FindAnyObjectByType<CastleScript>().health < 5) {
+                    UserInterfaceManager.instance.LoadSceneViaName("Scene_End");
+                }
                 if (DemonsSpawnerManager.instance.DemonAlive == 0 && DemonsSpawnerManager.instance.DemonCount == DemonsSpawnerManager.instance.DemonLimit) {
                     if (!IsConditionMeet) {
                         OnTutorialConditionMeet();
@@ -435,7 +441,6 @@ public class TutorialManager : MonoBehaviour {
                     else if (tutorialTextIndex == 1) {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, $"For example, type '{CommandTyperScript.upgradeStringRef} {BuildManager.instance.builtTowerList[0].GetComponent<ATowers>().TowerName}'! Or moved yourself into it to select a tower and type '{CommandTyperScript.upgradeStringRef}'.");
                         pressEnterToContinueText.SetActive(false);
-                        MoneyManager.instance.money = builtTower.GetComponent<IUpgradables>().UpgradeCost;
                         InputStateManager.instance.GameInputState = previousInputState;
                     }
                     if (IsConditionMeet) {
@@ -461,7 +466,6 @@ public class TutorialManager : MonoBehaviour {
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, godOfferingTutorialMessages[tutorialTextIndex]);
                     }
                     else {
-                        MoneyManager.instance.money = 200;
                         GodsOfferingManager.instance.InitiateGodOfferingsUI();
                         UserInterfaceManager.instance.ChangeTextMessage(tutorialText, godOfferingTutorialMessages[godOfferingTutorialMessages.Count - 1]);
                         pressEnterToContinueText.SetActive(true);
@@ -551,6 +555,7 @@ public class TutorialManager : MonoBehaviour {
             case Enum_TutorialState.PlayerTest3:
                 DemonsSpawnerManager.instance.StartCoroutine(DemonsSpawnerManager.instance.TutorialPlayerTest3());
                 StartCoroutine(HideTalkingBubble(0));
+                PlayerPrefs.SetInt("PassedTutorial", 1);
                 enabled = false;
                 break;
             case Enum_TutorialState.End:

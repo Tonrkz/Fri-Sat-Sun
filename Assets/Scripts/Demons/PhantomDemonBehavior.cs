@@ -5,44 +5,38 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class PhantomDemonBehavior : MonoBehaviour, IDemons, IDamagable {
-    [Header("References")]
-    [SerializeField] Rigidbody rb;
-    [SerializeField] AnimatorRenderer render;
-    [SerializeField] DemonsMovement movement;
-    [SerializeField] GameObject floatingTextPrefab;
-
-
-
+public class PhantomDemonBehavior : ADemons {
     [Header("Attributes")]
     [SerializeField] Enum_PhantomDemonState state = Enum_PhantomDemonState.Walk;
     [SerializeField] float hitPoint = 100;
-    public float HitPoint { get => hitPoint; set => hitPoint = value; }
     [SerializeField] Single moneyOnDead = 100;
-    public Single MoneyOnDead { get { return moneyOnDead; } set { moneyOnDead = value; } }
 
 
 
 
     [Header("Movement Attributes")]
     [SerializeField] Single startWalkSpeed = 1.5f;
-    public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
-    Single walkSpeed = 1.5f;
-    public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
-    [SerializeField] internal Single acceptableRadius = 0.33f;
 
 
 
     [Header("Debug")]
     Enum_DemonTypes demonType = Enum_DemonTypes.Phantom;
-    public Enum_DemonTypes DemonType { get => demonType; set => demonType = value; }
-    float lastCalculateTime;
-    [SerializeField] float delayCalculateTime = 0.2f;
 
     void Start() {
+        // Get the references
         rb = GetComponent<Rigidbody>();
         movement = GetComponent<DemonsMovement>();
-        walkSpeed = startWalkSpeed;
+
+        // Set ADemons properties
+        StartWalkSpeed = startWalkSpeed;
+        WalkSpeed = StartWalkSpeed;
+        HitPoint = hitPoint;
+        MoneyOnDead = moneyOnDead;
+        DemonType = demonType;
+
+        // Set the initial state
+        ChangeDemonState(Enum_PhantomDemonState.Walk);
+        render.PlayAnimation(render.WALK, 0, WalkSpeed);
     }
 
     void Update() {
@@ -52,7 +46,6 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons, IDamagable {
         lastCalculateTime = Time.time;
         switch (state) {
             case Enum_PhantomDemonState.Walk:
-                render.PlayAnimation(render.WALK);
                 if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
                     movement.walkTarget = movement.GetNextWalkTarget();
                 }
@@ -69,10 +62,37 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons, IDamagable {
                 Move(movement.walkTarget.transform.position);
                 break;
             case Enum_PhantomDemonState.Dead:
+                break;
+            default:
+                break;
+        }
+        if (HitPoint <= 0) {
+            ChangeDemonState(Enum_PhantomDemonState.Dead);
+        }
+    }
+
+    public override void ChangeDemonState(Enum newState) {
+        // Check if the new state is the same as the current state or dead
+        if (state == (Enum_PhantomDemonState)newState || state == Enum_PhantomDemonState.Dead) {
+            return;
+        }
+
+        // Change the state
+        state = (Enum_PhantomDemonState)newState;
+
+        // Set the animation
+        switch (state) {
+            case Enum_PhantomDemonState.Walk:
+                render.PlayAnimation(render.WALK, 0, WalkSpeed);
+                break;
+            case Enum_PhantomDemonState.Hurt:
+                render.PlayAnimation(render.HURT, 0);
+                break;
+            case Enum_PhantomDemonState.Dead:
                 // Disabled Hitbox
-                GetComponent<Rigidbody>().Sleep();
+                GetComponent<Rigidbody>().useGravity = false;
                 GetComponent<SphereCollider>().enabled = false;
-                GetComponent<CapsuleCollider>().excludeLayers = LayerMask.GetMask("Soldier");
+                GetComponent<CapsuleCollider>().enabled = false;
 
                 // Play Animation
                 render.PlayAnimation(render.DEAD, 0);
@@ -80,50 +100,17 @@ public class PhantomDemonBehavior : MonoBehaviour, IDemons, IDamagable {
             default:
                 break;
         }
-        if (HitPoint <= 0) {
-            state = Enum_PhantomDemonState.Dead;
-        }
     }
 
-    public IEnumerator Dead() {
-        DOVirtual.Float(0, 1, 1f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetFloat("_Dissolve", x));
-
-        yield return new WaitForSeconds(1.2f);
-
-        if (transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetFloat("_Dissolve") >= 1) {
-            DemonsSpawnerManager.instance.OnDemonDead(this);
-            //Play Dead Animation
-            Destroy(gameObject);
-        }
-    }
-
-    public void Move(Vector3 position) {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, position, walkSpeed * Time.fixedDeltaTime));
-    }
-
-    public void TakeDamage(Single damage) {
-        HitPoint -= damage;
-
-        ShowFloatingText();
-
-        void ShowFloatingText() {
-            if (HitPoint > 0 && floatingTextPrefab) {
-                var floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
-                floatingText.GetComponent<TextMeshPro>().SetText(((int)HitPoint).ToString());
-            }
-        }
-    }
-
-    public void AddKnockback(Vector3 knockback) {
+    public override void AddKnockback(Vector3 knockback) {
         // Add a knockback
         rb.AddForce(knockback, ForceMode.Impulse);
         StartCoroutine(WaitForHurtAnimation());
-        render.PlayAnimation(render.HURT, 0);
 
         IEnumerator WaitForHurtAnimation() {
-            state = Enum_PhantomDemonState.Hurt;
+            ChangeDemonState(Enum_PhantomDemonState.Hurt);
             yield return new WaitForSeconds(render.animator.GetCurrentAnimatorStateInfo(0).length);
-            state = Enum_PhantomDemonState.Walk;
+            ChangeDemonState(Enum_PhantomDemonState.Walk);
         }
     }
 }

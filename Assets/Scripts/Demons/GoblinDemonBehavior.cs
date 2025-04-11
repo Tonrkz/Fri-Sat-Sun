@@ -5,66 +5,60 @@ using Unity.VisualScripting;
 using DG.Tweening;
 using TMPro;
 
-public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamagable {
-    [Header("References")]
-    [SerializeField] Rigidbody rb;
-    [SerializeField] AnimatorRenderer render;
-    [SerializeField] DemonsMovement movement;
-    [SerializeField] GameObject floatingTextPrefab;
-
-
-
+public class GoblinDemonBehavior : ADemons, IAttackables {
     [Header("Demon Attributes")]
     [SerializeField] Enum_GoblinDemonState state = Enum_GoblinDemonState.Walk;
-    [SerializeField] float hitPoint = 100;
-    public float HitPoint { get => hitPoint; set => hitPoint = value; }
-    [SerializeField] Single moneyOnDead = 20;
-    public Single MoneyOnDead { get { return moneyOnDead; } set { moneyOnDead = value; } }
+    [SerializeField] float hitPoint = 60;
+    [SerializeField] Single moneyOnDead = 25;
 
 
 
     [Header("Movement Attributes")]
-    [SerializeField] Single startWalkSpeed = 1.5f;
-    public Single StartWalkSpeed { get => startWalkSpeed; set => startWalkSpeed = value; }
-    Single walkSpeed;
-    public Single WalkSpeed { get => walkSpeed; set => walkSpeed = value; }
-    [SerializeField] internal Single acceptableRadius = 0.33f;
+    [SerializeField] Single startWalkSpeed = 1f;
 
 
 
     [Header("Attack Attributes")]
-    [SerializeField] Single startDamage = 10;
+    [SerializeField] Single startDamage = 30;
     public Single StartDamage { get => startDamage; set => startDamage = value; }
-    Single damage;
-    public Single Damage { get => damage; set => damage = value; }
+    public Single Damage { get; set; }
     [SerializeField] internal Single sightRange = 1.5f;
     [SerializeField] Single attackSpeed = 1;
     public Single AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
-    [SerializeField] Single attackCooldown = 1;
+    [SerializeField] Single attackCooldown = 1.25f;
     public Single AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
-    [SerializeField] Single attackRange = 1f;
+    [SerializeField] Single attackRange = 1.3f;
     public Single AttackRange { get => attackRange; set => attackRange = value; }
 
 
 
     [Header("Debug")]
     Enum_DemonTypes demonType = Enum_DemonTypes.Goblin;
-    public Enum_DemonTypes DemonType { get => demonType; set => demonType = value; }
-    GameObject attackTarget;
-    public GameObject AttackTarget { get => attackTarget; set => attackTarget = value; }
-    float lastCalculateTime;
+    public GameObject AttackTarget { get; set; }
     float lastAttackTime;
-    [SerializeField] float delayCalculateTime = 0.2f;
     LayerMask SoldierLayer;
 
 
 
     void Start() {
+        // Get the references
         rb = GetComponent<Rigidbody>();
         movement = GetComponent<DemonsMovement>();
-        WalkSpeed = StartWalkSpeed;
-        Damage = StartDamage;
         SoldierLayer = LayerMask.GetMask("Soldier");
+
+        // Set ADemons properties
+        StartWalkSpeed = startWalkSpeed;
+        WalkSpeed = StartWalkSpeed;
+        HitPoint = hitPoint;
+        MoneyOnDead = moneyOnDead;
+        DemonType = demonType;
+
+        // Set IAttackables properties
+        Damage = StartDamage;
+
+        // Set the initial state
+        ChangeDemonState(Enum_GoblinDemonState.Walk);
+        render.PlayAnimation(render.WALK, 0, WalkSpeed);
     }
 
     void Update() {
@@ -76,9 +70,10 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamaga
             case Enum_GoblinDemonState.Idle:
                 break;
             case Enum_GoblinDemonState.Walk:
-                if (attackTarget != null) {
-                    if (Vector3.Distance(transform.position, attackTarget.transform.position) <= AttackRange) {
-                        state = Enum_GoblinDemonState.Attack;
+                if (AttackTarget != null) {
+                    if (Vector3.Distance(transform.position, AttackTarget.transform.position) <= AttackRange) {
+                        ChangeDemonState(Enum_GoblinDemonState.Attack);
+                        return;
                     }
                 }
                 if (Vector3.Distance(transform.position, movement.walkTarget.transform.position) <= acceptableRadius) {
@@ -87,9 +82,9 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamaga
                 CheckForTarget();
                 break;
             case Enum_GoblinDemonState.Attack:
-                if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<IDamagable>().HitPoint <= 0) {
-                    attackTarget = null;
-                    state = Enum_GoblinDemonState.Walk;
+                if (AttackTarget.gameObject.IsDestroyed() || AttackTarget.GetComponent<IDamagable>().HitPoint <= 0) {
+                    AttackTarget = null;
+                    ChangeDemonState(Enum_GoblinDemonState.Walk);
                 }
                 break;
             case Enum_GoblinDemonState.Dead:
@@ -102,21 +97,19 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamaga
     void FixedUpdate() {
         switch (state) {
             case Enum_GoblinDemonState.Idle:
-                render.PlayAnimation("Idle");
                 return;
             case Enum_GoblinDemonState.Walk:
-                render.PlayAnimation("Walk", 0.2f, WalkSpeed);
-                if (attackTarget != null) {
-                    Move(attackTarget.transform.position);
+                if (AttackTarget != null) {
+                    Move(AttackTarget.transform.position);
                     return;
                 }
                 Move(movement.walkTarget.transform.position);
                 break;
             case Enum_GoblinDemonState.Attack:
                 // Change to walking if attack target is out of reach
-                if (attackTarget.gameObject.IsDestroyed() || attackTarget.GetComponent<IDamagable>().HitPoint <= 0 || Vector3.Distance(transform.position, attackTarget.transform.position) > attackRange) {
-                    attackTarget = null;
-                    state = Enum_GoblinDemonState.Walk;
+                if (AttackTarget.gameObject.IsDestroyed() || AttackTarget.GetComponent<IDamagable>().HitPoint <= 0 || Vector3.Distance(transform.position, AttackTarget.transform.position) > attackRange) {
+                    AttackTarget = null;
+                    ChangeDemonState(Enum_GoblinDemonState.Walk);
                     return;
                 }
 
@@ -128,24 +121,51 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamaga
                     }
                 }
                 catch {
-                    attackTarget = null;
-                    state = Enum_GoblinDemonState.Walk;
+                    AttackTarget = null;
+                    ChangeDemonState(Enum_GoblinDemonState.Walk);
                 }
                 break;
             case Enum_GoblinDemonState.Dead:
-                // Disabled Hitbox
-                GetComponent<Rigidbody>().Sleep();
-                GetComponent<SphereCollider>().enabled = false;
-                GetComponent<CapsuleCollider>().excludeLayers = LayerMask.GetMask("Soldier");
-
-                // Play Animation
-                render.PlayAnimation(render.DEAD, 0);
                 break;
             default:
                 break;
         }
         if (HitPoint <= 0) {
-            state = Enum_GoblinDemonState.Dead;
+            ChangeDemonState(Enum_GoblinDemonState.Dead);
+        }
+    }
+
+    public override void ChangeDemonState(Enum newState) {
+        if (state == (Enum_GoblinDemonState)newState || state == Enum_GoblinDemonState.Dead) {
+            return;
+        }
+
+        state = (Enum_GoblinDemonState)newState;
+
+        switch (state) {
+            case Enum_GoblinDemonState.Idle:
+                render.PlayAnimation(render.IDLE, 0);
+                break;
+            case Enum_GoblinDemonState.Walk:
+                render.PlayAnimation(render.WALK, 0, WalkSpeed);
+                break;
+            case Enum_GoblinDemonState.Hurt:
+                render.PlayAnimation(render.HURT, 0);
+                break;
+            case Enum_GoblinDemonState.Attack:
+                break;
+            case Enum_GoblinDemonState.Dead:
+                // Disabled Hitbox
+                GetComponent<Rigidbody>().useGravity = false;
+                GetComponent<SphereCollider>().enabled = false;
+                GetComponent<CapsuleCollider>().enabled = false;
+
+                // Play Animation
+                render.PlayAnimation(render.DEAD, 0);
+                break;
+            default:
+                ChangeDemonState(Enum_GoblinDemonState.Walk);
+                break;
         }
     }
 
@@ -155,7 +175,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamaga
         Single knockbackForce = 1.5f;
 
         // Calculate knockback direction
-        Vector3 knockbackDirection = attackTarget.transform.position - transform.position;
+        Vector3 knockbackDirection = AttackTarget.transform.position - transform.position;
         knockbackDirection.Normalize();
         knockbackDirection *= knockbackForce;
 
@@ -174,45 +194,15 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamaga
         yield return null;
     }
 
-    public IEnumerator Dead() {
-        DOVirtual.Float(0, 1, 1f, x => transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.SetFloat("_Dissolve", x));
-
-        yield return new WaitForSeconds(1.2f);
-
-        if (transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().material.GetFloat("_Dissolve") >= 1) {
-            DemonsSpawnerManager.instance.OnDemonDead(this);
-            //Play Dead Animation
-            Destroy(gameObject);
-        }
-    }
-
-    public void Move(Vector3 position) {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, position, WalkSpeed * Time.fixedDeltaTime));
-    }
-
-    public void TakeDamage(Single damage) {
-        HitPoint -= damage;
-
-        ShowFloatingText();
-
-        void ShowFloatingText() {
-            if (HitPoint > 0 && floatingTextPrefab) {
-                var floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
-                floatingText.GetComponent<TextMeshPro>().SetText(((int)HitPoint).ToString());
-            }
-        }
-    }
-
-    public void AddKnockback(Vector3 knockback) {
+    public override void AddKnockback(Vector3 knockback) {
         // Add a knockback
         rb.AddForce(knockback, ForceMode.Impulse);
         StartCoroutine(WaitForHurtAnimation());
-        render.PlayAnimation(render.HURT, 0);
 
         IEnumerator WaitForHurtAnimation() {
-            state = Enum_GoblinDemonState.Hurt;
+            ChangeDemonState(Enum_GoblinDemonState.Hurt);
             yield return new WaitForSeconds(render.animator.GetCurrentAnimatorStateInfo(0).length);
-            state = Enum_GoblinDemonState.Walk;
+            ChangeDemonState(Enum_GoblinDemonState.Walk);
         }
     }
 
@@ -220,7 +210,7 @@ public class GoblinDemonBehavior : MonoBehaviour, IDemons, IAttackables, IDamaga
         Collider[] collides = Physics.OverlapSphere(transform.position, sightRange, SoldierLayer);
         foreach (var item in collides) {
             if (item.CompareTag("Soldier")) {
-                attackTarget = item.gameObject;
+                AttackTarget = item.gameObject;
                 break;
             }
         }

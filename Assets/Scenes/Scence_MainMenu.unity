@@ -1123,8 +1123,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 704041837}
         m_TargetAssemblyTypeName: UserInterfaceManager, Assembly-CSharp
-        m_MethodName: LoadSceneViaName
-        m_Mode: 5
+        m_MethodName: PlayButtonTutorialCheck
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

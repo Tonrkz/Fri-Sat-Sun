@@ -103,12 +103,12 @@ MonoBehaviour:
   render: {fileID: 7794050748405837792}
   movement: {fileID: -660648354733540177}
   floatingTextPrefab: {fileID: 2596864824031655447, guid: c0bdc9dceccc6f84498b687ea8ff836d, type: 3}
+  acceptableRadius: 0.5
+  delayCalculateTime: 1
   state: 0
   hitPoint: 50
   moneyOnDead: 30
-  startWalkSpeed: 1.5
-  acceptableRadius: 0.5
-  delayCalculateTime: 1
+  startWalkSpeed: 1.25
 --- !u!114 &-660648354733540177
 MonoBehaviour:
   m_ObjectHideFlags: 0
