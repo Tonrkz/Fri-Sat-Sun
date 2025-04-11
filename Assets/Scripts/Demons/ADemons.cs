@@ -52,7 +52,11 @@ public abstract class ADemons : MonoBehaviour, IDemons, IDamagable {
         ShowFloatingText(((int)HitPoint).ToString());
     }
 
-    public abstract void AddKnockback(Vector3 knockback);
+    public virtual void AddKnockback(Vector3 knockback) {
+        if (HitPoint > 0) {
+            rb.AddForce(knockback, ForceMode.Impulse);
+        }
+    }
 
     void ShowFloatingText(string message) {
         if (HitPoint > 0 && floatingTextPrefab) {

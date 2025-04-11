@@ -98,7 +98,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers, IDamagable {
                 }
 
                 if (Time.time > lastAttackTime + AttackCooldown) {
-                    render.PlayAnimation(render.ATTACK, 0);
+                    render.PlayAnimation(render.ATTACK);
                 }
                 break;
             case Enum_NormalSoldierState.Die:
@@ -147,25 +147,29 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers, IDamagable {
                     }
                 }
                 // Play Walk Animation
-                render.PlayAnimation("Walk", 0.2f, WalkSpeed);
+                render.PlayAnimation(render.WALK, 0.2f, WalkSpeed);
                 break;
             case Enum_NormalSoldierState.Idle:
                 // Play Idle Animation
-                render.PlayAnimation("Idle");
+                render.PlayAnimation(render.IDLE, 0);
                 break;
             case Enum_NormalSoldierState.Engage:
                 // Play Walk Animation
-                render.PlayAnimation("Walk", 0.2f, WalkSpeed);
+                render.PlayAnimation(render.WALK, 0.2f, WalkSpeed);
+                break;
+            case Enum_NormalSoldierState.Hurt:
+                // Play Hurt Animation
+                render.PlayAnimation(render.HURT, 0);
                 break;
             case Enum_NormalSoldierState.Attack:
                 // Play Idle Animation
-                render.PlayAnimation("Idle");
+                render.PlayAnimation(render.IDLE, 0);
                 break;
             case Enum_NormalSoldierState.Die:
                 // Disabled Hitbox
-                GetComponent<Rigidbody>().Sleep();
+                GetComponent<Rigidbody>().useGravity = false;
                 GetComponent<SphereCollider>().enabled = false;
-                GetComponent<CapsuleCollider>().excludeLayers = LayerMask.GetMask("Demon");
+                GetComponent<CapsuleCollider>().enabled = false;
 
                 // Play Animation
                 render.PlayAnimation(render.DEAD);
@@ -277,9 +281,11 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers, IDamagable {
 
     public void AddKnockback(Vector3 knockback) {
         // Add a knockback
-        rb.AddForce(knockback, ForceMode.Impulse);
+        if (HitPoint > 0) {
+            rb.AddForce(knockback, ForceMode.Impulse);
+        }
+
         StartCoroutine(WaitForHurtAnimation());
-        render.PlayAnimation(render.HURT, 0, 1);
 
         IEnumerator WaitForHurtAnimation() {
             ChangeState(Enum_NormalSoldierState.Hurt);

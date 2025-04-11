@@ -103,8 +103,8 @@ public class PhantomDemonBehavior : ADemons {
     }
 
     public override void AddKnockback(Vector3 knockback) {
-        // Add a knockback
-        rb.AddForce(knockback, ForceMode.Impulse);
+        base.AddKnockback(knockback);
+
         StartCoroutine(WaitForHurtAnimation());
 
         IEnumerator WaitForHurtAnimation() {

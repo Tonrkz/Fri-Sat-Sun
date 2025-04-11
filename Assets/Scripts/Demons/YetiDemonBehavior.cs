@@ -172,8 +172,8 @@ public class YetiDemonBehavior : ADemons, IAttackables, IDamagable {
     }
 
     public override void AddKnockback(Vector3 knockback) {
-        // Add a knockback
-        rb.AddForce(knockback, ForceMode.Impulse);
+        base.AddKnockback(knockback);
+
         StartCoroutine(WaitForHurtAnimation());
 
         IEnumerator WaitForHurtAnimation() {
