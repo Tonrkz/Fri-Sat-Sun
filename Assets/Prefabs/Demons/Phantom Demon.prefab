@@ -103,12 +103,12 @@ MonoBehaviour:
   render: {fileID: 4324102490571063635}
   movement: {fileID: -2204621155732318736}
   floatingTextPrefab: {fileID: 2596864824031655447, guid: c0bdc9dceccc6f84498b687ea8ff836d, type: 3}
+  acceptableRadius: 0.5
+  delayCalculateTime: 1
   state: 0
   hitPoint: 70
   moneyOnDead: 40
   startWalkSpeed: 1.25
-  acceptableRadius: 0.5
-  delayCalculateTime: 1
 --- !u!114 &-2204621155732318736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,7 +231,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!95 &8946271517301042466
 Animator:

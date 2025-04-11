@@ -29,9 +29,22 @@ public abstract class ADemons : MonoBehaviour, IDemons, IDamagable {
 
     public abstract void ChangeDemonState(Enum newState);
 
+    Vector3 FindDirection(Vector3 target) {
+        Vector3 direction = (target - transform.position).normalized;
+
+        // Flip sprite based on direction
+        if (direction.x < 0) {
+            render.FlipSprite(true);
+        }
+        else {
+            render.FlipSprite(false);
+        }
+
+        return direction;
+    }
+
     public virtual void Move(Vector3 position) {
-        Vector3 direction = (position - transform.position).normalized;
-        rb.MovePosition(transform.position + direction * WalkSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(transform.position + FindDirection(position) * WalkSpeed * Time.fixedDeltaTime);
     }
 
     public virtual IEnumerator Dead() {

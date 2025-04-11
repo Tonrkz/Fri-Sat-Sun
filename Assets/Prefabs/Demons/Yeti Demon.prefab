@@ -103,17 +103,17 @@ MonoBehaviour:
   render: {fileID: 7415092612268029008}
   movement: {fileID: -7488874263059044657}
   floatingTextPrefab: {fileID: 2596864824031655447, guid: c0bdc9dceccc6f84498b687ea8ff836d, type: 3}
+  acceptableRadius: 0.5
+  delayCalculateTime: 0.25
   state: 1
   hitPoint: 130
   moneyOnDead: 50
   startWalkSpeed: 0.7
-  acceptableRadius: 0.5
   startDamage: 40
   sightRange: 1.5
   attackSpeed: 1
   attackCooldown: 1.8
   attackRange: 1.2
-  delayCalculateTime: 0.25
 --- !u!114 &-7488874263059044657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,7 +236,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!95 &7285732385674814827
 Animator:

@@ -50,6 +50,11 @@ public class AnimatorRenderer : MonoBehaviour {
 
     }
 
+    public void FlipSprite(bool flip) {
+        GetComponent<SpriteRenderer>().flipX = flip;
+    }
+
+
     public void AnimNotifyOnDestroyTower() {
         // Notify the tower that the animation is done
         GetComponentInParent<ATowers>().Dead();

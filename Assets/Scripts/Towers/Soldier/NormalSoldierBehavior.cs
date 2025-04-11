@@ -98,7 +98,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers, IDamagable {
                 }
 
                 if (Time.time > lastAttackTime + AttackCooldown) {
-                    render.PlayAnimation(render.ATTACK);
+                    render.PlayAnimation(render.ATTACK, 0.1f);
                 }
                 break;
             case Enum_NormalSoldierState.Die:
@@ -147,7 +147,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers, IDamagable {
                     }
                 }
                 // Play Walk Animation
-                render.PlayAnimation(render.WALK, 0.2f, WalkSpeed);
+                render.PlayAnimation(render.WALK, 0, WalkSpeed);
                 break;
             case Enum_NormalSoldierState.Idle:
                 // Play Idle Animation
@@ -155,7 +155,7 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers, IDamagable {
                 break;
             case Enum_NormalSoldierState.Engage:
                 // Play Walk Animation
-                render.PlayAnimation(render.WALK, 0.2f, WalkSpeed);
+                render.PlayAnimation(render.WALK, 0, WalkSpeed);
                 break;
             case Enum_NormalSoldierState.Hurt:
                 // Play Hurt Animation
@@ -263,8 +263,23 @@ public class NormalSoldierBehavior : MonoBehaviour, ISoldiers, IDamagable {
         }
         Destroy(gameObject);
     }
+
+    Vector3 FindDirection(Vector3 target) {
+        Vector3 direction = (target - transform.position).normalized;
+
+        // Flip sprite based on direction
+        if (direction.x < 0) {
+            render.FlipSprite(true);
+        }
+        else {
+            render.FlipSprite(false);
+        }
+
+        return direction;
+    }
+
     public void Move(Vector3 position) {
-        rb.MovePosition(Vector3.MoveTowards(transform.position, position, WalkSpeed * Time.fixedDeltaTime));
+        rb.MovePosition(transform.position + FindDirection(position) * WalkSpeed * Time.fixedDeltaTime);
     }
 
     public void TakeDamage(Single damage) {
